@@ -2,5 +2,6 @@
 | |
 = link_to "Edit", edit_note_path(@note)
 .note
+  = @note.updated_at
   pre
     = @note.content

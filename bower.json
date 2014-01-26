@@ -6,8 +6,12 @@
     "node_modules",
     "vendor/assets/components"
   ],
+  "main": [
+    "jquery", "jquery-autosize", "moment"
+  ],
   "dependencies": {
     "jquery": "*"
   , "jquery-autosize": "*"
+  , "moment": "*"
   }
 }

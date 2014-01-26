@@ -1,5 +1,5 @@
-//= require jquery/jquery
-//= require jquery-autosize/jquery.autosize.min
+//= require jquery
+//= require jquery-autosize
+//= require moment
 //= require turbolinks
 //= require_tree .
-//= require_self
