@@ -9,6 +9,5 @@
   "dependencies": {
     "jquery": "*"
   , "jquery-autosize": "*"
-  , "font-awesome": "*"
   }
 }
