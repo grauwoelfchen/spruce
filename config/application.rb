@@ -24,6 +24,11 @@ module Ash
     # assets
     config.assets.paths << Rails.root.join("vendor", "assets", "components")
 
-    config.assets.precompile << lambda { |path| path =~ /\.(eot|svg|ttf|woff|otf)$/ }
+    config.assets.precompile << lambda { |path|
+      File.extname(path).in? [
+        ".png", ".gif", ".jpg", ".jpeg",
+        ".eot", ".otf", ".svg", ".woff", ".ttf"
+      ]
+    }
   end
 end

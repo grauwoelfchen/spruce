@@ -1,3 +1,4 @@
+= render "shared/errors", resource: @note
 = form_for @note do |f|
   = f.text_area :content, id: "canvas"
   = f.submit "Save"

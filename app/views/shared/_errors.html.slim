@@ -1,0 +1,5 @@
+- if resource && resource.errors.any?
+  #errors
+    - resource.errors.full_messages.each do |message|
+      .alert.alert-error
+        span= message

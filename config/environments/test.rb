@@ -33,4 +33,8 @@ Ash::Application.configure do
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
+
+  # Prevent `ActionView::Template::Error Asset logical path has no extension against some files`
+  config.assets.compile = false
+  config.assets.digest  = true
 end

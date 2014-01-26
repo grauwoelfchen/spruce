@@ -1,7 +1,9 @@
 require 'test_helper'
 
 class NotesControllerTest < ActionController::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+
+  def test_get_index
+    get :index
+    assert_response :success
+  end
 end

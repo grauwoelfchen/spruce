@@ -10,7 +10,7 @@ class NotesController < ApplicationController
   end
 
   def create
-    @note = Note.new(parsed_params)
+    @note = Note.new(note_params)
     if @note.save
       redirect_to @note
     else
@@ -25,7 +25,7 @@ class NotesController < ApplicationController
   end
 
   def update
-    if @note.update_attributes(parsed_params)
+    if @note.update_attributes(note_params)
       redirect_to @note
     else
       render :edit
@@ -46,10 +46,5 @@ class NotesController < ApplicationController
 
   def note_params
     params.require(:note).permit(:content)
-  end
-
-  def parsed_params
-    # TODO
-    { :name => note_params[:content].split(/\r?\n/).first }.merge(note_params)
   end
 end
