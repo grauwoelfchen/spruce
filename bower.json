@@ -1,0 +1,14 @@
+{
+  "name": "ash",
+  "version": "0.0.1",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "vendor/assets/components"
+  ],
+  "dependencies": {
+    "jquery": "*"
+  , "jquery-autosize": "*"
+  , "font-awesome": "*"
+  }
+}

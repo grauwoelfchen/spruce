@@ -1,0 +1,80 @@
+// index
+ul.notes
+  padding 0
+  margin  9px 0 0 0
+  li
+    list-style none
+    span.created,
+    span.updated
+      padding 0 3px 0 5px
+
+// show
+.note
+  margin 9px 0 0 0
+
+
+// form
+section
+  form
+    input[type='submit']
+      position         absolute
+      float            left
+      left             5px
+      margin           27px 0px 9px 0px
+      background-color #FCFCFC
+      border           1px solid #EBEBEB
+      outline          none
+
+// plugin
+.line-numbers textarea,
+.wrapper .numbers .line-no
+  font-size   10pt
+  font-family monospace
+  line-height normal !important
+
+.line-numbers
+  overflow auto !important
+
+.wrapper
+  .lines
+    margin    0 3px 0 0
+    padding   0 2px 0 0
+    min-width 50px
+    float     left
+  .numbers
+    border-right 1px solid #E6EBE6
+    padding      0
+    margin       0
+    .line-no
+      padding     0 0.5em 0 0
+      margin      0
+      color       #AAAAAA
+      text-align  right
+      white-space nowrap
+
+// canvas
+textarea#canvas
+  padding     0px 4px 0px 4px
+  margin      0 0 9px 0
+  border      none
+  outline     none
+  border-left 1px dashed #D8D8D8
+  border-right 1px dashed #F2F2F2
+  overflow    auto
+  min-height  138px
+  min-width   700px
+  width       auto
+  box-shadow  none
+  transition  none
+  &:focus
+    background-color #FCFCFC
+    box-shadow none
+
+.wrapper
+  margin 30px 0 0 9px
+  width  100%
+
+.lines .numbers .active
+  background-color #FFFAFF
+  color            #E0A3C2
+

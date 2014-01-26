@@ -19,3 +19,6 @@
 /Gemfile.personal
 /Guadfile
 /.env
+
+/node_modules
+/vendor/assets/components

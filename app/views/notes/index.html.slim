@@ -1,0 +1,11 @@
+= link_to new_note_path do
+  i.fa.fa-plus
+  | New
+ul.notes
+  - @notes.each do |n|
+    li
+      span.name= link_to n.name, note_path(n)
+      | ,
+      span.created= n.created_at
+      | ,
+      span.updated= n.updated_at

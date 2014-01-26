@@ -5,7 +5,7 @@ gem "rails", "4.0.2"
 
 gem "turbolinks"
 gem 'uglifier', '>= 1.3.0'
-gem "haml"
+gem "slim"
 gem "stylus"
 
 group :development, :test do
@@ -14,7 +14,7 @@ group :development, :test do
 end
 
 group :development do
-  gem "haml-rails", "~> 0.5"
+  gem "slim-rails", "~> 2.0.4"
 end
 
 group :test do
