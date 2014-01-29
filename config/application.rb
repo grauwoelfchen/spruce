@@ -20,18 +20,5 @@ module Ash
     # config.i18n.load_path += Dir[Rails.root.join("my", "locales", "*.{rb,yml}").to_s]
     # config.i18n.default_locale = :de
     config.i18n.enforce_available_locales = true
-
-    # assets
-    #config.assets.paths << Rails.root.join("vendor", "assets", "components")
-
-    # precompile
-    config.assets.precompile.shift
-    config.assets.precompile << lambda { |path|
-      File.extname(path).in? [
-        ".png", ".gif", ".jpg", ".jpeg", ".svg",
-        ".eot", ".otf", ".svc", ".woff", ".ttf",
-      ]
-      false
-    }
   end
 end

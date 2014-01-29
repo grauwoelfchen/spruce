@@ -6,7 +6,7 @@ gem "rails", "4.0.2"
 gem "turbolinks"
 gem 'uglifier', '>= 1.3.0'
 gem "slim"
-gem "stylus"
+gem "stylus", :github => "grauwoelfchen/ruby-stylus", :branch => "prevent-exception-by-no-ext-logical-path-for-sprockets"
 
 group :development, :test do
   gem "sqlite3"

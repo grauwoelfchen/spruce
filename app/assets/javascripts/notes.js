@@ -8,14 +8,13 @@ var ready = function() {
       updated.html(time.fromNow());
     }
   });
-
   // new
   $("#canvas").autosize({
     callback: function(textarea) {
       $(textarea).scroll();
     }
   });
-  $("#canvas").lineNumbers({
+  $("#canvas").setNumber({
     activeLine: 1
   });
 

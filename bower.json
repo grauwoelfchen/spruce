@@ -13,5 +13,7 @@
     "jquery": "*"
   , "jquery-autosize": "*"
   , "moment": "*"
+  , "normalize-css": "*"
+  , "set-number": "https://github.com/grauwoelfchen/set-number.git"
   }
 }
