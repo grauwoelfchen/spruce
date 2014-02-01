@@ -32,7 +32,7 @@ class NotesController < ApplicationController
     end
   end
 
-  def delete
+  def destroy
     @note.destroy
     redirect_to notes_path
   end

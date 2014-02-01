@@ -5,13 +5,13 @@ class NoteTest < ActiveSupport::TestCase
 
   # validation
 
-  test "saving without content" do
+  def test_save_without_content
     note = Note.new
     assert !note.save, "Saved the note without content"
   end
 
-  test "updating without content" do
-    note = notes("linux-book")
+  def test_update_without_content
+    note = notes(:linux_book)
     assert !note.update_attributes(:content => ""), "Updated the note without content"
   end
 end

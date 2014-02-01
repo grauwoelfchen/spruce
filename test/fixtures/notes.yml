@@ -1,5 +1,5 @@
 # notes
-linux-book:
+linux_book:
   name: Little hard Linux beginner's Book
   content: |
     # Little hard Linux beginner's Book
@@ -10,7 +10,7 @@ linux-book:
       * About X Window System
       * Xterm
       * Tiling Window Managers
-wish-list:
+wish_list:
   name: My Wishlist
   content: |
     # My Wishlist
