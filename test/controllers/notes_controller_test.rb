@@ -10,7 +10,7 @@ class NotesControllerTest < ActionController::TestCase
   def test_get_index
     get :index
     assert_response :success
-    assert_not_nil assigns(:notes)
+    assert_not_empty assigns(:notes)
   end
 
   def test_show_note
