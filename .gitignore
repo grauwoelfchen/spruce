@@ -17,7 +17,7 @@
 
 # Personal
 /Gemfile.personal
-/Guadfile
+/Guardfile
 /.env
 
 /node_modules
