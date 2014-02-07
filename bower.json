@@ -15,5 +15,6 @@
   , "moment": "*"
   , "normalize-css": "*"
   , "set-number": "https://github.com/grauwoelfchen/set-number.git"
+  , "set-cursor-line": "https://github.com/grauwoelfchen/set-cursor-line.git"
   }
 }
