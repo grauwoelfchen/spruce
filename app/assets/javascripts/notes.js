@@ -8,16 +8,20 @@ var ready = function() {
       updated.html(time.fromNow());
     }
   });
-  // new
-  $("#canvas").autosize({
-    callback: function(textarea) {
-      $(textarea).scroll();
-    }
-  });
-  $("#canvas").setNumber({
-    activeLine: 1
-  });
-
+  // editor
+  $("#canvas")
+    .autosize({
+      callback: function(textarea) {
+        $(textarea).scroll();
+      }
+    })
+    .setNumber({
+      activeLine: 1
+    })
+    .setCursorLine({
+      cursorLineColor: "silver"
+    })
+    .trigger("click");
 };
 $(document).ready(ready);
 $(document).on("page:load", ready);
