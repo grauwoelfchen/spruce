@@ -1,10 +1,9 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
-  before_filter :authenticate!
 
   private
 
-  def authenticate!
-    # pass
+  def not_authenticated
+    redirect_to login_url, :alert => "First login :("
   end
 end

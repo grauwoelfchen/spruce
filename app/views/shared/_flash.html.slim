@@ -1,0 +1,4 @@
+.flash-messages
+  ul
+    - flash.each do |name, message|
+      li(class="#{name}")= message

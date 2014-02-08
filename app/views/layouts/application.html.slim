@@ -11,6 +11,17 @@ html lang="en"
   body
     header
       h1= link_to "Ash", root_path
+      - if flash.any? && flash.notice
+        = render "shared/flash", flash: flash
     section
+      .user
+        - if current_user
+          span= "Hi `#{current_user.username}`"
+          | &nbsp;&nbsp;
+          = link_to "Log out", logout_path
+        - else
+          = link_to "Sign up", signup_path
+          |  or 
+          = link_to "Log in",  login_path
       == yield
     footer
