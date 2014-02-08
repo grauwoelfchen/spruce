@@ -3,6 +3,8 @@ source "https://rubygems.org"
 gem "foreman"
 gem "rails", "4.0.2"
 
+gem "sorcery"
+
 gem "turbolinks"
 gem 'uglifier', '>= 1.3.0'
 gem "slim"

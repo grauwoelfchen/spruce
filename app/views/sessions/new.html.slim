@@ -1,0 +1,19 @@
+h2
+  | Log in
+- if flash.any? && flash.alert # as error-messages
+  .error-messages
+    ul
+      - flash.each do |name, message|
+        li.alert= message
+= form_tag sessions_path do
+  .field
+    = label_tag :username
+    = text_field_tag :username
+  .field
+    = label_tag :password
+    = password_field_tag :password
+  .field
+    = check_box_tag :remember_me, 1, params[:remember_me]
+    = label_tag :remember_me
+  .actions
+    = submit_tag "Log in"

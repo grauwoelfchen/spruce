@@ -1,4 +1,5 @@
 class NotesController < ApplicationController
+  before_filter :require_login
   before_filter :load_note, :except => [:index, :new, :create]
 
   def index

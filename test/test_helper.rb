@@ -6,6 +6,7 @@ helper = lambda {
 
   class ActiveSupport::TestCase
     ActiveRecord::Migration.check_pending!
+    include Sorcery::TestHelpers::Rails
 
     DatabaseCleaner.strategy = :transaction
     #fixtures :all
