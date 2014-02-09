@@ -2,7 +2,7 @@ h2
   | Sign up
 - if @user.errors.any?
   = render "shared/errors", resource: @user
-= form_for @user do |f|
+= form_for @user, url: signup_path do |f|
   .field
     = f.label :username
     = f.text_field :username

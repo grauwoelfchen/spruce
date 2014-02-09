@@ -1,5 +1,7 @@
 - if @note.errors.any?
   = render "shared/errors", resource: @note
 = form_for @note do |f|
-  = f.text_area :content, id: "canvas"
-  = f.submit "Save"
+  .field
+    = f.text_area :content, id: "canvas"
+  .actions
+    = f.submit "Save"
