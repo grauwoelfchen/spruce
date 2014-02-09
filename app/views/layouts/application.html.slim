@@ -20,8 +20,8 @@ html lang="en"
           | &nbsp;&nbsp;
           = link_to "Log out", logout_path
         - else
-          = link_to "Sign up", signup_path
-          |  or 
           = link_to "Log in",  login_path
+          | &nbsp;&nbsp;or&nbsp;&nbsp;
+          = link_to "Sign up", signup_path
       == yield
     footer

@@ -1,11 +1,10 @@
 Ash::Application.routes.draw do
-  resources :sessions, :only => [:new, :create, :destroy]
-  resources :users,    :only => [:new, :create]
-
   # authentication
-  get "login"  => "sessions#new",     :as => :login
-  get "logout" => "sessions#destroy", :as => :logout
-  get "signup" => "users#new", :as => :signup
+  get  "logout" => "sessions#destroy", :as => :logout
+  get  "login"  => "sessions#new", :as => :login
+  post "login"  => "sessions#create"
+  get  "signup" => "users#new", :as => :signup
+  post "signup" => "users#create"
 
   resources :notes
 

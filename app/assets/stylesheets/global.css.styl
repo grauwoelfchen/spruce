@@ -18,20 +18,29 @@ section
       display inline
       label
         color red
-    input
-      border  1px solid silver
-      margin  3px
-      padding 3px 5px
-    input[type='checkbox']
-      margin 3px 5px
-    input[type='submit']
-      position         absolute
-      float            left
-      left             5px
-      margin           27px 0px 9px 0px
-      background-color #FCFCFC
-      border           1px solid #EBEBEB
-      outline          none
-      &:hover
-        background-color #EDEDED
-
+    .field
+      label
+        display block
+        margin  3px 0px 0px 1px
+      input
+        border  1px solid silver
+        margin  2px 0px 4px 0px
+        padding 3px 5px
+        &:focus
+          background-color #EDEDED
+      input[type='checkbox']
+        margin 5px 1px
+      textarea
+        margin 0px
+    .actions
+      input[type='submit']
+        background-color #FCFCFC
+        position         absolute
+        float            left
+        left             5px
+        padding          3px 5px
+        margin           18px 0px 9px 5px
+        border           1px solid #EBEBEB
+        outline          none
+        &:hover
+          background-color #EDEDED

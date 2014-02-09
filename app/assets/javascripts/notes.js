@@ -19,7 +19,7 @@ var ready = function() {
       activeLine: 1
     })
     .setCursorLine({
-      cursorLineColor: "silver"
+      cursorLineColor: "#F2F2F2"
     })
     .trigger("click");
 };
