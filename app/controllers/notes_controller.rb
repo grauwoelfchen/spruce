@@ -3,7 +3,7 @@ class NotesController < ApplicationController
   before_filter :load_note, :except => [:index, :new, :create]
 
   def index
-    @notes = Note.all
+    @notes = Note.visible_to(current_user).order(:updated_at => :desc)
   end
 
   def new
@@ -11,7 +11,7 @@ class NotesController < ApplicationController
   end
 
   def create
-    @note = Note.new(note_params)
+    @note = Note.new(note_params).assign_to(current_user)
     if @note.save
       redirect_to @note
     else
@@ -41,7 +41,7 @@ class NotesController < ApplicationController
   private
 
   def load_note
-    @note = Note.where(:id => params[:id]).first
+    @note = Note.visible_to(current_user).where(:id => params[:id]).first
     redirect_to root_path unless @note
   end
 

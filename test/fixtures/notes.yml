@@ -1,5 +1,7 @@
 # notes
+## tim's
 linux_book:
+  user: tim
   name: Little hard Linux beginner's Book
   content: |
     # Little hard Linux beginner's Book
@@ -11,9 +13,26 @@ linux_book:
       * Xterm
       * Tiling Window Managers
 wish_list:
+  user: tim
   name: My Wishlist
   content: |
     # My Wishlist
     * Comfortable Sofa
     * Cool Percolator
     * Awesome Coffee Table
+## bob's
+idea_note:
+  user: bob
+  name: My Ideas
+  content: |
+    # My Ideas
+    * Tiny RSS agregator
+    * Scheme Markdown Parser
+shopping_list:
+  user: bob
+  name: Shopping list
+  content: |
+    # Shopping list
+    * Tofu
+    * Salad
+    * Orange Juce

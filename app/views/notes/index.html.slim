@@ -2,5 +2,7 @@
 ul.notes
   - @notes.each do |n|
     li
-      span.name= link_to n.name, note_path(n)
-      span.updated= n.updated_at.strftime("%Y,%m,%d")
+      span.name
+        | *&nbsp;
+        = link_to n.name, note_path(n)
+      span.updated= n.updated_at.strftime("%Y-%m-%dT%H:%M:%S")
