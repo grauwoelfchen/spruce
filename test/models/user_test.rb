@@ -7,28 +7,18 @@ class UserTest < ActiveSupport::TestCase
 
   def test_properties
     user = User.new
-    assert_respond_to(user, :username)
-    assert_respond_to(user, :crypted_password)
-    assert_respond_to(user, :email)
-    assert_respond_to(user, :salt)
-    assert_respond_to(user, :remember_me_token)
-    assert_respond_to(user, :remember_me_token_expires_at)
-    assert_respond_to(user, :reset_password_token)
-    assert_respond_to(user, :reset_password_token_expires_at)
-    assert_respond_to(user, :reset_password_email_sent_at)
+    assert_respond_to user, :username
+    assert_respond_to user, :crypted_password
+    assert_respond_to user, :email
+    assert_respond_to user, :salt
+    assert_respond_to user, :remember_me_token
+    assert_respond_to user, :remember_me_token_expires_at
+    assert_respond_to user, :reset_password_token
+    assert_respond_to user, :reset_password_token_expires_at
+    assert_respond_to user, :reset_password_email_sent_at
   end
 
   # validations
-
-  def test_save_with_errors
-    user = User.new
-    assert_not user.save, "Saved the user without username"
-  end
-
-  def test_update_with_errors
-    user = users(:tim)
-    assert_not user.update_attributes(:username => ""), "Updated the user without username"
-  end
 
   def test_validation_with_blank_username
     user = User.new(:username => "")
@@ -98,8 +88,8 @@ class UserTest < ActiveSupport::TestCase
   def test_validation_with_blank_password
     user = User.new(:password => "")
     user.valid?
-    assert_equal 1, user.errors[:password].length
-    assert_equal "can't be blank", user.errors[:password].first
+    assert_equal(1, user.errors[:password].length)
+    assert_equal("can't be blank", user.errors[:password].first)
   end
 
   def test_validation_with_too_short_password
@@ -121,5 +111,38 @@ class UserTest < ActiveSupport::TestCase
     user.valid?
     assert_equal 1, user.errors[:password_confirmation].length
     assert_equal "doesn't match Password", user.errors[:password_confirmation].first
+  end
+
+  # save & update
+
+  def test_save_with_errors
+    user = User.new
+    assert_not user.save, "Saved the user with errors"
+  end
+
+  def test_save_without_errors
+    attributes = {
+      :username              => "lisa",
+      :email                 => "lisa@example.com",
+      :password              => "secret",
+      :password_confirmation => "secret"
+    }
+    user = User.new(attributes)
+    assert user.save, "Failed to save the user without errors"
+  end
+
+  def test_update_with_errors
+    user = users(:tim)
+    assert_not user.update_attributes(:username => ""), "Updated the user with errors"
+  end
+
+  def test_update_without_errors
+    attributes = {
+      :email                 => "tim-s-new-email@example.com",
+      :password              => "secret",
+      :password_confirmation => "secret"
+    }
+    user = users(:tim)
+    assert user.update_attributes(attributes), "Failed to update the user without errors"
   end
 end

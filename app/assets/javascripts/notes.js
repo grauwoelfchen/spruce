@@ -1,11 +1,19 @@
 // canvas
 var ready = function() {
   // index
-  $(".updated").each(function() {
+  $(".notes .updated").each(function() {
     var updated = $(this)
-      , time    = moment(updated.html());
+      , time    = moment.utc(updated.html());
     if (time.isValid()) {
-      updated.html(time.fromNow());
+      updated.html(time.local().fromNow());
+    }
+  });
+  // show
+  $(".note .updated").each(function() {
+    var updated = $(this)
+      , time    = moment.utc(updated.html());
+    if (time.isValid()) {
+      updated.html(time.local().format("YYYY-MM-DD HH:mm:ss ZZ"));
     }
   });
   // editor

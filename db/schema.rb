@@ -11,17 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140207055003) do
+ActiveRecord::Schema.define(version: 20140209122804) do
 
   create_table "notes", force: true do |t|
     t.string   "name"
-    t.text     "description"
     t.text     "content"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id",    null: false
   end
 
+  add_index "notes", ["user_id"], name: "index_notes_on_user_id"
+
   create_table "users", force: true do |t|
+    t.string   "username",                        null: false
     t.string   "email",                           null: false
     t.string   "crypted_password",                null: false
     t.string   "salt",                            null: false
@@ -32,7 +35,6 @@ ActiveRecord::Schema.define(version: 20140207055003) do
     t.string   "reset_password_token"
     t.datetime "reset_password_token_expires_at"
     t.datetime "reset_password_email_sent_at"
-    t.string   "username",                        null: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
