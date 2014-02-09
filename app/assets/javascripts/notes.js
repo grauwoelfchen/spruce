@@ -29,7 +29,8 @@ var ready = function() {
     .setCursorLine({
       cursorLineColor: "#F2F2F2"
     })
-    .trigger("click");
+    .trigger("click")
+    .focus();
 };
 $(document).ready(ready);
 $(document).on("page:load", ready);
