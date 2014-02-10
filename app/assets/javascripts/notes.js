@@ -27,7 +27,7 @@ var ready = function() {
       activeLine: 1
     })
     .setCursorLine({
-      cursorLineColor: "#F2F2F2"
+      cursorLineColor: "silver"
     })
     .trigger("click")
     .focus();
