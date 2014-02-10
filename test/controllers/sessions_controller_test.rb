@@ -18,6 +18,7 @@ class SessionsControllerTest < ActionController::TestCase
   end
 
   def test_create_session
+    @user.activate!
     post :create, :username => @user.username, :password => "secret", :remember_me => "1"
     assert_response :redirect
     assert_redirected_to root_url

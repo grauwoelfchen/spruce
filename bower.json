@@ -11,6 +11,7 @@
   ],
   "dependencies": {
     "jquery": "*"
+  , "jquery-ujs": "*"
   , "jquery-autosize": "*"
   , "moment": "*"
   , "normalize-css": "*"

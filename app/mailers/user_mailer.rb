@@ -1,6 +1,4 @@
 class UserMailer < ActionMailer::Base
-  default from: "from@example.com"
-
   # Subject can be set in your I18n file at config/locales/en.yml
   # with the following lookup:
   #
@@ -10,5 +8,17 @@ class UserMailer < ActionMailer::Base
     @greeting = "Hi"
 
     mail to: "to@example.org"
+  end
+
+  def activation_needed_email(user)
+    @user = user
+    @url  = activate_url(:token => user.activation_token)
+    mail :to => user.email, :subject => "Welcome to Ash"
+  end
+
+  def activation_success_email(user)
+    @user = user
+    @url  = login_url
+    mail :to => user.email, :subject => "Your account is now activated"
   end
 end
