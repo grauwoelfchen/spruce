@@ -16,6 +16,9 @@ class UserTest < ActiveSupport::TestCase
     assert_respond_to user, :reset_password_token
     assert_respond_to user, :reset_password_token_expires_at
     assert_respond_to user, :reset_password_email_sent_at
+    assert_respond_to user, :activation_state
+    assert_respond_to user, :activation_token
+    assert_respond_to user, :activation_token_expires_at
   end
 
   # validations

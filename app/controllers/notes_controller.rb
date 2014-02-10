@@ -35,14 +35,14 @@ class NotesController < ApplicationController
 
   def destroy
     @note.destroy
-    redirect_to notes_path
+    redirect_to notes_url
   end
 
   private
 
   def load_note
     @note = Note.visible_to(current_user).where(:id => params[:id]).first
-    redirect_to root_path unless @note
+    redirect_to root_url unless @note
   end
 
   def note_params
