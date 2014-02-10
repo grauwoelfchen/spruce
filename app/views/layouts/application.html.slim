@@ -17,11 +17,11 @@ html lang="en"
       .user
         - if current_user
           span= "Hi `#{current_user.username}`"
-          | &nbsp;&nbsp;
+          | &nbsp;
           = link_to "Log out", logout_path, method: :delete
         - else
           = link_to "Log in",  login_path
-          | &nbsp;&nbsp;or&nbsp;&nbsp;
+          | &nbsp;or&nbsp;
           = link_to "Sign up", signup_path
       == yield
     footer
