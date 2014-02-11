@@ -1,7 +1,7 @@
-// notes
+// nodes
 var ready = function() {
   // index
-  $(".notes .updated").each(function() {
+  $(".nodes .updated").each(function() {
     var updated = $(this)
       , time    = moment.utc(updated.html());
     if (time.isValid()) {
@@ -9,28 +9,13 @@ var ready = function() {
     }
   });
   // show
-  $(".note .updated").each(function() {
+  $(".nodes .updated").each(function() {
     var updated = $(this)
       , time    = moment.utc(updated.html());
     if (time.isValid()) {
       updated.html(time.local().format("YYYY-MM-DD HH:mm:ss ZZ"));
     }
   });
-  // editor
-  $("#canvas")
-    .autosize({
-      callback: function(textarea) {
-        $(textarea).scroll();
-      }
-    })
-    .setNumber({
-      activeLine: 1
-    })
-    .setCursorLine({
-      cursorLineColor: "silver"
-    })
-    .trigger("click")
-    .focus();
 };
 $(document).ready(ready);
 $(document).on("page:load", ready);
