@@ -15,12 +15,14 @@
 /log/*.log
 /tmp
 
-# Personal
+/.lock-closuretree-*
+
+/node_modules
+/vendor/assets/components
+/public/assets
+
+# personal
 /Gemfile.personal
 /Guardfile
 /.env
 
-/node_modules
-/vendor/assets/components
-
-/public/assets

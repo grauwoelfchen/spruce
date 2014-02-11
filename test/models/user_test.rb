@@ -91,8 +91,8 @@ class UserTest < ActiveSupport::TestCase
   def test_validation_with_blank_password
     user = User.new(:password => "")
     user.valid?
-    assert_equal(1, user.errors[:password].length)
-    assert_equal("can't be blank", user.errors[:password].first)
+    assert_equal 1, user.errors[:password].length
+    assert_equal "can't be blank", user.errors[:password].first
   end
 
   def test_validation_with_too_short_password

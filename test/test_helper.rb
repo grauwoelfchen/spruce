@@ -12,11 +12,13 @@ helper = lambda {
     #fixtures :all
 
     def setup
+      ENV["FLOCK_DIR"] = Dir.mktmpdir
       DatabaseCleaner.start
     end
 
     def teardown
       DatabaseCleaner.clean
+      FileUtils.remove_entry_secure ENV["FLOCK_DIR"]
     end
   end
 }

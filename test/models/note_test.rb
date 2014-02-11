@@ -87,7 +87,7 @@ class NoteTest < ActiveSupport::TestCase
     user = users(:bob)
     result = note.assign_to(user)
     assert_kind_of Note, result
-    assert_equal user.id, result.user_id
+    assert_equal user, result.user
   end
 
   # methods
