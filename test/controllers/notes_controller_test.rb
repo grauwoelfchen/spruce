@@ -13,7 +13,7 @@ class NotesControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_empty assigns(:notes)
     assert_equal 1, assigns(:notes).map(&:user_id).uniq.length
-    assert_equal assigns(:current_user).id, assigns(:notes).map(&:user_id).uniq.first
+    assert_equal assigns(:current_user), assigns(:notes).map(&:user).uniq.first
     assert_template :index
   end
 

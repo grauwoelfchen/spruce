@@ -1,0 +1,12 @@
+{
+  "name": "ash",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+  },
+  "dependencies": {
+    "bower": "*"
+  },
+  "devDependencies": {
+  }
+}

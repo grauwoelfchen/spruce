@@ -12,6 +12,7 @@ Ash::Application.routes.draw do
     :as          => :activate,
     :constraints => { :token => /[A-z0-9]+/ }
 
+  resources :nodes
   resources :notes
 
   root "pages#index"

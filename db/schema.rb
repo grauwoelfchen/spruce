@@ -11,7 +11,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140209161723) do
+ActiveRecord::Schema.define(version: 20140211052337) do
+
+  create_table "node_hierarchies", id: false, force: true do |t|
+    t.integer "ancestor_id",   null: false
+    t.integer "descendant_id", null: false
+    t.integer "generations",   null: false
+  end
+
+  add_index "node_hierarchies", ["ancestor_id", "descendant_id", "generations"], name: "index_nodes_on_anc_and_desc_and_gens", unique: true
+  add_index "node_hierarchies", ["descendant_id"], name: "index_nodes_on_desc"
+
+  create_table "nodes", force: true do |t|
+    t.string   "name"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "parent_id"
+  end
+
+  add_index "nodes", ["parent_id", "user_id", "name"], name: "index_nodes_on_parent_id_and_user_id_and_name", unique: true
+  add_index "nodes", ["parent_id"], name: "index_nodes_on_parent_id"
+  add_index "nodes", ["user_id"], name: "index_nodes_on_user_id"
 
   create_table "notes", force: true do |t|
     t.string   "name"

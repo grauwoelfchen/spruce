@@ -1,0 +1,27 @@
+# nodes
+## tim's
+tim_s_home:
+  user: tim
+  parent:
+  name: Tim's Home
+root:
+  user: tim
+  parent: tim_s_home
+  name: root
+usr:
+  user: tim
+  parent: root
+  name: usr
+var:
+  user: tim
+  parent: root
+  name: var
+## bob's
+bob_s_home:
+  user: bob
+  parent:
+  name: Bob's Home
+work:
+  user: bob
+  parent: bob_s_home
+  name: Work
