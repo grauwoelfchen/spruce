@@ -16,10 +16,10 @@ class UserMailerTest < ActionMailer::TestCase
   def test_activation_needed_email
     @user.activation_token = "token"
     mail = UserMailer.activation_needed_email(@user)
-    assert_equal "Welcome to Ash", mail.subject
+    assert_equal "Welcome to Spruce", mail.subject
     assert_equal [@user.email], mail.to
     assert_equal ["from@example.org"], mail.from
-    assert_match "Welcome to Ash, `#{@user.username}`", mail.body.encoded
+    assert_match "Welcome to Spruce, `#{@user.username}`", mail.body.encoded
   end
 
   def test_activation_success_email

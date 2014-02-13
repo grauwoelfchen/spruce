@@ -13,7 +13,7 @@ class UserMailer < ActionMailer::Base
   def activation_needed_email(user)
     @user = user
     @url  = activate_url(:token => user.activation_token)
-    mail :to => user.email, :subject => "Welcome to Ash"
+    mail :to => user.email, :subject => "Welcome to Spruce"
   end
 
   def activation_success_email(user)

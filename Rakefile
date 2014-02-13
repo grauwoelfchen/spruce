@@ -15,4 +15,4 @@ namespace :components do
   end
 end
 
-Ash::Application.load_tasks
+Spruce::Application.load_tasks

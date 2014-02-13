@@ -1,3 +1,3 @@
 # Be sure to restart your server when you modify this file.
 
-Ash::Application.config.session_store :cookie_store, key: '_ash_session'
+Spruce::Application.config.session_store :cookie_store, key: '_spruce_session'
