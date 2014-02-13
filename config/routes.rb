@@ -1,4 +1,4 @@
-Ash::Application.routes.draw do
+Spruce::Application.routes.draw do
   # authentication
   delete "logout" => "sessions#destroy", :as => :logout
   get    "login"  => "sessions#new",     :as => :login

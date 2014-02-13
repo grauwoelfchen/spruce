@@ -9,4 +9,4 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-Ash::Application.config.secret_key_base = '3e40620e00006ef4cd1a4429944e5a2b101b3a9e09c2306c086b9ba7357b8a3530a67945d853219d1deb7f8cc87d7e0406843897ae04da72570e8655fe07c180'
+Spruce::Application.config.secret_key_base = '3e40620e00006ef4cd1a4429944e5a2b101b3a9e09c2306c086b9ba7357b8a3530a67945d853219d1deb7f8cc87d7e0406843897ae04da72570e8655fe07c180'

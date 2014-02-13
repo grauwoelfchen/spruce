@@ -1,21 +1,21 @@
-# Ash
+# Spruce
 
 ## Development
 
 * Node.js via virtualenv
 
 ```
-% mkvirtualenv ash
-% pip install nodeenv
-% nodeenv -p
+% mkvirtualenv spruce
+(spruce) % pip install nodeenv
+(spruce) % nodeenv -p
 ```
 
 ### Setup
 
 ```
-% bundle install --path .bundle/gems
-% npm install bower
-% ./node_modules/.bin/bower install
+(spruce) % bundle install --path .bundle/gems
+(spruce) % npm install bower
+(spruce) % ./node_modules/.bin/bower install
 ```
 
 see `.bowerrc` and `bower.json`
@@ -23,7 +23,7 @@ see `.bowerrc` and `bower.json`
 ### Boot
 
 ```
-% bundle exec foreman run dev
+(spruce) % bundle exec foreman run dev
 ```
 
 see `Procfile`
