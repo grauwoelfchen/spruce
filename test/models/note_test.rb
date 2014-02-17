@@ -33,13 +33,31 @@ class NoteTest < ActiveSupport::TestCase
     assert_equal ["can't be blank"], note.errors[:node_id]
   end
 
-  def test_validation_with_blank_name
-    note = Note.new(:name => "", :content => "\r\n\r\ntest")
+  def test_validation_without_name
+    note = Note.new(:content => "\r\n\r\ntest")
     note.valid?
     assert_equal ["can't be blank"], note.errors[:name]
   end
 
-  def test_validation_with_blank_content
+  def test_validation_with_dot_name
+    note = Note.new(:content => ".test\r\n")
+    note.valid?
+    assert_equal ["can't start with ."], note.errors[:name]
+  end
+
+  def test_validation_with_too_long_name
+    note = Note.new(:content => "long" * 100 + "\r\nlong")
+    note.valid?
+    assert_equal ["is too long (maximum is 64 characters)"], note.errors[:name]
+  end
+
+  def test_validation_with_invalid_name
+    note = Note.new(:content => "~test\r\n")
+    note.valid?
+    assert_equal ["can't contain %~/\\*`"], note.errors[:name]
+  end
+
+  def test_validation_without_content
     note = Note.new(:content => "")
     note.valid?
     assert_equal ["can't be blank"], note.errors[:content]
@@ -118,7 +136,7 @@ class NoteTest < ActiveSupport::TestCase
 
   # methods
 
-  def test_name_with_empty_content
+  def test_name_with_blank_content
     note = notes(:linux_book)
     note.content = ""
     assert_nil note.name

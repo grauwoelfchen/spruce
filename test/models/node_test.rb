@@ -29,11 +29,27 @@ class NodeTest < ActiveSupport::TestCase
     assert_equal ["can't be blank"], node.errors[:name]
   end
 
+  def test_validation_with_dot_name
+    node = Node.new(:name => ".test")
+    node.valid?
+    assert_equal ["can't start with ."], node.errors[:name]
+  end
+
+  def test_validation_with_too_long_name
+    node = Node.new(:name => "long" * 100)
+    node.valid?
+    assert_equal ["is too long (maximum is 32 characters)"], node.errors[:name]
+  end
+
+  def test_validation_with_invalid_name
+    node = Node.new(:name => "~test")
+    node.valid?
+    assert_equal ["can't contain %~/\\*`"], node.errors[:name]
+  end
+
   def test_validation_with_duplicate_name
-    user = users(:tim)
-    existing_node = nodes(:var).assign_to(user)
-    existing_node.save!
-    node = Node.new(:name => "var", :parent => existing_node.parent).assign_to(user)
+    existing_node = nodes(:var)
+    node = Node.new(:name => "var", :parent => existing_node.parent).assign_to(existing_node.user)
     node.valid?
     assert_equal ["has already been taken"], node.errors[:name]
   end
@@ -44,10 +60,14 @@ class NodeTest < ActiveSupport::TestCase
     assert_equal ["can't be blank"], node.errors[:user_id]
   end
 
+  def test_validation_without_parent_id
+    node = Node.new(:parent_id => nil)
+    node.valid?
+    assert_equal ["can't be blank"], node.errors[:parent_id]
+  end
+
   def test_validation_with_invalid_parent_id
-    user = users(:bob)
-    node = Node.new(:name => "test", :user => user)
-    node.save!
+    node = nodes(:bob_s_home)
     node.parent = node
     node.valid?
     assert_equal ["You cannot add an ancestor as a descendant"], node.errors[:parent_id]
@@ -61,11 +81,9 @@ class NodeTest < ActiveSupport::TestCase
   end
 
   def test_save_without_errors
-    attributes = {
-      :name => "Tim's node"
-    }
     user = users(:tim)
-    node = Node.new(attributes).assign_to(user)
+    node = Node.new(:name => "Tim's node").assign_to(user)
+    node.parent = nodes(:tim_s_home)
     assert node.save
   end
 
@@ -78,7 +96,7 @@ class NodeTest < ActiveSupport::TestCase
     attributes = {
       :name =>  "Tim's awesome home"
     }
-    node = nodes(:tim_s_home)
+    node = nodes(:var)
     assert node.update_attributes(attributes)
   end
 
@@ -90,7 +108,7 @@ class NodeTest < ActiveSupport::TestCase
     child = node.children.first
     assert_nil Node.where(:id => node.id).first
     assert Node.where(:parent_id => node.id).present?
-    assert Note.where(:node_id => node.id).present?
+    assert Note.where(:node => node).present?
   end
 
   def test_destroy
@@ -98,7 +116,7 @@ class NodeTest < ActiveSupport::TestCase
     node.destroy
     assert_nil Node.where(:id => node.id).first
     assert Node.where(:user => node.user).empty?
-    assert Note.where(:node_id => node.id).present?
+    assert Note.where(:node => node).present?
   end
 
   # included methods

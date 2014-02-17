@@ -10,8 +10,18 @@ class Node < ActiveRecord::Base
   belongs_to :user
   has_many :notes
 
-  validates :name, :user_id, :presence => true
+  validates :name, :presence => true
   validates :name, :uniqueness => { :scope => [:user_id, :parent_id] }
+  validates :name,
+    :length => { :maximum => 32 },
+    :if     => ->(n) { n.name.present? }
+  validates :name, 
+    :format => { :with => /\A^[^\.]/, :message => "can't start with ." },
+    :if     => ->(n) { n.name.present? }
+  validates :name, 
+    :format => { :with => /\A[^%~\/\\*`]+\z/, :message => "can't contain %~/\\*`" },
+    :if     => ->(n) { n.name.present? }
+  validates :user_id, :parent_id, :presence => true
 
   def paths
     self_and_ancestors

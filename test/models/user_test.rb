@@ -39,7 +39,7 @@ class UserTest < ActiveSupport::TestCase
   def test_validation_with_invalid_username
     user = User.new(:username => "!INVALID!")
     user.valid?
-    assert_equal ["must be `/^[a-z0-9-_]+$/`"], user.errors[:username]
+    assert_equal ["must be alphanumeric characters and _"], user.errors[:username]
   end
 
   def test_validation_with_too_short_username
@@ -149,16 +149,16 @@ class UserTest < ActiveSupport::TestCase
     user = users(:bob)
     user.delete
     assert_nil User.where(:id => user.id).first
-    assert Node.where(:user_id => user.id).present?
-    assert Note.where(:user_id => user.id).present?
+    assert Node.where(:user => user).present?
+    assert Note.where(:user => user).present?
   end
 
   def test_destroy
     user = users(:bob)
     user.destroy
     assert_nil User.where(:id => user.id).first
-    assert Node.where(:user_id => user.id).present?
-    assert Note.where(:user_id => user.id).present?
+    assert Node.where(:user => user).present?
+    assert Note.where(:user => user).present?
   end
 
   # methods
@@ -181,12 +181,12 @@ class UserTest < ActiveSupport::TestCase
 
   def signed_up_user
     attributes = {
-      :username => "johnsmith",
-      :email    => "grauwoelfchen@gmail.com",
-      :password => "test",
+      :username              => "johnsmith",
+      :email                 => "grauwoelfchen@gmail.com",
+      :password              => "test",
       :password_confirmation => "test",
-      :activation_token => "token",
-      :activation_state => "pending"
+      :activation_token      => "token",
+      :activation_state      => "pending"
     }
     User.create(attributes)
   end
