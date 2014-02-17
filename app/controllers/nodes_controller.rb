@@ -17,6 +17,7 @@ class NodesController < ApplicationController
 
   def create
     @node = Node.new(node_params).assign_to(current_user)
+    @node.parent = @parent
     if @node.valid? && @parent.add_child(@node)
       redirect_to node_nodes_url(@node.parent)
     else
