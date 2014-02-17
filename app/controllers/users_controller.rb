@@ -17,8 +17,11 @@ class UsersController < ApplicationController
   def activate
     @user = User.load_from_activation_token(params[:token])
     if @user
-      @user.activate!
-      redirect_to notes_url, :notice => "Your were successfully activated :-D"
+      @user.transaction do
+        @user.activate!
+        @user.create_home!
+      end
+      redirect_to nodes_url, :notice => "Your were successfully activated :-D"
     else
       not_authenticated
     end

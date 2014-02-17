@@ -12,8 +12,10 @@ Spruce::Application.routes.draw do
     :as          => :activate,
     :constraints => { :token => /[A-z0-9]+/ }
 
-  resources :nodes
-  resources :notes
+  resources :nodes, :path => "b", :shallow => true, :only => [:index] do
+    resources :nodes, :path => "b"
+    resources :notes, :path => "l"
+  end
 
   root "pages#index"
 end

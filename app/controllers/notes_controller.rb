@@ -1,6 +1,7 @@
 class NotesController < ApplicationController
   before_filter :require_login
   before_filter :load_note, :except => [:index, :new, :create]
+  before_filter :load_node
 
   def index
     @notes = Note.visible_to(current_user).order(:updated_at => :desc)
@@ -12,6 +13,7 @@ class NotesController < ApplicationController
 
   def create
     @note = Note.new(note_params).assign_to(current_user)
+    @note.node = @node
     if @note.save
       redirect_to @note
     else
@@ -35,7 +37,7 @@ class NotesController < ApplicationController
 
   def destroy
     @note.destroy
-    redirect_to notes_url
+    redirect_to node_url(@note.node)
   end
 
   private
@@ -43,6 +45,16 @@ class NotesController < ApplicationController
   def load_note
     @note = Note.visible_to(current_user).where(:id => params[:id]).first
     redirect_to root_url unless @note
+  end
+
+  def load_node
+    @node = \
+      if params[:node_id]
+        Node.visible_to(current_user).where(:id => params[:node_id]).first
+      elsif @note
+        @note.node
+      end
+    redirect_to root_url unless @node
   end
 
   def note_params

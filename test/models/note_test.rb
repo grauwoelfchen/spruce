@@ -1,7 +1,7 @@
 require "test_helper"
 
 class NoteTest < ActiveSupport::TestCase
-  fixtures :notes, :users
+  fixtures :notes, :users, :nodes
 
   # properties
 
@@ -11,48 +11,60 @@ class NoteTest < ActiveSupport::TestCase
     assert_respond_to note, :content
   end
 
+  # associations
+
+  def test_associations
+    note = Note.new
+    assert_respond_to note, :user
+    assert_respond_to note, :node
+  end
+
   # validations
 
   def test_validation_without_user_id
     note = Note.new(:user_id => nil)
     note.valid?
-    assert_equal 1, note.errors[:user_id].length
-    assert_equal "can't be blank", note.errors[:user_id].first
+    assert_equal ["can't be blank"], note.errors[:user_id]
+  end
+
+  def test_validation_without_node_id
+    note = Note.new(:node_id => nil)
+    note.valid?
+    assert_equal ["can't be blank"], note.errors[:node_id]
   end
 
   def test_validation_with_blank_name
     note = Note.new(:name => "", :content => "\r\n\r\ntest")
     note.valid?
-    assert_equal 1, note.errors[:name].length
-    assert_equal "can't be blank", note.errors[:name].first
+    assert_equal ["can't be blank"], note.errors[:name]
   end
 
   def test_validation_with_blank_content
     note = Note.new(:content => "")
     note.valid?
-    assert_equal 1, note.errors[:content].length
-    assert_equal "can't be blank", note.errors[:content].first
+    assert_equal ["can't be blank"], note.errors[:content]
   end
 
   # save & update
 
   def test_save_with_errors
     note = Note.new
-    assert_not note.save, "Saved the note with errors"
+    assert_not note.save
   end
 
   def test_save_without_errors
     attributes = {
-      :content => "Test\r\nThis is test"
+      :content => "Test\r\nThis is test",
+      :node    => nodes(:var)
     }
     user = users(:tim)
     note = Note.new(attributes).assign_to(user)
-    assert note.save, "Failed to save the note without errors"
+    assert note.save
   end
 
   def test_update_with_errors
     note = notes(:linux_book)
-    assert_not note.update_attributes(:content => ""), "Updated the note with errors"
+    assert_not note.update_attributes(:content => "")
   end
 
   def test_update_without_errors
@@ -63,7 +75,21 @@ class NoteTest < ActiveSupport::TestCase
       NOTE
     }
     note = notes(:linux_book)
-    assert note.update_attributes(attributes), "Failed to update the note without errors"
+    assert note.update_attributes(attributes)
+  end
+
+  # delete & destroy
+
+  def test_delete
+    note = notes(:shopping_list)
+    note.delete
+    assert_nil Note.where(:id => note.id).first
+  end
+
+  def test_destroy
+    note = notes(:shopping_list)
+    note.destroy
+    assert_nil Note.where(:id => note.id).first
   end
 
   # included methods
@@ -95,12 +121,12 @@ class NoteTest < ActiveSupport::TestCase
   def test_name_with_empty_content
     note = notes(:linux_book)
     note.content = ""
-    assert_equal nil, note.name
+    assert_nil note.name
   end
 
   def test_name_with_nil_content
     note = notes(:linux_book)
     note.content = nil
-    assert_equal nil, note.name
+    assert_nil note.name
   end
 end

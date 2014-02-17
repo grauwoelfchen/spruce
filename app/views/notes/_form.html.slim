@@ -1,6 +1,6 @@
 - if @note.errors.any?
   = render "shared/errors", resource: @note
-= form_for @note do |f|
+= form_for shallow_args(@node, @note) do |f|
   .field
     = f.text_area :content, id: "canvas"
   .actions

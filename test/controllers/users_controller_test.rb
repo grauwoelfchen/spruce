@@ -3,7 +3,7 @@ require "test_helper"
 class UsersControllerTest < ActionController::TestCase
   fixtures :users
 
-  def test_new_user
+  def test_get_new
     get :new
     assert_response :success
     assert_instance_of User, assigns(:user)
@@ -11,7 +11,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_template :partial => "_form"
   end
 
-  def test_create_user_with_validation_errors
+  def test_post_create_with_validation_errors
     attributes = {
       :user => {
         :username              => "",
@@ -29,7 +29,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_template :partial => "_form"
   end
 
-  def test_create_user
+  def test_post_create
     attributes = {
       :user => {
         :username              => "lisa",
@@ -45,29 +45,43 @@ class UsersControllerTest < ActionController::TestCase
     assert_redirected_to login_url
   end
 
-  def test_activate_user_with_invalid_token
-    @user = users(:tim)
-    @user.update_attribute(:activation_token, "token")
-    attributes = {
-      :token => "invalid"
-    }
-    assert_no_difference("User.where(:activation_state => \"active\").count") do
-      get :activate, attributes 
+  def test_get_activate_with_invalid_token
+    user = signed_up_user
+    expressions = [
+      "User.where(:activation_state => \"active\").count",
+      "Node.where(:user_id => #{user.id}).count"
+    ]
+    assert_no_difference(expressions, 1) do
+      get :activate, :token => "invalid"
     end
     assert_response :redirect
     assert_redirected_to login_url
   end
 
-  def test_activate_user
-    @user = users(:tim)
-    @user.update_attribute(:activation_token, "token")
-    attributes = {
-      :token => @user.activation_token
-    }
-    assert_difference("User.where(:activation_state => \"active\").count", 1) do
-      get :activate, attributes 
+  def test_get_activate
+    user = signed_up_user
+    expressions = [
+      "User.where(:activation_state => \"active\").count",
+      "Node.where(:user_id => #{user.id}).count"
+    ]
+    assert_difference(expressions, 1) do
+      get :activate, :token => user.activation_token
     end
     assert_response :redirect
-    assert_redirected_to notes_url
+    assert_redirected_to nodes_url
+  end
+
+  private
+
+  def signed_up_user
+    attributes = {
+      :username => "johnsmith",
+      :email    => "grauwoelfchen@gmail.com",
+      :password => "test",
+      :password_confirmation => "test",
+      :activation_token => "token",
+      :activation_state => "pending"
+    }
+    User.create(attributes)
   end
 end

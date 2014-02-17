@@ -25,4 +25,15 @@ class User < ActiveRecord::Base
     :if     => ->(u) { u.password.present? }
   validates :password, :confirmation => true, :presence => true
   validates :password_confirmation, :presence => true
+
+  has_many :notes
+
+  def create_home!
+    if Node.where(:user => self).first
+      false
+    else
+      home = Node.new.assign_to(self)
+      home.save(:validate => false)
+    end
+  end
 end

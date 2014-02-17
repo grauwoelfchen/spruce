@@ -1,0 +1,68 @@
+ruby:
+  node    = @node.new_record? ? @parent : @node
+  p_klass = parentheses
+.navigation
+  span(class=p_klass[:global])
+    | (
+  span(class=p_klass[:node])
+    | (
+  - if controller_name == "nodes" && !node.root?
+    - if action_name.in?(%w[show])
+        = link_to "edit", edit_node_path(@node)
+    - elsif action_name.in?(%w[edit update])
+        span.title EDIT
+    - elsif action_name.in?(%w[new create])
+        = link_to "edit", edit_node_path(@node.parent)
+    - else
+      | edit
+  - else
+    | edit
+
+  | &nbsp;(
+  - unless @node.new_record?
+    = link_to "add new branch", new_node_node_path(@node)
+    | )
+    span(class=p_klass[:node])
+      | )
+    |&nbsp;
+    span(class=p_klass[:note])
+      | (
+    - if controller_name == "notes"
+      - if action_name == "show"
+        = link_to "edit", edit_note_path(@note)
+      - elsif action_name.in?(%w[edit update])
+        span.title EDIT
+      - else
+        | edit
+    - else
+      | edit
+    | &nbsp;(
+    - if controller_name == "notes" && action_name.in?(%w[new create])
+      | add 
+      span.title NEW LEAF
+    - else
+      = link_to "add new leaf", new_node_note_path(@node)
+    | )
+  - else
+    | add 
+    span.title NEW BRANCH
+    | )
+    span(class=p_klass[:node])
+      | )
+    | &nbsp;(
+    | edit
+    | &nbsp;(
+    = link_to "add new leaf", new_node_note_path(node)
+    | )
+  span(class=p_klass[:note])
+    | )
+  span(class=p_klass[:global])
+    | )
+
+p.path
+  - if @node.new_record? || !node.root? || controller_name == "notes"
+    == render_paths(node.paths)
+    - if action_name.in?(%w[new create]) || (controller_name == "notes" && !action_name.in?(%w[index show]))
+      | &nbsp;/
+  - else
+    | / root

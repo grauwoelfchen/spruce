@@ -1,0 +1,11 @@
+- if @node.errors.any?
+  = render "shared/errors", resource: @node
+= form_for shallow_args(@node) do |f|
+  .field
+    = f.label :name
+    = f.text_field :name
+  .actions
+    = f.submit "Save"
+    .back
+      - node = @node.new_record? ? @parent : @node
+      = link_to "Back", node_path(node)

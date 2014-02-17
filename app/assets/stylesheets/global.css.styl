@@ -11,6 +11,55 @@
     li.notice
       color green
 
+
+fs-style(type)
+  color gray
+  a
+    text-decoration none
+    if type == 'file'
+      color #696969
+      &:hover
+        text-decoration underline
+    else
+      font-weight bold
+      color       #0000CD
+      &:hover
+        text-decoration underline
+active-style()
+  font-weight bold
+  color       #484848
+
+// navigation
+.navigation
+  margin 13px 0px
+  span.title
+    margin      0px
+    active-style()
+  span.parenthesis-highlight
+    background-color lightgray
+    active-style()
+p.path
+  fs-style('directory')
+
+
+// filesystem
+ul.nodes
+  li
+    span.name
+      fs-style('directory')
+ul.notes
+  li
+    span.name
+      fs-style('file')
+ul.nodes, ul.notes
+  li
+    list-style none
+    span.updated
+      padding   0 3px 0 9px
+      font-size 85%
+      color     silver
+
+
 // form
 section
   form
@@ -44,3 +93,7 @@ section
         outline          none
         &:hover
           background-color #EDEDED
+      .back
+        display block
+        float left
+        margin 23px 0px 3px 69px
