@@ -1,40 +1,86 @@
 require "test_helper"
 
 class NotesControllerTest < ActionController::TestCase
-  fixtures :notes, :users
+  fixtures :notes, :users, :nodes
 
-  setup    :login, :initialize_note
+  setup    :login, :initialize_node, :initialize_note
   teardown :logout
 
   # actions
 
+  def test_get_index_without_nest
+    assert_raise ActionController::UrlGenerationError do
+      get :index
+    end
+  end
+
+  def test_get_index_with_others_node
+    node = nodes(:bob_s_home)
+    get :index, :node_id => node.id
+    assert_response :redirect
+    assert_redirected_to root_url
+  end
+
   def test_get_index
-    get :index
+    get :index, :node_id => @note.node.id
     assert_response :success
     assert_not_empty assigns(:notes)
-    assert_equal 1, assigns(:notes).map(&:user_id).uniq.length
-    assert_equal assigns(:current_user), assigns(:notes).map(&:user).uniq.first
+    assert_equal [assigns(:current_user)], assigns(:notes).map(&:user).uniq
     assert_template :index
   end
 
-  def test_show_note
+  def test_get_show_with_others_node
+    get :show, :id => @note.node.id
+    assert_response :redirect
+    assert_redirected_to root_url
+  end
+
+  def test_get_show
     get :show, :id => @note
     assert_response :success
     assert_equal @note, assigns(:note)
     assert_template :show
   end
 
-  def test_new_note
-    get :new
+  def test_get_new_without_nest
+    assert_raise ActionController::UrlGenerationError do
+      get :new
+    end
+  end
+
+  def test_get_new_with_others_node
+    node = nodes(:bob_s_home)
+    get :new, :node_id => node.id
+    assert_response :redirect
+    assert_redirected_to root_url
+  end
+
+  def test_get_new
+    get :new, :node_id => @note.node.id
     assert_response :success
     assert_instance_of Note, assigns(:note)
     assert_template :new
     assert_template :partial => "_form"
   end
 
-  def test_create_note_with_validation_errors
-    assert_no_difference("Note.count") do
-      post :create, :note => { :content => "" }
+  def test_post_create_without_nest
+    assert_raise ActionController::UrlGenerationError do
+      post :create, :note => { :content => "Unknown Note\n\nUnexpected" }
+    end
+  end
+
+  def test_post_create_with_others_node
+    node = nodes(:bob_s_home).children.first
+    assert_no_difference("Node.count", 1) do
+      post :create, :node_id => node.id, :note => { :content => "Not allowed, right?\r\n" }
+    end
+    assert_response :redirect
+    assert_redirected_to root_url
+  end
+
+  def test_post_create_with_validation_errors
+    assert_no_difference("Note.count", 1) do
+      post :create, :node_id => @note.node.id, :note => { :content => "" }
     end
     assert_response :success
     assert_instance_of Note, assigns(:note)
@@ -43,15 +89,22 @@ class NotesControllerTest < ActionController::TestCase
     assert_template :partial => "_form"
   end
 
-  def test_create_note
+  def test_post_create
     assert_difference("Note.count", 1) do
-      post :create, :note => { :content => "More hard Linux beginner's Book\r\n" }
+      post :create, :node_id => @note.node.id, :note => { :content => "More hard Linux beginner's Book\r\n" }
     end
     assert_response :redirect
     assert_redirected_to note_url(assigns(:note))
   end
 
-  def test_edit_note
+  def test_get_edit_with_others_note
+    note = notes(:idea_note)
+    get :edit, :id => note.id
+    assert_response :redirect
+    assert_redirected_to root_url
+  end
+
+  def test_get_edit
     get :edit, :id => @note.id
     assert_response :success
     assert_equal @note, assigns(:note)
@@ -59,8 +112,15 @@ class NotesControllerTest < ActionController::TestCase
     assert_template :partial => "_form"
   end
 
-  def test_update_note_with_validation_errors
-    patch :update, :id => @note.id, :note => { :content => "" }
+  def test_put_update_with_others_note
+    note = notes(:idea_note)
+    put :update, :id => note.id, :note => { :content => "Not allowed, right?" }
+    assert_response :redirect
+    assert_redirected_to root_url
+  end
+
+  def test_put_update_with_validation_errors
+    put :update, :id => @note.id, :note => { :content => "" }
     assert_response :success
     assert_equal @note, assigns(:note)
     assert_template :edit
@@ -68,40 +128,27 @@ class NotesControllerTest < ActionController::TestCase
     assert_template :partial => "_form"
   end
 
-  def test_update_note_of_others
-    other = users(:bob)
-    other_s_note = notes(:shopping_list)
-    other_s_note.update_attribute(:user, other)
-    assert_no_difference("Note.count", -1) do
-      patch :update, :id => other_s_note.id, :note => { :content => "Not allowed, right?" }
-    end
-    assert_response :redirect
-    assert_redirected_to root_url
-  end
-
-  def test_update_note
-    patch :update, :id => @note.id, :note => { :content => "Little hard Linux user's Book\r\n" }
+  def test_put_update
+    put :update, :id => @note.id, :note => { :content => "Little hard Linux user's Book\r\n" }
     assert_response :redirect
     assert_redirected_to note_url(assigns(:note))
   end
 
-  def test_destroy_note_of_others
-    other = users(:bob)
-    other_s_note = notes(:shopping_list)
-    other_s_note.update_attribute(:user, other)
+  def test_delete_destroy_with_others_note
+    note = notes(:idea_note)
     assert_no_difference("Note.count", -1) do
-      delete :destroy, :id => other_s_note.id
+      delete :destroy, :id => note.id
     end
     assert_response :redirect
     assert_redirected_to root_url
   end
 
-  def test_destroy_note
+  def test_delete_destroy
     assert_difference("Note.count", -1) do
       delete :destroy, :id => @note.id
     end
     assert_response :redirect
-    assert_redirected_to notes_url
+    assert_redirected_to node_url(@note.node)
   end
 
   private
@@ -109,6 +156,10 @@ class NotesControllerTest < ActionController::TestCase
   def login
     user = users(:tim)
     login_user(user)
+  end
+
+  def initialize_node
+    Node.rebuild!
   end
 
   def initialize_note

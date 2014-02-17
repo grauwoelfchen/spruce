@@ -1,4 +1,5 @@
-= link_to "New", new_note_path
+= link_to "New", new_node_note_path(@node)
+p == " / " + @node.paths.map { |n| link_to(n.name, node_path(n)) }.join(" / ")
 ul.notes
   - @notes.each do |n|
     li

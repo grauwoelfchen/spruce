@@ -1,6 +1,4 @@
-= link_to "← Outliners", notes_path
-| |
-= link_to "Edit", edit_note_path(@note)
+= render "shared/navigation"
 .note
   span.updated= @note.updated_at.strftime("%Y-%m-%dT%H:%M:%S")
   pre

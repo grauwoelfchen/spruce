@@ -4,18 +4,14 @@ tim_s_home:
   user: tim
   parent:
   name: Tim's Home
-root:
-  user: tim
-  parent: tim_s_home
-  name: root
-usr:
-  user: tim
-  parent: root
-  name: usr
 var:
   user: tim
-  parent: root
+  parent: tim_s_home
   name: var
+lib:
+  user: tim
+  parent: var
+  name: lib
 ## bob's
 bob_s_home:
   user: bob

@@ -2,6 +2,7 @@
 ## tim's
 linux_book:
   user: tim
+  node: tim_s_home
   name: Little hard Linux beginner's Book
   content: |
     # Little hard Linux beginner's Book
@@ -14,6 +15,7 @@ linux_book:
       * Tiling Window Managers
 wish_list:
   user: tim
+  node: var
   name: My Wishlist
   content: |
     # My Wishlist
@@ -23,6 +25,7 @@ wish_list:
 ## bob's
 idea_note:
   user: bob
+  node: bob_s_home
   name: My Ideas
   content: |
     # My Ideas
@@ -30,6 +33,7 @@ idea_note:
     * Scheme Markdown Parser
 shopping_list:
   user: bob
+  node: bob_s_home
   name: Shopping list
   content: |
     # Shopping list

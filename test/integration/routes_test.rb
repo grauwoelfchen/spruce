@@ -18,22 +18,23 @@ class RoutesTest < ActionDispatch::IntegrationTest
   end
 
   def test_route_to_nodes
-    assert_routing({ :method => "get",    :path => "/nodes" },        { :controller => "nodes", :action => "index" })
-    assert_routing({ :method => "get",    :path => "/nodes/new" },    { :controller => "nodes", :action => "new" })
-    assert_routing({ :method => "post",   :path => "/nodes" },        { :controller => "nodes", :action => "create" })
-    assert_routing({ :method => "get",    :path => "/nodes/1" },      { :controller => "nodes", :action => "show",    :id => "1" })
-    assert_routing({ :method => "get",    :path => "/nodes/1/edit" }, { :controller => "nodes", :action => "edit",    :id => "1" })
-    assert_routing({ :method => "put",    :path => "/nodes/1" },      { :controller => "nodes", :action => "update",  :id => "1" })
-    assert_routing({ :method => "delete", :path => "/nodes/1" },      { :controller => "nodes", :action => "destroy", :id => "1" })
+    assert_routing({ :method => "get",    :path => "/b/1/b" },     { :controller => "nodes", :action => "index",  :node_id => "1" })
+    assert_routing({ :method => "get",    :path => "/b/1/b/new" }, { :controller => "nodes", :action => "new",    :node_id => "1" })
+    assert_routing({ :method => "post",   :path => "/b/1/b" },     { :controller => "nodes", :action => "create", :node_id => "1" })
+    assert_routing({ :method => "get",    :path => "/b" },         { :controller => "nodes", :action => "index" })
+    assert_routing({ :method => "get",    :path => "/b/1" },       { :controller => "nodes", :action => "show",    :id => "1" })
+    assert_routing({ :method => "get",    :path => "/b/1/edit" },  { :controller => "nodes", :action => "edit",    :id => "1" })
+    assert_routing({ :method => "put",    :path => "/b/1" },       { :controller => "nodes", :action => "update",  :id => "1" })
+    assert_routing({ :method => "delete", :path => "/b/1" },       { :controller => "nodes", :action => "destroy", :id => "1" })
   end
 
   def test_route_to_notes
-    assert_routing({ :method => "get",    :path => "/notes" },        { :controller => "notes", :action => "index" })
-    assert_routing({ :method => "get",    :path => "/notes/new" },    { :controller => "notes", :action => "new" })
-    assert_routing({ :method => "post",   :path => "/notes" },        { :controller => "notes", :action => "create" })
-    assert_routing({ :method => "get",    :path => "/notes/1" },      { :controller => "notes", :action => "show",    :id => "1" })
-    assert_routing({ :method => "get",    :path => "/notes/1/edit" }, { :controller => "notes", :action => "edit",    :id => "1" })
-    assert_routing({ :method => "put",    :path => "/notes/1" },      { :controller => "notes", :action => "update",  :id => "1" })
-    assert_routing({ :method => "delete", :path => "/notes/1" },      { :controller => "notes", :action => "destroy", :id => "1" })
+    assert_routing({ :method => "get",    :path => "/b/1/l" },     { :controller => "notes", :action => "index",  :node_id => "1" })
+    assert_routing({ :method => "get",    :path => "/b/1/l/new" }, { :controller => "notes", :action => "new",    :node_id => "1" })
+    assert_routing({ :method => "post",   :path => "/b/1/l" },     { :controller => "notes", :action => "create", :node_id => "1" })
+    assert_routing({ :method => "get",    :path => "/l/1" },       { :controller => "notes", :action => "show",    :id => "1" })
+    assert_routing({ :method => "get",    :path => "/l/1/edit" },  { :controller => "notes", :action => "edit",    :id => "1" })
+    assert_routing({ :method => "put",    :path => "/l/1" },       { :controller => "notes", :action => "update",  :id => "1" })
+    assert_routing({ :method => "delete", :path => "/l/1" },       { :controller => "notes", :action => "destroy", :id => "1" })
   end
 end

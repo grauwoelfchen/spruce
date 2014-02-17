@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140211052337) do
+ActiveRecord::Schema.define(version: 20140215054349) do
 
   create_table "node_hierarchies", id: false, force: true do |t|
     t.integer "ancestor_id",   null: false
@@ -40,8 +40,11 @@ ActiveRecord::Schema.define(version: 20140211052337) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id",    null: false
+    t.integer  "node_id",    null: false
   end
 
+  add_index "notes", ["node_id"], name: "index_notes_on_node_id"
+  add_index "notes", ["user_id", "node_id", "name"], name: "index_notes_on_user_id_and_node_id_and_name", unique: true
   add_index "notes", ["user_id"], name: "index_notes_on_user_id"
 
   create_table "users", force: true do |t|
