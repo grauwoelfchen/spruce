@@ -1,6 +1,6 @@
 // nodes
 var ready = function() {
-  // index
+  // index & show
   $(".nodes .updated").each(function() {
     var updated = $(this)
       , time    = moment.utc(updated.html());
@@ -8,14 +8,8 @@ var ready = function() {
       updated.html(time.local().fromNow());
     }
   });
-  // show
-  $(".nodes .updated").each(function() {
-    var updated = $(this)
-      , time    = moment.utc(updated.html());
-    if (time.isValid()) {
-      updated.html(time.local().format("YYYY-MM-DD HH:mm:ss ZZ"));
-    }
-  });
+  // new & creat & edit & update
+  $("#node_name").focus();
 };
 $(document).ready(ready);
 $(document).on("page:load", ready);
