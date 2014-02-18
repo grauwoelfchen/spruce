@@ -16,7 +16,7 @@ var ready = function() {
       updated.html(time.local().format("YYYY-MM-DD HH:mm:ss ZZ"));
     }
   });
-  // editor
+  // new & create & edit & update
   $("#canvas")
     .autosize({
       callback: function(textarea) {

@@ -1,16 +1,2 @@
 = render "shared/navigation"
-- if @node.children
-  ul.nodes
-    - @node.children.each do |n|
-      li
-        span.name
-          | d&nbsp;
-          = link_to n.name, node_path(n)
-        span.updated= @node.updated_at.strftime("%Y-%m-%dT%H:%M:%S")
-  ul.notes
-    - @node.notes.each do |n|
-      li
-        span.name
-          | -&nbsp;
-          = link_to n.name, note_path(n)
-        span.updated= n.updated_at.strftime("%Y-%m-%dT%H:%M:%S")
+= render "list"

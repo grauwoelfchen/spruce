@@ -5,3 +5,5 @@
     = f.text_area :content, id: "canvas", placeholder: "e.g. How to stretch your branches ?"
   .actions
     = f.submit "Save"
+    .back
+      = link_to "Back", node_path(@node)

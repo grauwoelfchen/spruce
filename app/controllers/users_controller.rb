@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      redirect_to login_url, :notice => "Signed up :)"
+      redirect_to login_url, :notice => "Signed up! Please check email :)"
     else
       render :new
     end
