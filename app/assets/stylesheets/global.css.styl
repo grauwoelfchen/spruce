@@ -97,3 +97,19 @@ section
         display block
         float left
         margin 23px 0px 3px 69px
+
+// placeholders
+placeholder-text = #4682B4
+placeholder-style()
+  color      placeholder-text
+  font-style italic
+  opacity    0.3
+
+*::-webkit-input-placeholder
+  placeholder-style()
+*:-moz-placeholder
+  placeholder-style()
+*::-moz-placeholder
+  placeholder-style()
+*:-ms-input-placeholder
+  placeholder-style()

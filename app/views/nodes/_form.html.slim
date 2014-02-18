@@ -3,7 +3,7 @@
 = form_for shallow_args(@node) do |f|
   .field
     = f.label :name
-    = f.text_field :name
+    = f.text_field :name, placeholder: "e.g. sprouts"
   .actions
     = f.submit "Save"
     .back

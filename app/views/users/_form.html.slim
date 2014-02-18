@@ -1,15 +1,15 @@
 = form_for @user, url: url do |f|
   .field
     = f.label :username
-    = f.text_field :username
+    = f.text_field :username, placeholder: "e.g. spruce"
   .field
     = f.label :email
-    = f.text_field :email
+    = f.text_field :email, placeholder: ""
   .field
     = f.label :password
-    = f.password_field :password
+    = f.password_field :password, placeholder: "Keep it in secret :)"
   .field
     = f.label :password_confirmation
-    = f.password_field :password_confirmation
+    = f.password_field :password_confirmation, placeholder: "Oh, I almost forgot!"
   .actions
     = f.submit "Sign up"
