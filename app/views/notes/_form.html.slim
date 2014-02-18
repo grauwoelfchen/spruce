@@ -2,6 +2,6 @@
   = render "shared/errors", resource: @note
 = form_for shallow_args(@node, @note) do |f|
   .field
-    = f.text_area :content, id: "canvas"
+    = f.text_area :content, id: "canvas", placeholder: "e.g. How to stretch your branches ?"
   .actions
     = f.submit "Save"
