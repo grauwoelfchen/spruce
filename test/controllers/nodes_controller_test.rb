@@ -15,20 +15,6 @@ class NodesControllerTest < ActionController::TestCase
     assert_template :index
   end
 
-  def test_get_index_with_others_node
-    node = nodes(:tim_s_home)
-    get :index, :node_id => node.id
-    assert_response :redirect
-    assert_redirected_to root_url
-  end
-
-  def test_get_index_with_nest
-    get :index, :node_id => @node.id
-    assert_response :success
-    assert_equal @node, assigns(:node)
-    assert_template :index
-  end
-
   def test_get_show_with_others_node
     node = nodes(:tim_s_home)
     get :show, :id => node.id
@@ -84,13 +70,13 @@ class NodesControllerTest < ActionController::TestCase
       post :create, :node_id => @node.id, :node => { :name => "New child node" }
     end
     assert_response :redirect
-    assert_redirected_to node_nodes_url(@node)
+    assert_redirected_to node_url(@node)
   end
 
   def test_get_edit_with_root_node # not allowed
     get :edit, :id => @node.id
     assert_response :redirect
-    assert_redirected_to node_nodes_url(@node)
+    assert_redirected_to nodes_url
   end
 
   def test_get_edit_with_others_node

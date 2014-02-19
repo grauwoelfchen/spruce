@@ -15,18 +15,16 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_get_index_with_others_node
-    node = nodes(:bob_s_home)
-    get :index, :node_id => node.id
-    assert_response :redirect
-    assert_redirected_to root_url
+    assert_raise ActionController::UrlGenerationError do
+      node = nodes(:bob_s_home)
+      get :index, :node_id => node.id
+    end
   end
 
   def test_get_index
-    get :index, :node_id => @note.node.id
-    assert_response :success
-    assert_not_empty assigns(:notes)
-    assert_equal [assigns(:current_user)], assigns(:notes).map(&:user).uniq
-    assert_template :index
+    assert_raise ActionController::UrlGenerationError do
+      get :index, :node_id => @note.node.id
+    end
   end
 
   def test_get_show_with_others_node
