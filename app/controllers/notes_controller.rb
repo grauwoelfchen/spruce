@@ -1,11 +1,7 @@
 class NotesController < ApplicationController
   before_filter :require_login
-  before_filter :load_note, :except => [:index, :new, :create]
+  before_filter :load_note, :except => [:new, :create]
   before_filter :load_node
-
-  def index
-    @notes = Note.visible_to(current_user).order(:updated_at => :desc)
-  end
 
   def new
     @note = Note.new

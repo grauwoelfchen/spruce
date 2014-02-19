@@ -18,7 +18,6 @@ class RoutesTest < ActionDispatch::IntegrationTest
   end
 
   def test_route_to_nodes
-    assert_routing({ :method => "get",    :path => "/b/1/b" },     { :controller => "nodes", :action => "index",  :node_id => "1" })
     assert_routing({ :method => "get",    :path => "/b/1/b/new" }, { :controller => "nodes", :action => "new",    :node_id => "1" })
     assert_routing({ :method => "post",   :path => "/b/1/b" },     { :controller => "nodes", :action => "create", :node_id => "1" })
     assert_routing({ :method => "get",    :path => "/b" },         { :controller => "nodes", :action => "index" })
@@ -29,7 +28,6 @@ class RoutesTest < ActionDispatch::IntegrationTest
   end
 
   def test_route_to_notes
-    assert_routing({ :method => "get",    :path => "/b/1/l" },     { :controller => "notes", :action => "index",  :node_id => "1" })
     assert_routing({ :method => "get",    :path => "/b/1/l/new" }, { :controller => "notes", :action => "new",    :node_id => "1" })
     assert_routing({ :method => "post",   :path => "/b/1/l" },     { :controller => "notes", :action => "create", :node_id => "1" })
     assert_routing({ :method => "get",    :path => "/l/1" },       { :controller => "notes", :action => "show",    :id => "1" })

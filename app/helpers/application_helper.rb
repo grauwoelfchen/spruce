@@ -15,18 +15,31 @@ module ApplicationHelper
 
   def parentheses
     css_klass = "parenthesis-highlight"
-    at_node    = (controller_name == "nodes")
-    in_context = (action_name == "index" || (at_node && action_name == "show")) ? nil : css_klass
+    at_node   = (controller_name == "nodes")
+    in_edit   = action_name.in?(%w[index edit update])
+    in_show   = action_name.in?(%w[show])
+    in_new    = action_name.in?(%w[new create])
     {
-      global: (at_node && action_name.in?(%w[index show])) ? css_klass : nil,
-      node: at_node  ? in_context : nil,
-      note: !at_node ? in_context : nil
+      node: {
+        edit: at_node && in_edit ? css_klass : nil,
+        show: at_node && in_show ? css_klass : nil,
+        new:  at_node && in_new  ? css_klass : nil
+      },
+      note: {
+        edit: !at_node && in_edit ? css_klass : nil,
+        show: !at_node && in_show ? css_klass : nil,
+        new:  !at_node && in_new  ? css_klass : nil
+      }
     }
   end
 
   def render_paths(paths)
     "/ " + paths.map { |n|
-      link_to(n.root? ? "root" : n.name, node_path(n))
+      if n.root?
+        link_to("root", nodes_path)
+      else
+        link_to(n.name, node_path(n))
+      end
     }.join(" / ")
   end
 end

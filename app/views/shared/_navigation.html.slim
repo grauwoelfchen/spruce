@@ -2,30 +2,46 @@ ruby:
   node    = @node.new_record? ? @parent : @node
   p_klass = parentheses
 .navigation
-  span(class=p_klass[:global])
-    | (
-  span(class=p_klass[:node])
+  | (
+  span(class=p_klass[:node][:edit])
     | (
   - if controller_name == "nodes" && !node.root?
     - if action_name.in?(%w[show])
-        = link_to "edit", edit_node_path(@node)
+      = link_to "edit", edit_node_path(@node)
     - elsif action_name.in?(%w[edit update])
-        span.title EDIT
+      span.title EDIT
     - elsif action_name.in?(%w[new create])
-        = link_to "edit", edit_node_path(@node.parent)
+      = link_to "edit", edit_node_path(@node.parent)
     - else
       | edit
+  - elsif @note && action_name.in?(%w[new create show edit update]) && !node.root?
+    = link_to "edit", edit_node_path(@node)
   - else
     | edit
-
-  | &nbsp;(
+  | &nbsp;
+  span(class=p_klass[:node][:show])
+    | (
   - unless @node.new_record?
-    = link_to "add new branch", new_node_node_path(@node)
-    | )
-    span(class=p_klass[:node])
+    - if controller_name == "nodes" && action_name == "show"
+      span.title SHOW
+    - elsif action_name.in?(%w[show edit update])
+      = link_to "show", node_path(@node)
+    - elsif @note && action_name.in?(%w[new create edit update])
+      = link_to "show", node_path(@node)
+    - else
+      | show
+    | &nbsp;
+    span(class=p_klass[:node][:new])
+      | (
+    = link_to "new branch", new_node_node_path(@node)
+    span(class=p_klass[:node][:new])
+      | )
+    span(class=p_klass[:node][:show])
+      | )
+    span(class=p_klass[:node][:edit])
       | )
     |&nbsp;
-    span(class=p_klass[:note])
+    span(class=p_klass[:note][:edit])
       | (
     - if controller_name == "notes"
       - if action_name == "show"
@@ -36,29 +52,66 @@ ruby:
         | edit
     - else
       | edit
-    | &nbsp;(
+    | &nbsp;
+    span(class=p_klass[:note][:show])
+      | (
+    - if @note && !@note.new_record?
+      - if action_name == "show"
+        span.title SHOW
+      - elsif action_name.in?(%w[edit update])
+        = link_to "show", note_path(@note)
+      - else
+        | show
+    - else
+      | show
+    | &nbsp;
+    span(class=p_klass[:note][:new])
+      | (
     - if controller_name == "notes" && action_name.in?(%w[new create])
-      | add 
       span.title NEW LEAF
     - else
-      = link_to "add new leaf", new_node_note_path(@node)
-    | )
-  - else
-    | add 
-    span.title NEW BRANCH
-    | )
-    span(class=p_klass[:node])
+      = link_to "new leaf", new_node_note_path(@node)
+    span(class=p_klass[:note][:new])
       | )
-    | &nbsp;(
-    | edit
-    | &nbsp;(
-    = link_to "add new leaf", new_node_note_path(node)
+    span(class=p_klass[:note][:show])
+      | )
+    span(class=p_klass[:note][:edit])
+      | )
+  - else
+    = link_to "show", node_path(@node.parent)
+    | &nbsp;
+    span(class=p_klass[:node][:new])
+      | (
+    span.title NEW BRANCH
+    span(class=p_klass[:node][:new])
+      | )
+    span(class=p_klass[:node][:show])
+      | )
+    span(class=p_klass[:node][:edit])
+      | )
+    | &nbsp;
+    | (
+    | edit&nbsp;
+    span(class=p_klass[:note][:show])
+      | (
+    - if @note && !@note.new_record?
+      - if action_name == "show"
+        span.title SHOW
+      - elsif action_name.in?(%w[edit update])
+        = link_to "show", note_path(@note)
+      - else
+        | show
+    - else
+      | show
+    | &nbsp;
+    | (
+    = link_to "new leaf", new_node_note_path(node)
     | )
-  span(class=p_klass[:note])
+    span(class=p_klass[:note][:show])
+      | )
     | )
-  span(class=p_klass[:global])
-    | )
-
+  | )
+ 
 p.path
   - if @node.new_record? || !node.root? || controller_name == "notes"
     == render_paths(node.paths)
