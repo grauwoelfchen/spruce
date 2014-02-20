@@ -1,19 +1,22 @@
-h2
-  | Log in
-- if flash.any? && flash.alert # as error-messages
-  .error-messages
-    ul
-      - flash.each do |name, message|
-        li.alert= message
-= form_tag login_path, method: :post do
-  .field
-    = label_tag :username
-    = text_field_tag :username
-  .field
-    = label_tag :password
-    = password_field_tag :password
-  .field
-    = label_tag :remember_me
-    = check_box_tag :remember_me, 1, params[:remember_me]
-  .actions
-    = submit_tag "Log in"
+#sessions
+  h2 Log in
+  - if flash.any? && flash.alert # as error-messages
+    .error-messages
+      ul
+        - flash.each do |name, message|
+          li.alert= message
+  = form_tag login_path, method: :post do
+    .field
+      = label_tag :username
+      = text_field_tag :username
+    .field
+      = label_tag :password
+      = password_field_tag :password
+    .field
+      = label_tag :remember_me
+      = check_box_tag :remember_me, 1, params[:remember_me]
+    .actions
+      = submit_tag "Log in"
+      - if flash && flash.alert.present?
+        .reset
+          = link_to "Forgot password?", new_password_reset_path

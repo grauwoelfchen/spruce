@@ -28,6 +28,15 @@ class User < ActiveRecord::Base
 
   has_many :notes
 
+  def valid_attribute?(attr, message_keys = [])
+    self.valid?
+    messages = message_keys.map { |m| I18n.t("errors.messages.#{m}") }
+    self.errors.messages.delete_if { |key, values|
+      key != attr || values.reject { |v| v.in?(messages) }.present?
+    }
+    self.errors[attr].blank?
+  end
+
   def create_home!
     if Node.where(:user => self).first
       false

@@ -1,0 +1,10 @@
+#password_resets
+  h2 Forgot Password?
+  - if @user.errors.any?
+    = render "shared/errors", resource: @user
+  = form_for @user, url: password_resets_path, html: { method: :post } do |f|
+    .field
+      = f.label :email
+      = f.text_field :email
+    .actions
+      = f.submit "Reset"

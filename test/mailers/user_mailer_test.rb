@@ -6,11 +6,12 @@ class UserMailerTest < ActionMailer::TestCase
   setup :initialize_user
 
   def test_reset_password_email
-    mail = UserMailer.reset_password_email
-    assert_equal "Reset password email", mail.subject
-    assert_equal ["to@example.org"], mail.to
+    @user.reset_password_token = "token"
+    mail = UserMailer.reset_password_email(@user)
+    assert_equal "Your password has been reset", mail.subject
+    assert_equal [@user.email], mail.to
     assert_equal ["from@example.org"], mail.from
-    assert_match "Hi", mail.body.encoded
+    assert_match "Hi, `#{@user.username}`", mail.body.encoded
   end
 
   def test_activation_needed_email

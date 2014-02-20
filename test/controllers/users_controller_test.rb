@@ -12,7 +12,7 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   def test_post_create_with_validation_errors
-    attributes = {
+    params = {
       :user => {
         :username              => "",
         :email                 => "",
@@ -21,7 +21,7 @@ class UsersControllerTest < ActionController::TestCase
       }
     }
     assert_no_difference("User.count") do
-      post :create, attributes
+      post :create, params
     end
     assert_response :success
     assert_template :new
@@ -30,7 +30,7 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   def test_post_create
-    attributes = {
+    params = {
       :user => {
         :username              => "lisa",
         :email                 => "lisa@example.com",
@@ -39,7 +39,7 @@ class UsersControllerTest < ActionController::TestCase
       }
     }
     assert_difference("User.count", 1) do
-      post :create, attributes
+      post :create, params
     end
     assert_response :redirect
     assert_redirected_to login_url
@@ -75,12 +75,12 @@ class UsersControllerTest < ActionController::TestCase
 
   def signed_up_user
     attributes = {
-      :username => "johnsmith",
-      :email    => "grauwoelfchen@gmail.com",
-      :password => "test",
+      :username              => "johnsmith",
+      :email                 => "john@example.org",
+      :password              => "test",
       :password_confirmation => "test",
-      :activation_token => "token",
-      :activation_state => "pending"
+      :activation_token      => "token",
+      :activation_state      => "pending"
     }
     User.create(attributes)
   end

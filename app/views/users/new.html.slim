@@ -1,5 +1,5 @@
-h2
-  | Sign up
-- if @user.errors.any?
-  = render "shared/errors", resource: @user
-= render "form", :url => signup_path
+#users
+  h2 Sign up
+  - if @user.errors.any?
+    = render "shared/errors", resource: @user
+  = render "form", :url => signup_path

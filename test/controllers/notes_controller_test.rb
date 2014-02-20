@@ -69,16 +69,28 @@ class NotesControllerTest < ActionController::TestCase
 
   def test_post_create_with_others_node
     node = nodes(:bob_s_home).children.first
+    params = {
+      :node_id => node.id,
+      :note    => {
+        :content => "Not allowed, right?\r\n"
+      }
+    }
     assert_no_difference("Node.count", 1) do
-      post :create, :node_id => node.id, :note => { :content => "Not allowed, right?\r\n" }
+      post :create, params
     end
     assert_response :redirect
     assert_redirected_to root_url
   end
 
   def test_post_create_with_validation_errors
+    params = {
+      :node_id => @note.node.id,
+      :note    => {
+        :content => ""
+      }
+    }
     assert_no_difference("Note.count", 1) do
-      post :create, :node_id => @note.node.id, :note => { :content => "" }
+      post :create, params
     end
     assert_response :success
     assert_instance_of Note, assigns(:note)
@@ -88,8 +100,14 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_post_create
+    params = {
+      :node_id => @note.node.id,
+      :note    => {
+        :content => "More hard Linux beginner's Book\r\n"
+      }
+    }
     assert_difference("Note.count", 1) do
-      post :create, :node_id => @note.node.id, :note => { :content => "More hard Linux beginner's Book\r\n" }
+      post :create, params
     end
     assert_response :redirect
     assert_redirected_to note_url(assigns(:note))
@@ -112,7 +130,13 @@ class NotesControllerTest < ActionController::TestCase
 
   def test_put_update_with_others_note
     note = notes(:idea_note)
-    put :update, :id => note.id, :note => { :content => "Not allowed, right?" }
+    params = {
+      :id   => note.id,
+      :note => {
+        :content => "Not allowed, right?"
+      }
+    }
+    put :update, params
     assert_response :redirect
     assert_redirected_to root_url
   end
@@ -127,7 +151,13 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_put_update
-    put :update, :id => @note.id, :note => { :content => "Little hard Linux user's Book\r\n" }
+    params = {
+      :id   => @note.id,
+      :note => {
+        :content => "Little hard Linux user's Book\r\n"
+      }
+    }
+    put :update, params
     assert_response :redirect
     assert_redirected_to note_url(assigns(:note))
   end

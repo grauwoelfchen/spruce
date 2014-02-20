@@ -21,11 +21,18 @@ html lang="en"
           | &nbsp;
           = link_to "Log out", logout_path, method: :delete
         - else
-          = link_to "Log in",  login_path
+          - if current_page_in?(["sessions#new", "sessions#create"])
+            | Log in
+          - else
+            = link_to "Log in",  login_path
           | &nbsp;or&nbsp;
-          = link_to "Sign up", signup_path
+          - if current_page_in?(["users#new", "users#create"])
+            | Sign up
+          - else
+            = link_to "Sign up", signup_path
     section
       - if flash.any? && flash.notice
         = render "shared/flash", flash: flash
-      == yield
-    footer
+      .main
+        == yield
+    //footer
