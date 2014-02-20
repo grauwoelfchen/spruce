@@ -47,16 +47,28 @@ class NodesControllerTest < ActionController::TestCase
 
   def test_post_create_with_others_node
     node = nodes(:tim_s_home).children.first
+    params = {
+      :node_id => node.id,
+      :node    => {
+        :name => "Not allowed, right?"
+      }
+    }
     assert_no_difference("Node.count", 1) do
-      post :create, :node_id => node.id, :node => { :name => "Not allowed, right?" }
+      post :create, params
     end
     assert_response :redirect
     assert_redirected_to root_url
   end
 
   def test_post_create_with_validation_errors
+    params = {
+      :node_id => @node.id,
+      :node    => {
+        :name => ""
+      }
+    }
     assert_no_difference("Node.count", 1) do
-      post :create, :node_id => @node.id, :node => { :name => "" }
+      post :create, params
     end
     assert_response :success
     assert_instance_of Node, assigns(:node)
@@ -66,8 +78,14 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_post_create
+    params = {
+      :node_id => @node.id,
+      :node    => {
+        :name => "New child node"
+      }
+    }
     assert_difference("Node.count", 1) do
-      post :create, :node_id => @node.id, :node => { :name => "New child node" }
+      post :create, params
     end
     assert_response :redirect
     assert_redirected_to node_url(@node)
@@ -97,14 +115,26 @@ class NodesControllerTest < ActionController::TestCase
 
   def test_put_update_with_others_node
     node = nodes(:tim_s_home).children.first
-    put :update, :id => node.id, :node => { :name => "Not allowed, right?" }
+    params = {
+      :id   => node.id,
+      :node => {
+        :name => "Not allowed, right?"
+      }
+    }
+    put :update, params
     assert_response :redirect
     assert_redirected_to root_url
   end
 
   def test_put_update_with_validation_errors
     node = @node.children.first
-    put :update, :id => node.id, :node => { :name => "" }
+    params = {
+      :id   => node.id,
+      :node => {
+        :name => ""
+      }
+    }
+    put :update, params
     assert_response :success
     assert_equal node, assigns(:node)
     assert_template :edit
@@ -114,7 +144,13 @@ class NodesControllerTest < ActionController::TestCase
 
   def test_put_update
     node = @node.children.first
-    put :update, :id => node.id, :node => { :name => "Study" }
+    params = {
+      :id   => node.id,
+      :node => {
+        :name => "Study"
+      }
+    }
+    put :update, params
     assert_response :redirect
     assert_redirected_to assigns(:node)
   end

@@ -1,5 +1,6 @@
-= render "shared/navigation"
-.note
-  span.updated= @note.updated_at.strftime("%Y-%m-%dT%H:%M:%S")
-  pre
-    = @note.content
+#notes
+  = render "shared/navigation"
+  .note
+    span.updated= @note.updated_at.strftime("%Y-%m-%dT%H:%M:%S")
+    pre
+      = @note.content

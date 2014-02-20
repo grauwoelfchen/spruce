@@ -1,4 +1,17 @@
 module ApplicationHelper
+
+  def current_page?(options)
+    if options.is_a?(String) && options =~ /^([a-z]+)#([a-z]+)$/
+      super(controller: $1, action: $2)
+    else
+      super
+    end
+  end
+
+  def current_page_in?(options)
+    "#{controller_name}##{action_name}".in?(options)
+  end
+
   # Handles parent, child to consider its in shallow context.
   # if @node is given, `parent` is loaded via `@node.parent`.
   #

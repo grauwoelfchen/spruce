@@ -1,14 +1,14 @@
 # users
 tim:
   username: tim
-  email: tim@example.com
+  email: tim@example.org
   salt: <%= salt = "abcdefghijklmnopqrstuvwxyz" %>
   crypted_password: <%= Sorcery::CryptoProviders::BCrypt.encrypt("secret", salt) %>
   remember_me_token:
   reset_password_token:
 bob:
   username: bob
-  email: bob@example.com
+  email: bob@example.org
   salt: <%= salt = "abcdefghijklmnopqrstuvwxyz" %>
   crypted_password: <%= Sorcery::CryptoProviders::BCrypt.encrypt("secret", salt) %>
   remember_me_token:

@@ -12,6 +12,9 @@ Spruce::Application.routes.draw do
     :as          => :activate,
     :constraints => { :token => /[A-z0-9]+/ }
 
+  # reset password
+  resources :password_resets, :param => :token, :except => [:index, :show, :destroy]
+
   resources :nodes, :path => "b", :shallow => true, :only => [:index] do
     resources :nodes, :path => "b", :except => [:index]
     resources :notes, :path => "l", :except => [:index]
