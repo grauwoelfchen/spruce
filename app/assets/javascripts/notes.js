@@ -1,6 +1,5 @@
 // notes
-var ready = function() {
-  // index
+var applyNoteRelativeTime = function() {
   $(".notes .updated").each(function() {
     var updated = $(this)
       , time    = moment.utc(updated.html());
@@ -8,14 +7,10 @@ var ready = function() {
       updated.html(time.local().fromNow());
     }
   });
+};
+var startup = function() {
   // show
-  $(".note .updated").each(function() {
-    var updated = $(this)
-      , time    = moment.utc(updated.html());
-    if (time.isValid()) {
-      updated.html(time.local().format("YYYY-MM-DD HH:mm:ss ZZ"));
-    }
-  });
+  applyNoteRelativeTime();
   // new & create & edit & update
   $("#canvas")
     .autosize({
@@ -32,5 +27,5 @@ var ready = function() {
     .trigger("click")
     .focus();
 };
-$(document).ready(ready);
-$(document).on("page:load", ready);
+$(document).ready(startup);
+$(document).on("page:load", startup);

@@ -9,6 +9,10 @@ class NodesController < ApplicationController
   end
 
   def show
+    respond_to do |format|
+      format.js   { render :layout => false }
+      format.html
+    end
   end
 
   def new

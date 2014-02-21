@@ -2,6 +2,26 @@
 ul.nodes
   padding 0
   margin  9px 0 0 0
+  // nest
+  ul.nodes, ul.notes
+    margin 0 0 0 18px
+  li
+    span.name
+      span.node
+        color silver
+      a.node, a.expnd, a.close
+        font-weight normal
+      a.node, a.expnd
+        font-style  normal
+        cursor      s-resize
+        color       #008080
+        &:hover
+          opacity    0.2
+          box-shadow none
+      a.close
+        font-style  italic
+        cursor      n-resize
+        color       black
 
 // show
 .node

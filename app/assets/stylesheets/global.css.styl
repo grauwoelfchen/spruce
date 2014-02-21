@@ -17,15 +17,13 @@ fs-style(type)
   color gray
   a
     text-decoration none
+    &:hover
+      text-decoration underline
     if type == 'file'
       color #696969
-      &:hover
-        text-decoration underline
     else
       font-weight bold
-      color       #0000CD
-      &:hover
-        text-decoration underline
+      color       #008080
 active-style()
   font-weight bold
   color       #484848

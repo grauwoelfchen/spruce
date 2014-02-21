@@ -1,11 +1,12 @@
 module ApplicationHelper
+  include ActionView::Helpers::UrlHelper
 
+  alias_method :orig_current_page?, :current_page?
   def current_page?(options)
     if options.is_a?(String) && options =~ /^([a-z]+)#([a-z]+)$/
-      super(controller: $1, action: $2)
-    else
-      super
+      options = { controller: $1, action: $2 }
     end
+    orig_current_page?(url_for(options))
   end
 
   def current_page_in?(options)
@@ -50,6 +51,8 @@ module ApplicationHelper
     "/ " + paths.map { |n|
       if n.root?
         link_to("root", nodes_path)
+      elsif params[:id] && current_page?("nodes#show")
+        content_tag(:span, n.name)
       else
         link_to(n.name, node_path(n))
       end

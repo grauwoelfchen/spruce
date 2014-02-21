@@ -1,13 +1,18 @@
 - if @node.children
-  ul.nodes
+  ul class="nodes"
     - @node.children.each do |n|
       li
         span.name
-          | d&nbsp;
+          - if n.notes.present? || n.children.present?
+            = link_to "d", node_path(n), data: { remote: true }, class: "node node-#{n.id}"
+          - else
+            span.node d
+          | &nbsp;
           = link_to n.name, node_path(n)
         span.updated= n.updated_at.strftime("%Y-%m-%dT%H:%M:%S")
+        span class="nodes-#{n.id}"
 - if @node.notes
-  ul.notes
+  ul class="notes"
     - @node.notes.each do |n|
       li
         span.name
