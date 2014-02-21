@@ -22,6 +22,7 @@ class RoutesTest < ActionDispatch::IntegrationTest
     assert_routing({ :method => "post",   :path => "/b/1/b" },     { :controller => "nodes", :action => "create", :node_id => "1" })
     assert_routing({ :method => "get",    :path => "/b" },         { :controller => "nodes", :action => "index" })
     assert_routing({ :method => "get",    :path => "/b/1" },       { :controller => "nodes", :action => "show",    :id => "1" })
+    assert_routing({ :method => "get",    :path => "/b/1.js" },    { :controller => "nodes", :action => "show",    :id => "1", :format => "js" })
     assert_routing({ :method => "get",    :path => "/b/1/edit" },  { :controller => "nodes", :action => "edit",    :id => "1" })
     assert_routing({ :method => "put",    :path => "/b/1" },       { :controller => "nodes", :action => "update",  :id => "1" })
     assert_routing({ :method => "delete", :path => "/b/1" },       { :controller => "nodes", :action => "destroy", :id => "1" })

@@ -1,6 +1,5 @@
 // nodes
-var ready = function() {
-  // index & show
+var applyNodeRelativeTime = function() {
   $(".nodes .updated").each(function() {
     var updated = $(this)
       , time    = moment.utc(updated.html());
@@ -8,8 +7,14 @@ var ready = function() {
       updated.html(time.local().fromNow());
     }
   });
+};
+var startup = function() {
+  // index & show
+  applyNodeRelativeTime();
   // new & creat & edit & update
   $("#node_name").focus();
 };
-$(document).ready(ready);
-$(document).on("page:load", ready);
+$(document).ready(startup);
+$(document).on("page:load", startup);
+// expand & close
+$(document).ajaxComplete(applyNodeRelativeTime);

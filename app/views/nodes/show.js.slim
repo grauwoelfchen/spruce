@@ -1,0 +1,29 @@
+ruby:
+  id = @node.id
+| 
+  $(function() {
+    var link    = $("a.node-#{id}")
+      , content = $("span.nodes-#{id}")
+      , close_klass = "close node-#{id}"
+      , expnd_klass = "expnd node-#{id}";
+
+    link.attr("class", close_klass);
+    link.attr("href",  "#");
+    link.removeAttr("data-remote");
+    content.html("#{j render("list")}");
+
+    link.on("click", function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      var self  = $(this)
+        , klass = self.attr("class");
+      if (klass == close_klass) {
+        self.attr("class", expnd_klass);
+        content.hide();
+      } else if (klass == expnd_klass) {
+        self.attr("class", close_klass);
+        content.show();
+      }
+      return false;
+    });
+  })();

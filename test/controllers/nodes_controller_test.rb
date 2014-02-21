@@ -29,6 +29,13 @@ class NodesControllerTest < ActionController::TestCase
     assert_template :show
   end
 
+  def test_get_show_js
+    get :show, :id => @node.id, :format => :js
+    assert_response :success
+    assert_equal @node, assigns(:node)
+    assert_template :show
+  end
+
   def test_get_new_with_others_node
     node = nodes(:tim_s_home)
     get :new, :node_id => node.id
