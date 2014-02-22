@@ -15,12 +15,8 @@ class UsersController < ApplicationController
   end
 
   def activate
-    @user = User.load_from_activation_token(params[:token])
-    if @user
-      @user.transaction do
-        @user.activate!
-        @user.create_home!
-      end
+    authority = ActivationAuthority.new(params[:token])
+    if authority.activate!
       redirect_to nodes_url, :notice => "Your were successfully activated :-D"
     else
       not_authenticated

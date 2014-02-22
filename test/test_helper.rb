@@ -2,7 +2,11 @@ helper = lambda {
   ENV["RAILS_ENV"] ||= "test"
   require File.expand_path("../../config/environment", __FILE__)
   require "rails/test_help"
+  require "mocha/mini_test"
   require "database_cleaner"
+
+  # additional directories
+  Dir[Rails.root.join("test/services/**/*.rb")].each { |f| require f }
 
   module MiniTest
     class Unit
