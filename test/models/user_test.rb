@@ -163,31 +163,25 @@ class UserTest < ActiveSupport::TestCase
 
   # methods
 
-  def test_create_home_with_existed_user
-    user = users(:bob)
-    assert_no_difference("Node.count", 1) do
-      user.create_home!
-    end
-  end
-
-  def test_create_home_signed_up_user
-    user = signed_up_user
-    assert_difference("Node.count", 1) do
-      user.create_home!
-    end
-  end
-
-  private
-
-  def signed_up_user
+  def test_active_with_pending
     attributes = {
-      :username              => "johnsmith",
-      :email                 => "grauwoelfchen@gmail.com",
-      :password              => "test",
-      :password_confirmation => "test",
-      :activation_token      => "token",
-      :activation_state      => "pending"
+      :activation_state      => "pending",
+      :password              => "secret",
+      :password_confirmation => "secret"
     }
-    User.create(attributes)
+    user = users(:bob)
+    user.update_attributes(attributes)
+    assert_not user.active?
+  end
+
+  def test_active_with_active
+    attributes = {
+      :activation_state      => "active",
+      :password              => "secret",
+      :password_confirmation => "secret"
+    }
+    user = users(:bob)
+    user.update_attributes(attributes)
+    assert user.active?
   end
 end

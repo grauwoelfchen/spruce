@@ -28,6 +28,10 @@ class User < ActiveRecord::Base
 
   has_many :notes
 
+  def active?
+    activation_state == "active"
+  end
+
   def valid_attribute?(attr, message_keys = [])
     self.valid?
     messages = message_keys.map { |m| I18n.t("errors.messages.#{m}") }
@@ -35,14 +39,5 @@ class User < ActiveRecord::Base
       key != attr || values.reject { |v| v.in?(messages) }.present?
     }
     self.errors[attr].blank?
-  end
-
-  def create_home!
-    if Node.where(:user => self).first
-      false
-    else
-      home = Node.new.assign_to(self)
-      home.save(:validate => false)
-    end
   end
 end
