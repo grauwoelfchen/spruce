@@ -1,7 +1,9 @@
 class NodesController < ApplicationController
+  include ParentNodeManagement
+
   before_filter :require_login
-  before_filter :load_parent, :only => [:new, :create]
   before_filter :load_node, :except => [:index, :new, :create]
+  before_filter :load_parent, :only => [:new, :create]
 
   def index
     @node = Node.visible_to(current_user).root
@@ -55,10 +57,8 @@ class NodesController < ApplicationController
   end
 
   def load_parent
-    if params[:node_id]
-      @parent = Node.visible_to(current_user).where(:id => params[:node_id]).first
-      redirect_to root_url unless @parent
-    end
+    @parent = load_parent_node(params[:node_id])
+    redirect_to root_url unless @parent
   end
 
   def node_params
