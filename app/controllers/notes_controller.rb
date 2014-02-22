@@ -1,7 +1,9 @@
 class NotesController < ApplicationController
+  include ParentNodeManagement
+
   before_filter :require_login
   before_filter :load_note, :except => [:new, :create]
-  before_filter :load_node
+  before_filter :load_node, :except => [:destroy]
 
   def new
     @note = Note.new
@@ -46,7 +48,7 @@ class NotesController < ApplicationController
   def load_node
     @node = \
       if params[:node_id]
-        Node.visible_to(current_user).where(:id => params[:node_id]).first
+        load_parent_node(params[:node_id])
       elsif @note
         @note.node
       end
