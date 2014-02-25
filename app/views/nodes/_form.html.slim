@@ -6,6 +6,7 @@
     = f.text_field :name, placeholder: "e.g. sprouts"
   .actions
     = f.submit "Save"
+    | &nbsp;
     .back
       - node = @node.new_record? ? @parent : @node
       = link_to "Back", node_path(node)
