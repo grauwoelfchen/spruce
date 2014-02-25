@@ -12,8 +12,8 @@ class NodesController < ApplicationController
 
   def show
     respond_to do |format|
-      format.js   { render :layout => false }
       format.html
+      format.js { render :layout => false }
     end
   end
 
