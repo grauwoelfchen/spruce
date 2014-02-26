@@ -2,7 +2,9 @@ require "test_helper"
 
 class RoutesTest < ActionDispatch::IntegrationTest
   def test_route_to_pages
-    assert_routing({ :method => "get", :path => "/" }, { :controller => "pages", :action => "index" })
+    assert_routing({ :method => "get", :path => "/" },             { :controller => "pages", :action => "index" })
+    assert_routing({ :method => "get", :path => "/introduction" }, { :controller => "pages", :action => "introduction" })
+    assert_routing({ :method => "get", :path => "/changelog" },    { :controller => "pages", :action => "changelog" })
   end
 
   def test_route_to_sessions

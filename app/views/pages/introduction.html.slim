@@ -1,0 +1,34 @@
+#pages
+  h2 Introduction
+  p= link_to "← Back", root_path
+  h3 What's `Spruce`
+  ul.descriptions
+    li
+      | * Spruce is ...
+      ul
+        li
+          span * Simple Outliner
+          ul
+            li * Textarea (`Leaf`) only
+            li * You can draw tree with only text
+        li
+          span * Directory Organizer
+          ul
+            li * Node (`Branch`) tree viewer
+            li * You can put outlines into tree like filesystem
+        li
+          span * Text Sharing Service
+          ul
+            li * The `lock` based Collaboration
+            li * You can share outlines with your friends
+            li * Does your geek friend use text-browser? No problem, it is also supported ;)
+  h3 Screenshots
+  ul.screenshots
+    li= screenshot "spruce-branch-with-firefox.png", "branch with firefox"
+    li= screenshot "spruce-leaf-with-firefox.png",   "leaf with firefox"
+    li= screenshot "spruce-with-elinks.png",         "spruce with elinks"
+  h3 Author
+  p
+    = link_to "@grauwoelfchen", "https://twitter.com/grauwoelfchen", target: "_blank"
+  p
+    | If you have any problem, please tell me :)

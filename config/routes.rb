@@ -20,5 +20,9 @@ Spruce::Application.routes.draw do
     resources :notes, :path => "l", :except => [:index]
   end
 
+  # pages
+  get "introduction", :to => "pages#introduction"
+  get "changelog",    :to => "pages#changelog"
+
   root "pages#index"
 end
