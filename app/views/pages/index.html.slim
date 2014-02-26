@@ -1,4 +1,15 @@
 #pages
   p Let's spruce up messy thoughts.
-  - if current_user && @root
-    = link_to "Outlines", nodes_path
+  ul.links
+    - if current_user && @root
+      li
+        | *&nbsp;
+        = link_to "Outlines", nodes_path
+    li
+      | *&nbsp;
+      = link_to "Introduction", introduction_path
+    li
+      | *&nbsp;
+      = link_to "Changelog", changelog_path
+    li
+      | *&nbsp;Plans
