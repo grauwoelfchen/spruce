@@ -42,7 +42,7 @@ class UsersControllerTest < ActionController::TestCase
       post :create, params
     end
     assert_response :redirect
-    assert_redirected_to login_url
+    assert_redirected_to root_url
   end
 
   def test_get_activate_with_invalid_token
