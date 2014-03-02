@@ -4,11 +4,11 @@ html lang="en"
     meta charset="utf-8"
     title
       | Spruce
-    = stylesheet_link_tag    "application", media: "all", data: { "turbolinks-track" => true }
-    = javascript_include_tag "application", data: { "turbolinks-track"=> true }
+    = stylesheet_link_tag    "application", media: "all", data: {"turbolinks-track" => true}
+    = javascript_include_tag "application", data: {"turbolinks-track"=> true}
     = csrf_meta_tags
     link href="/favicon.ico" rel="shortcut icon"
-  body
+  body.application
     header
       h1
         = link_to root_path do
@@ -20,7 +20,7 @@ html lang="en"
         - if current_user
           span= "Hi `#{current_user.username}`"
           | &nbsp;
-          = link_to "Log out", logout_path, method: :delete
+          = button_to "Log out", logout_path, method: :delete
         - else
           - if current_page_in?(["sessions#new", "sessions#create"])
             | Log in

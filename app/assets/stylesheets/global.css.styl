@@ -39,6 +39,25 @@ p.navigation
 p.path
   fs-style('directory')
 
+// logout
+.user
+  form.button_to
+    display inline
+    margin  0
+    padding 0
+    div
+      display inline
+    input[type=submit]
+      margin             0
+      padding            0
+      -webkit-appearance caret
+      background         none
+      border             none
+      font-size          inherit
+      font-family        inherit
+      cursor             pointer
+      text-decoration    underline
+      color              #0000FF
 
 // filesystem
 ul.nodes
@@ -91,10 +110,10 @@ section
         outline          none
         &:hover
           background-color #EDEDED
-      .back,.reset
+      .back,.reset,.cancel
         display block
         float   left
-        margin  23px 0px 3px 69px
+        margin  23px 0px 3px 81px
 
 // placeholders
 placeholder-text = #4682B4
