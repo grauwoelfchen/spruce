@@ -16,8 +16,14 @@ Spruce::Application.routes.draw do
   resources :password_resets, :param => :token, :except => [:index, :show, :destroy]
 
   resources :nodes, :path => "b", :shallow => true, :only => [:index] do
-    resources :nodes, :path => "b", :except => [:index]
-    resources :notes, :path => "l", :except => [:index]
+    resources :nodes, :path => "b", :except => [:index] do
+    end
+    resources :notes, :path => "l", :except => [:index] do
+      member do
+        get    :delete
+        delete :delete, :action => :destroy
+      end
+    end
   end
 
   # pages

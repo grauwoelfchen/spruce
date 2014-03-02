@@ -33,6 +33,10 @@ class NotesController < ApplicationController
     end
   end
 
+  def delete
+    render :layout => "minimal"
+  end
+
   def destroy
     @note.destroy
     redirect_to node_url(@note.node)

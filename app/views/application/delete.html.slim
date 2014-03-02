@@ -1,0 +1,9 @@
+#application
+  .delete
+    = form_tag request.url, method: :delete do
+      h2 Are You sure you want to delete this note?
+      .actions
+        = submit_tag "Destroy"
+        - if request.referrer.present?
+          .cancel
+            = link_to "Cancel", node_path(@node)

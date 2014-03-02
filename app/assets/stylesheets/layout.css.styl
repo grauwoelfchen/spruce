@@ -4,36 +4,46 @@ html, body
   padding     5px
   color       #575757
 
-// layout
-header
-  position  absolute
-  margin    0px 0px 9px 0px
-  min-width 600px
-  h1
-    text-align left
-    float      left
-    margin     0px
-    outline    none
-    a
-      text-decoration none
-      color           #484848
-      &:hover
-        color black
-      img
-        float  left
-        margin 0px
-      span
-        float     left
-        display   block
-        margin    13px 0px 0px 5px
-        font-size 27px
-  .user
-    position absolute
-    margin 63px 0px 0px 67px
-    width  500px
-section
-  display block
-  margin  85px 0px 0px 0px
-  padding 4px 4px
-  .main
-    min-height 300px
+// layout - application
+body.application
+  header
+    position  absolute
+    margin    0px 0px 9px 0px
+    min-width 600px
+    h1
+      text-align left
+      float      left
+      margin     0px
+      outline    none
+      a
+        text-decoration none
+        color           #484848
+        &:hover
+          color black
+        img
+          float  left
+          margin 0px
+        span
+          float     left
+          display   block
+          margin    13px 0px 0px 5px
+          font-size 27px
+    .user
+      position absolute
+      margin 63px 0px 0px 67px
+      width  500px
+  section
+    display block
+    margin  85px 0px 0px 0px
+    padding 4px 4px
+    .main
+      min-height 300px
+
+// layout - minimal
+body.minimal
+  section
+    display block
+    margin  0px
+    padding 0px 4px
+    .main
+      min-height 300px
