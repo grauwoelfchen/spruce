@@ -74,7 +74,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def test_validation_with_too_long_email
-    user = User.new(:email => ("long" * 100) + "@example.com")
+    user = User.new(:email => ("long" * 100) + "@example.org")
     user.valid?
     assert_equal ["is too long (maximum is 64 characters)"], user.errors[:email]
   end
@@ -110,7 +110,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal ["doesn't match Password"], user.errors[:password_confirmation]
   end
 
-  # save & update
+  # actions
 
   def test_save_with_errors
     user = User.new
@@ -120,7 +120,7 @@ class UserTest < ActiveSupport::TestCase
   def test_save_without_errors
     attributes = {
       :username              => "lisa",
-      :email                 => "lisa@example.com",
+      :email                 => "lisa@example.org",
       :password              => "secret",
       :password_confirmation => "secret"
     }
@@ -135,15 +135,13 @@ class UserTest < ActiveSupport::TestCase
 
   def test_update_without_errors
     attributes = {
-      :email                 => "tim-s-new-email@example.com",
+      :email                 => "tim-s-new-email@example.org",
       :password              => "secret",
       :password_confirmation => "secret"
     }
     user = users(:tim)
     assert user.update_attributes(attributes)
   end
-
-  # delete & destroy
 
   def test_delete
     user = users(:bob)

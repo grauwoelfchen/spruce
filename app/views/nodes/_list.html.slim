@@ -4,7 +4,7 @@
       li
         span.name
           - if n.notes.present? || n.children.present?
-            = link_to "d", node_path(n), data: { remote: true }, class: "node node-#{n.id}"
+            = link_to "d", node_path(n), data: {remote: true}, class: "node node-#{n.id}"
           - else
             span.node d
           | &nbsp;

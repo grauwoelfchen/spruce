@@ -2,7 +2,7 @@
   h2 New Password
   - if @user.errors.any?
     = render "shared/errors", resource: @user
-  = form_for @user, url: password_reset_path(@token), html: { method: :put, id: "user_email" } do |f|
+  = form_for @user, url: password_reset_path(@token), html: {method: :put, id: "user_email"} do |f|
     .field
       = f.label :email
       p.user_email= @user.email

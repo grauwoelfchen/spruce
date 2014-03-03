@@ -10,20 +10,14 @@ Spruce::Application.routes.draw do
   get "users/:token/activate", \
     :to          => "users#activate",
     :as          => :activate,
-    :constraints => { :token => /[A-z0-9]+/ }
+    :constraints => {:token => /[A-z0-9]+/}
 
   # reset password
   resources :password_resets, :param => :token, :except => [:index, :show, :destroy]
 
   resources :nodes, :path => "b", :shallow => true, :only => [:index] do
-    resources :nodes, :path => "b", :except => [:index] do
-    end
-    resources :notes, :path => "l", :except => [:index] do
-      member do
-        get    :delete
-        delete :delete, :action => :destroy
-      end
-    end
+    resources :nodes, :path => "b", :except => [:index], :with => [:delete]
+    resources :notes, :path => "l", :except => [:index], :with => [:delete]
   end
 
   # pages

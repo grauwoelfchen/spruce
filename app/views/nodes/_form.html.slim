@@ -3,7 +3,7 @@
 = form_for shallow_args(@node) do |f|
   .field
     = f.label :name
-    = f.text_field :name, placeholder: "e.g. sprouts"
+    = f.text_field :name, placeholder: "e.g. sprouts", autofocus: true
   .actions
     = f.submit "Save"
     | &nbsp;

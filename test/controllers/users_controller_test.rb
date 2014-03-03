@@ -33,7 +33,7 @@ class UsersControllerTest < ActionController::TestCase
     params = {
       :user => {
         :username              => "lisa",
-        :email                 => "lisa@example.com",
+        :email                 => "lisa@example.org",
         :password              => "secret",
         :password_confirmation => "secret"
       }

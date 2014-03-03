@@ -63,7 +63,7 @@ class NoteTest < ActiveSupport::TestCase
     assert_equal ["can't be blank"], note.errors[:content]
   end
 
-  # save & update
+  # actions
 
   def test_save_with_errors
     note = Note.new
@@ -95,8 +95,6 @@ class NoteTest < ActiveSupport::TestCase
     note = notes(:linux_book)
     assert note.update_attributes(attributes)
   end
-
-  # delete & destroy
 
   def test_delete
     note = notes(:shopping_list)

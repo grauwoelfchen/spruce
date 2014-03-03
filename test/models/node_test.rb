@@ -73,7 +73,7 @@ class NodeTest < ActiveSupport::TestCase
     assert_equal ["You cannot add an ancestor as a descendant"], node.errors[:parent_id]
   end
 
-  # save & update
+  # actions
 
   def test_save_with_errors
     node = Node.new
@@ -93,14 +93,9 @@ class NodeTest < ActiveSupport::TestCase
   end
 
   def test_update_without_errors
-    attributes = {
-      :name =>  "Tim's awesome home"
-    }
     node = nodes(:var)
-    assert node.update_attributes(attributes)
+    assert node.update_attributes(:name => "Tim's awesome home")
   end
-
-  # delete & destroy
 
   def test_delete
     node = nodes(:bob_s_home)
