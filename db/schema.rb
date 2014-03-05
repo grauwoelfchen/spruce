@@ -13,39 +13,42 @@
 
 ActiveRecord::Schema.define(version: 20140215054349) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "node_hierarchies", id: false, force: true do |t|
-    t.integer "ancestor_id",   null: false
-    t.integer "descendant_id", null: false
-    t.integer "generations",   null: false
+    t.integer "ancestor_id",   limit: 8, null: false
+    t.integer "descendant_id", limit: 8, null: false
+    t.integer "generations",             null: false
   end
 
-  add_index "node_hierarchies", ["ancestor_id", "descendant_id", "generations"], name: "index_nodes_on_anc_and_desc_and_gens", unique: true
-  add_index "node_hierarchies", ["descendant_id"], name: "index_nodes_on_desc"
+  add_index "node_hierarchies", ["ancestor_id", "descendant_id", "generations"], name: "index_nodes_on_anc_and_desc_and_gens", unique: true, using: :btree
+  add_index "node_hierarchies", ["descendant_id"], name: "index_nodes_on_desc", using: :btree
 
   create_table "nodes", force: true do |t|
     t.string   "name"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "parent_id"
+    t.integer  "parent_id",  limit: 8
   end
 
-  add_index "nodes", ["parent_id", "user_id", "name"], name: "index_nodes_on_parent_id_and_user_id_and_name", unique: true
-  add_index "nodes", ["parent_id"], name: "index_nodes_on_parent_id"
-  add_index "nodes", ["user_id"], name: "index_nodes_on_user_id"
+  add_index "nodes", ["parent_id", "user_id", "name"], name: "index_nodes_on_parent_id_and_user_id_and_name", unique: true, using: :btree
+  add_index "nodes", ["parent_id"], name: "index_nodes_on_parent_id", using: :btree
+  add_index "nodes", ["user_id"], name: "index_nodes_on_user_id", using: :btree
 
   create_table "notes", force: true do |t|
     t.string   "name"
     t.text     "content"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "user_id",    null: false
-    t.integer  "node_id",    null: false
+    t.integer  "user_id",              null: false
+    t.integer  "node_id",    limit: 8, null: false
   end
 
-  add_index "notes", ["node_id"], name: "index_notes_on_node_id"
-  add_index "notes", ["user_id", "node_id", "name"], name: "index_notes_on_user_id_and_node_id_and_name", unique: true
-  add_index "notes", ["user_id"], name: "index_notes_on_user_id"
+  add_index "notes", ["node_id"], name: "index_notes_on_node_id", using: :btree
+  add_index "notes", ["user_id", "node_id", "name"], name: "index_notes_on_user_id_and_node_id_and_name", unique: true, using: :btree
+  add_index "notes", ["user_id"], name: "index_notes_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "username",                        null: false
@@ -64,10 +67,10 @@ ActiveRecord::Schema.define(version: 20140215054349) do
     t.datetime "activation_token_expires_at"
   end
 
-  add_index "users", ["activation_token"], name: "index_users_on_activation_token"
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["remember_me_token"], name: "index_users_on_remember_me_token"
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token"
-  add_index "users", ["username"], name: "index_users_on_username", unique: true
+  add_index "users", ["activation_token"], name: "index_users_on_activation_token", using: :btree
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["remember_me_token"], name: "index_users_on_remember_me_token", using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", using: :btree
+  add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
 end
