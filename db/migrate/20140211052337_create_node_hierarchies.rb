@@ -1,8 +1,8 @@
 class CreateNodeHierarchies < ActiveRecord::Migration
   def change
     create_table :node_hierarchies, :id => false do |t|
-      t.integer :ancestor_id,   :null => false
-      t.integer :descendant_id, :null => false
+      t.integer :ancestor_id,   :limit => 8, :null => false
+      t.integer :descendant_id, :limit => 8, :null => false
       t.integer :generations,   :null => false
     end
 
