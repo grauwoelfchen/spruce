@@ -8,7 +8,7 @@ class Node < ActiveRecord::Base
     :order       => :name
 
   belongs_to :user
-  has_many :notes
+  has_many :notes, :dependent => :delete_all
 
   validates :name, :presence => true
   validates :name, :uniqueness => {:scope => [:user_id, :parent_id]}

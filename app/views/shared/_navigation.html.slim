@@ -33,7 +33,7 @@ p.navigation
     | &nbsp;
     span(class=p_klass[:node][:new])
       | (
-    = link_to "new branch", new_node_node_path(@node)
+    = link_to "new 'branch", new_node_node_path(@node)
     span(class=p_klass[:node][:new])
       | )
     span(class=p_klass[:node][:show])
@@ -68,9 +68,9 @@ p.navigation
     span(class=p_klass[:note][:new])
       | (
     - if controller_name == "notes" && action_name.in?(%w[new create])
-      span.title NEW LEAF
+      span.title NEW 'LEAF
     - else
-      = link_to "new leaf", new_node_note_path(@node)
+      = link_to "new 'leaf", new_node_note_path(@node)
     span(class=p_klass[:note][:new])
       | )
     span(class=p_klass[:note][:show])
@@ -82,7 +82,7 @@ p.navigation
     | &nbsp;
     span(class=p_klass[:node][:new])
       | (
-    span.title NEW BRANCH
+    span.title NEW 'BRANCH
     span(class=p_klass[:node][:new])
       | )
     span(class=p_klass[:node][:show])
@@ -105,13 +105,13 @@ p.navigation
       | show
     | &nbsp;
     | (
-    = link_to "new leaf", new_node_note_path(node)
+    = link_to "new 'leaf", new_node_note_path(node)
     | )
     span(class=p_klass[:note][:show])
       | )
     | )
   | )
- 
+
 p.path
   - if @node.new_record? || !node.root? || controller_name == "notes"
     == render_paths(node.paths)

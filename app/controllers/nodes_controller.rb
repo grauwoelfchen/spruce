@@ -44,6 +44,7 @@ class NodesController < ApplicationController
   end
 
   def delete
+    render :layout => "minimal"
   end
 
   def destroy

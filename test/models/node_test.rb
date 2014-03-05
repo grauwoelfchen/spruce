@@ -111,7 +111,7 @@ class NodeTest < ActiveSupport::TestCase
     node.destroy
     assert_nil Node.where(:id => node.id).first
     assert Node.where(:user => node.user).empty?
-    assert Note.where(:node => node).present?
+    assert Note.where(:node => node).empty?
   end
 
   # included methods

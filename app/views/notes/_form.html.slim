@@ -6,4 +6,5 @@
   .actions
     = f.submit "Save"
     .back
-      = link_to "Back", node_path(@node)
+      - url = @note.new_record? ? node_path(@node) : note_path(@note)
+      = link_to "Back", url
