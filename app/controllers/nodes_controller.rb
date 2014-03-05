@@ -4,6 +4,7 @@ class NodesController < ApplicationController
   before_filter :require_login
   before_filter :load_node, :except => [:index, :new, :create]
   before_filter :load_parent, :only => [:new, :create]
+  before_filter :block_root,  :only => [:edit, :update, :delete, :destroy]
 
   def index
     @node = Node.visible_to(current_user).root
@@ -32,11 +33,9 @@ class NodesController < ApplicationController
   end
 
   def edit
-    redirect_to nodes_url if @node.root?
   end
 
   def update
-    redirect_to nodes_url if @node.root?
     if @node.update_attributes(node_params)
       redirect_to @node
     else
@@ -44,8 +43,12 @@ class NodesController < ApplicationController
     end
   end
 
+  def delete
+    render :layout => "minimal"
+  end
+
   def destroy
-    @node.destroy unless @node.root?
+    @node.destroy
     redirect_to nodes_url
   end
 
@@ -59,6 +62,10 @@ class NodesController < ApplicationController
   def load_parent
     @parent = load_parent_node(params[:node_id])
     redirect_to root_url unless @parent
+  end
+
+  def block_root
+    redirect_to nodes_url if @node.root?
   end
 
   def node_params

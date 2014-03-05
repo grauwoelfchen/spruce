@@ -27,14 +27,15 @@ class NotesControllerTest < ActionController::TestCase
     end
   end
 
-  def test_get_show_with_others_node
-    get :show, :id => @note.node.id
+  def test_get_show_with_others_note
+    bob_s_note = notes(:idea_note)
+    get :show, :id => bob_s_note.id
     assert_response :redirect
     assert_redirected_to root_url
   end
 
   def test_get_show
-    get :show, :id => @note
+    get :show, :id => @note.id
     assert_response :success
     assert_equal @note, assigns(:note)
     assert_template :show
@@ -63,12 +64,12 @@ class NotesControllerTest < ActionController::TestCase
 
   def test_post_create_without_nest
     assert_raise ActionController::UrlGenerationError do
-      post :create, :note => { :content => "Unknown Note\n\nUnexpected" }
+      post :create, :note => {:content => "Unknown Note\n\nUnexpected"}
     end
   end
 
   def test_post_create_with_others_node
-    node = nodes(:bob_s_home).children.first
+    node = nodes(:bob_s_home)
     params = {
       :node_id => node.id,
       :note    => {
@@ -114,8 +115,8 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_get_edit_with_others_note
-    note = notes(:idea_note)
-    get :edit, :id => note.id
+    bob_s_note = notes(:idea_note)
+    get :edit, :id => bob_s_note.id
     assert_response :redirect
     assert_redirected_to root_url
   end
@@ -129,9 +130,9 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_put_update_with_others_note
-    note = notes(:idea_note)
+    bob_s_note = notes(:idea_note)
     params = {
-      :id   => note.id,
+      :id   => bob_s_note.id,
       :note => {
         :content => "Not allowed, right?"
       }
@@ -142,7 +143,7 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_put_update_with_validation_errors
-    put :update, :id => @note.id, :note => { :content => "" }
+    put :update, :id => @note.id, :note => {:content => ""}
     assert_response :success
     assert_equal @note, assigns(:note)
     assert_template :edit
@@ -162,10 +163,23 @@ class NotesControllerTest < ActionController::TestCase
     assert_redirected_to note_url(assigns(:note))
   end
 
+  def test_get_delete_with_others_note
+    bob_s_note = notes(:idea_note)
+    get :delete, :id => bob_s_note.id
+    assert_response :redirect
+  end
+
+  def test_get_delete
+    get :delete, :id => @note.id
+    assert_response :success
+    assert_equal @note, assigns(:note)
+    assert_template :delete
+  end
+
   def test_delete_destroy_with_others_note
-    note = notes(:idea_note)
+    bob_s_note = notes(:idea_note)
     assert_no_difference("Note.count", -1) do
-      delete :destroy, :id => note.id
+      delete :destroy, :id => bob_s_note.id
     end
     assert_response :redirect
     assert_redirected_to root_url
@@ -192,7 +206,6 @@ class NotesControllerTest < ActionController::TestCase
 
   def initialize_note
     @note = notes(:linux_book)
-    @note.update_attributes(:user => assigns(:current_user))
   end
 
   def logout

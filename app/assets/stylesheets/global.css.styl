@@ -76,6 +76,34 @@ ul.nodes, ul.notes
       font-size 85%
       color     silver
 
+button-style()
+  text-decoration  none
+  color            black
+  background-color #FCFCFC
+  border           1px solid #EBEBEB
+  padding          4px 8px
+  display          inline-block
+  outline          none
+  &:hover
+    background-color #EDEDED
+
+.actions
+  display block
+  height  48px
+  margin  18px 0px 0px 1px
+  .back,.reset,.cancel
+    float left
+    a
+      button-style()
+      margin 9px 0px 0px 9px
+      color  gray
+      &:hover
+        color black
+  .destroy
+    float left
+    a
+      button-style()
+      margin 9px 0px 0px -1px
 
 // form
 section
@@ -100,20 +128,11 @@ section
         margin 0px
     .actions
       input[type='submit']
-        background-color #FCFCFC
-        position         absolute
-        float            left
-        left             5px
-        padding          3px 5px
-        margin           18px 0px 9px 8px
-        border           1px solid #EBEBEB
-        outline          none
-        &:hover
-          background-color #EDEDED
-      .back,.reset,.cancel
-        display block
-        float   left
-        margin  23px 0px 3px 81px
+        button-style()
+        margin   9px 10px 9px -1px
+        padding  3px 5px
+        float    left
+        left     5px
 
 // placeholders
 placeholder-text = #4682B4

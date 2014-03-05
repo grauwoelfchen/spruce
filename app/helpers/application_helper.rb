@@ -4,7 +4,7 @@ module ApplicationHelper
   alias_method :orig_current_page?, :current_page?
   def current_page?(options)
     if options.is_a?(String) && options =~ /^([a-z]+)#([a-z]+)$/
-      options = { controller: $1, action: $2 }
+      options = {controller: $1, action: $2}
     end
     orig_current_page?(url_for(options))
   end

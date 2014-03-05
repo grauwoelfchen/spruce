@@ -48,7 +48,7 @@ class ActivationAuthorityTest < ActiveSupport::TestCase
   def signed_up_user
     attributes = {
       :username              => "johnsmith",
-      :email                 => "grauwoelfchen@gmail.com",
+      :email                 => "john@example.org",
       :password              => "test",
       :password_confirmation => "test",
       :activation_token      => "token",

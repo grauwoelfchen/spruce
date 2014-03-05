@@ -2,8 +2,9 @@
   = render "shared/errors", resource: @note
 = form_for shallow_args(@node, @note) do |f|
   .field
-    = f.text_area :content, id: "canvas", placeholder: "e.g. How to stretch your branches ?"
+    = f.text_area :content, id: "canvas", placeholder: "e.g. How to stretch your branches ?", autofocus: true
   .actions
     = f.submit "Save"
     .back
-      = link_to "Back", node_path(@node)
+      - url = @note.new_record? ? node_path(@node) : note_path(@note)
+      = link_to "Back", url

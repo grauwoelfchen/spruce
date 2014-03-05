@@ -4,27 +4,29 @@ ul.notes
   margin  9px 0 0 0
 
 // show
-.note
-  margin 9px 0 0 0
-  span.updated
-    color silver
-  pre
-    border-top 1px solid #EBEBEB
-    padding    9px 0px
-    margin     9px 0px
-    width      700px
+#notes
+  .note
+    margin 9px 0 0 0
+    span.updated
+      color silver
+    pre
+      border-top 1px solid #EBEBEB
+      padding    9px 0px
+      margin     9px 0px
+      width      700px
 
 // canvas
-.set-number
-  margin 18px 0px 9px 0px
-textarea#canvas
-  padding      0px 4px 3px 4px
-  margin       0px
-  border       none
-  border-left  1px dashed #D8D8D8
-  border-right 1px dashed #D8D8D8
-  overflow     auto
-  min-height   138px
-  min-width    700px
-  &:focus
-    background-color #FCFCFC
+#notes
+  .set-number
+    margin 9px 0px 9px 0px
+  textarea#canvas
+    resize        none
+    padding       0px 4px 3px 4px
+    margin        0px
+    border        none
+    border-bottom 1px dashed #D8D8D8
+    overflow      auto
+    min-height    144px
+    min-width     700px
+    &:focus
+      background-color #FCFCFC

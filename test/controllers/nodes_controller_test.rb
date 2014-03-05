@@ -98,7 +98,7 @@ class NodesControllerTest < ActionController::TestCase
     assert_redirected_to node_url(@node)
   end
 
-  def test_get_edit_with_root_node # not allowed
+  def test_get_edit_with_root_node
     get :edit, :id => @node.id
     assert_response :redirect
     assert_redirected_to nodes_url
@@ -118,6 +118,18 @@ class NodesControllerTest < ActionController::TestCase
     assert_equal node, assigns(:node)
     assert_template :edit
     assert_template :partial => "_form"
+  end
+
+  def test_post_update_with_root_node
+    params = {
+      :id   => @node.id,
+      :node => {
+        :name => "Not allwoed, right?"
+      }
+    }
+    put :update, params
+    assert_response :redirect
+    assert_redirected_to nodes_url
   end
 
   def test_put_update_with_others_node
@@ -160,6 +172,35 @@ class NodesControllerTest < ActionController::TestCase
     put :update, params
     assert_response :redirect
     assert_redirected_to assigns(:node)
+  end
+
+  def test_get_delete_with_root_node
+    get :delete, :id => @node.id
+    assert_response :redirect
+    assert_redirected_to nodes_url
+  end
+
+  def test_get_delete_with_others_node
+    node = nodes(:tim_s_home)
+    get :delete, :id => node.id
+    assert_response :redirect
+    assert_redirected_to root_url
+  end
+
+  def test_get_delete
+    node = @node.children.first
+    get :delete, :id => node.id
+    assert_response :success
+    assert_equal node, assigns(:node)
+    assert_template :delete
+  end
+
+  def test_delete_destroy_with_root_node
+    assert_no_difference("Node.count", -1) do
+      delete :destroy, :id => @node.id
+    end
+    assert_response :redirect
+    assert_redirected_to nodes_url
   end
 
   def test_delete_destroy_with_others_node
