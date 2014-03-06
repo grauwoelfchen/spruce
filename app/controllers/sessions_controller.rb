@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  before_filter :admit_only_new_user, :only => [:new, :create]
+
   def new
   end
 
@@ -15,5 +17,11 @@ class SessionsController < ApplicationController
   def destroy
     logout
     redirect_to root_url, :notice => "Logged out :p"
+  end
+
+  private
+
+  def admit_only_new_user
+    redirect_to root_url if current_user
   end
 end

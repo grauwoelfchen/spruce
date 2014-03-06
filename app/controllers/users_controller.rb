@@ -1,7 +1,9 @@
 class UsersController < ApplicationController
   skip_before_filter :require_login, :only => [:new, :create, :activate]
+  before_filter :force_logout, :only => [:create, :activate]
 
   def new
+    redirect_to root_url if current_user
     @user = User.new
   end
 
@@ -24,6 +26,13 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def force_logout
+    if current_user
+      logout
+      redirect_to root_url
+    end
+  end
 
   def user_params
     params.require(:user).permit(:username, :email, :password, :password_confirmation)
