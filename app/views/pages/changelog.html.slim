@@ -1,9 +1,17 @@
 #pages
   h2 Changelog
-  p= link_to "← Back", root_path
+  .links
+    | >&nbsp;
+    = link_to "back", root_path
   h3 Recent changes
   ul.changelog
-    li
+    li.entry
+      | * Navigation for text-browser
+      | &nbsp;
+      span.released 2014-03-19T18:00:00
+      ul
+        li * Delete & Logout link without JavaScript
+    li.entry
       | * First release!
       | &nbsp;
       span.released 2014-03-18T20:00:00

@@ -51,7 +51,7 @@ module ApplicationHelper
     "/ " + paths.map { |n|
       if n.root?
         link_to("root", nodes_path)
-      elsif params[:id] && current_page?("nodes#show")
+      elsif params[:id] == n.id.to_s && current_page?("nodes#show")
         content_tag(:span, n.name)
       else
         link_to(n.name, node_path(n))

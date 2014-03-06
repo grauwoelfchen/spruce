@@ -68,7 +68,7 @@ class UsersControllerTest < ActionController::TestCase
       get :activate, :token => user.activation_token
     end
     assert_response :redirect
-    assert_redirected_to nodes_url
+    assert_redirected_to login_url
   end
 
   private

@@ -1,3 +1,8 @@
+.links
+  .back
+    - url = node_path(@node.new_record? ? @parent : @node)
+    | >&nbsp;
+    = link_to "back", url
 - if @node.errors.any?
   = render "shared/errors", resource: @node
 = form_for shallow_args(@node) do |f|
@@ -7,6 +12,6 @@
   .actions
     = f.submit "Save"
     | &nbsp;
-    .back
-      - node = @node.new_record? ? @parent : @node
-      = link_to "Back", node_path(node)
+    - unless @node.new_record? || @node.root?
+      .destroy
+        = link_to "Delete", [:delete, @node], {method: :delete, data: {confirm: "Are you sure?"}}

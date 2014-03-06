@@ -1,9 +1,6 @@
 #notes
   = render "shared/navigation"
-  .note
+  .box
     span.updated= @note.updated_at.strftime("%Y-%m-%dT%H:%M:%S")
     pre
       = @note.content
-  .actions
-    .destroy
-      = link_to "Delete", [:delete, @note], {method: :delete, data: {confirm: "Are you sure?"}}
