@@ -26,4 +26,5 @@ class ActivationAuthority
       home.save(:validate => false)
     end
   end
+  handle_asynchronously :create_home
 end

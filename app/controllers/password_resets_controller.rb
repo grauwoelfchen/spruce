@@ -32,6 +32,7 @@ class PasswordResetsController < ApplicationController
   private
 
   def load_user_from_token
+    logout
     @user  = User.load_from_reset_password_token(params[:token])
     @token = params[:token]
     return not_authenticated unless @user

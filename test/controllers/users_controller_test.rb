@@ -3,12 +3,41 @@ require "test_helper"
 class UsersControllerTest < ActionController::TestCase
   fixtures :users
 
+  def test_get_new_for_logged_in_user
+    user = signed_up_user
+    user.activate!
+    login_user(user)
+    get :new
+    assert_response :redirect
+    assert_redirected_to root_url
+    logout_user
+  end
+
   def test_get_new
     get :new
     assert_response :success
     assert_instance_of User, assigns(:user)
     assert_template :new
     assert_template :partial => "_form"
+  end
+
+  def test_post_create_for_logged_in_user
+    user = signed_up_user
+    user.activate!
+    login_user(user)
+    params = {
+      :user => {
+        :username              => "lisa",
+        :email                 => "lisa@example.org",
+        :password              => "secret",
+        :password_confirmation => "secret"
+      }
+    }
+    assert_no_difference("User.count", 1) do
+      post :create, params
+    end
+    assert_response :redirect
+    assert_redirected_to root_url
   end
 
   def test_post_create_with_validation_errors
@@ -40,6 +69,22 @@ class UsersControllerTest < ActionController::TestCase
     }
     assert_difference("User.count", 1) do
       post :create, params
+    end
+    assert_response :redirect
+    assert_redirected_to root_url
+  end
+
+  def test_get_activate_for_logged_in_user
+    user = signed_up_user
+    token = user.activation_token
+    user.activate!
+    login_user(user)
+    expressions = [
+      "User.where(:activation_state => \"active\").count",
+      "Node.where(:user_id => #{user.id}).count"
+    ]
+    assert_no_difference(expressions, 1) do
+      get :activate, :token => token
     end
     assert_response :redirect
     assert_redirected_to root_url

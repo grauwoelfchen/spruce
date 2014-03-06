@@ -5,6 +5,7 @@ gem "rails", "4.0.2"
 
 gem "sorcery"
 gem "closure_tree"
+gem "delayed_job_active_record"
 
 gem "turbolinks"
 gem 'uglifier', '>= 1.3.0'
