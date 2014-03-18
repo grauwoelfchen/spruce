@@ -3,6 +3,8 @@ source "https://rubygems.org"
 gem "foreman"
 gem "rails", "4.0.2"
 
+gem "pg"
+
 gem "sorcery"
 gem "closure_tree"
 gem "delayed_job_active_record"
@@ -10,11 +12,7 @@ gem "delayed_job_active_record"
 gem "turbolinks"
 gem 'uglifier', '>= 1.3.0'
 gem "slim"
-gem "stylus", :github => "grauwoelfchen/ruby-stylus", :branch => "prevent-exception-by-no-ext-logical-path-for-sprockets"
-
-group :development, :test do
-  gem "sqlite3"
-end
+gem "stylus"
 
 group :development do
   gem "slim-rails", "~> 2.0.4"
@@ -27,7 +25,6 @@ end
 
 group :production do
   gem "unicorn"
-  gem "pg"
 end
 
 personal = File.expand_path("../Gemfile.personal", __FILE__)
