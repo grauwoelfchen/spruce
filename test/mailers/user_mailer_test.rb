@@ -11,7 +11,7 @@ class UserMailerTest < ActionMailer::TestCase
     assert_equal "Your password has been reset", mail.subject
     assert_equal [@user.email], mail.to
     assert_equal ["from@example.org"], mail.from
-    assert_match "Hi, `#{@user.username}`", mail.body.encoded
+    assert_match "Hi, #{@user.username}", mail.body.encoded
   end
 
   def test_activation_needed_email
@@ -20,7 +20,7 @@ class UserMailerTest < ActionMailer::TestCase
     assert_equal "Welcome to Spruce", mail.subject
     assert_equal [@user.email], mail.to
     assert_equal ["from@example.org"], mail.from
-    assert_match "Welcome to Spruce, `#{@user.username}`", mail.body.encoded
+    assert_match "Welcome to Spruce, #{@user.username}", mail.body.encoded
   end
 
   def test_activation_success_email
@@ -28,7 +28,7 @@ class UserMailerTest < ActionMailer::TestCase
     assert_equal "Your account is now activated", mail.subject
     assert_equal [@user.email], mail.to
     assert_equal ["from@example.org"], mail.from
-    assert_match "Congratulations, `#{@user.username}`", mail.body.encoded
+    assert_match "Congratulations, #{@user.username}", mail.body.encoded
   end
 
   private

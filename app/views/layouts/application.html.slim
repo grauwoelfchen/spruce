@@ -18,7 +18,7 @@ html lang="en"
           span Spruce
       .user
         - if current_user
-          span= "Hi `#{current_user.username}`"
+          span= "Hi #{current_user.username}"
           | &nbsp;
           = button_to "Log out", logout_path, method: :delete
         - else

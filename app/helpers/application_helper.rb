@@ -14,7 +14,7 @@ module ApplicationHelper
   end
 
   # Handles parent, child to consider its in shallow context.
-  # if @node is given, `parent` is loaded via `@node.parent`.
+  # if @node is given, parent is loaded via @node.parent.
   #
   # @param [Array<Node,Note>] @node or [@node, @note]
   # @return [Array<Array, Node>]
