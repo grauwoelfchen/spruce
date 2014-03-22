@@ -1,6 +1,6 @@
-- if @node.children
+- if node.children
   ul class="nodes"
-    - @node.children.each do |n|
+    - node.children.includes(:children, :notes).each do |n|
       li
         span.name
           - if n.notes.present? || n.children.present?
@@ -12,9 +12,9 @@
         | &nbsp;
         span.updated= n.updated_at.strftime("%Y-%m-%dT%H:%M:%S")
         span class="nodes-#{n.id}"
-- if @node.notes
+- if node.notes
   ul class="notes"
-    - @node.notes.each do |n|
+    - node.notes.each do |n|
       li
         span.name
           | -&nbsp;

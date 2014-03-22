@@ -1,10 +1,12 @@
 #pages
   p Let's spruce up messy thoughts.
   ul.links
-    - if current_user && @root
-      li
-        | *&nbsp;
+    li
+      | *&nbsp;
+      - if current_user && @root
         = link_to "Outlines", nodes_path
+      - else
+        | Outlines
     li
       | *&nbsp;
       = link_to "Introduction", introduction_path

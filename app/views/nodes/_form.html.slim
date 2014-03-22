@@ -1,17 +1,17 @@
 .links
   .back
-    - url = node_path(@node.new_record? ? @parent : @node)
+    - url = node_path(node.new_record? ? parent : node)
     | >&nbsp;
     = link_to "back", url
-- if @node.errors.any?
-  = render "shared/errors", resource: @node
-= form_for shallow_args(@node) do |f|
+- if node.errors.any?
+  = render "shared/errors", resource: node
+= form_for shallow_args(node) do |f|
   .field
     = f.label :name
     = f.text_field :name, placeholder: "e.g. sprouts", autofocus: true
   .actions
     = f.submit "Save"
     | &nbsp;
-    - unless @node.new_record? || @node.root?
+    - unless node.new_record? || node.root?
       .destroy
-        = link_to "Delete", [:delete, @node], {method: :delete, data: {confirm: "Are you sure?"}}
+        = link_to "Delete", [:delete, node], {method: :delete, data: {confirm: "Are you sure?"}}

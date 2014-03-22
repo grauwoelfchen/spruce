@@ -7,7 +7,7 @@ class NodesController < ApplicationController
   before_filter :block_root,  :only => [:edit, :update, :delete, :destroy]
 
   def index
-    @node = Node.visible_to(current_user).root
+    @node = Node.visible_to(current_user).includes(:notes).root
     redirect_to root_url unless @node
   end
 

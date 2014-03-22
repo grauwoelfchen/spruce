@@ -2,4 +2,4 @@
   h2 Sign up
   - if @user.errors.any?
     = render "shared/errors", resource: @user
-  = render "form", :url => signup_path
+  = render "form", url: signup_path, user: @user

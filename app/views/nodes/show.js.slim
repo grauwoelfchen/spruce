@@ -10,7 +10,7 @@ ruby:
     link.attr("class", close_klass);
     link.attr("href",  "#");
     link.removeAttr("data-remote");
-    content.html("#{j render("list")}");
+    content.html("#{j render("list", node: @node)}");
 
     link.on("click", function(e) {
       e.stopPropagation();

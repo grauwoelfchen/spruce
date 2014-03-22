@@ -1,4 +1,4 @@
 #nodes
-  = render "shared/navigation"
+  = render "shared/navigation", parent: @parent, node: @node, note: nil
   .tree
-    = render "list"
+    = render "list", node: @node

@@ -1,5 +1,5 @@
 #notes
-  = render "shared/navigation"
+  = render "shared/navigation", parent: nil, node: @node, note: @note
   .box
     span.updated= @note.updated_at.strftime("%Y-%m-%dT%H:%M:%S")
     pre

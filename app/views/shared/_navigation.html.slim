@@ -1,39 +1,39 @@
 ruby:
-  node    = @node.new_record? ? @parent : @node
-  p_klass = parentheses
+  current_node = node.new_record? ? parent : node
+  p_klass      = parentheses
 p.navigation
   | (
   span(class=p_klass[:node][:edit])
     | (
-  - if controller_name == "nodes" && !node.root?
+  - if controller_name == "nodes" && !current_node.root?
     - if action_name.in?(%w[show])
-      = link_to "edit", edit_node_path(@node)
+      = link_to "edit", edit_node_path(node)
     - elsif action_name.in?(%w[edit update])
       span.title EDIT
     - elsif action_name.in?(%w[new create])
-      = link_to "edit", edit_node_path(@node.parent)
+      = link_to "edit", edit_node_path(node.parent)
     - else
       | edit
-  - elsif @note && action_name.in?(%w[new create show edit update]) && !node.root?
-    = link_to "edit", edit_node_path(@node)
+  - elsif note && action_name.in?(%w[new create show edit update]) && !current_node.root?
+    = link_to "edit", edit_node_path(node)
   - else
     | edit
   | &nbsp;
   span(class=p_klass[:node][:show])
     | (
-  - unless @node.new_record?
+  - unless node.new_record?
     - if controller_name == "nodes" && action_name == "show"
       span.title SHOW
     - elsif action_name.in?(%w[show edit update])
-      = link_to "show", node_path(@node)
-    - elsif @note && action_name.in?(%w[new create edit update])
-      = link_to "show", node_path(@node)
+      = link_to "show", node_path(node)
+    - elsif note && action_name.in?(%w[new create edit update])
+      = link_to "show", node_path(node)
     - else
       | show
     | &nbsp;
     span(class=p_klass[:node][:new])
       | (
-    = link_to "new 'branch", new_node_node_path(@node)
+    = link_to "new 'branch", new_node_node_path(node)
     span(class=p_klass[:node][:new])
       | )
     span(class=p_klass[:node][:show])
@@ -45,7 +45,7 @@ p.navigation
       | (
     - if controller_name == "notes"
       - if action_name == "show"
-        = link_to "edit", edit_note_path(@note)
+        = link_to "edit", edit_note_path(note)
       - elsif action_name.in?(%w[edit update])
         span.title EDIT
       - else
@@ -55,11 +55,11 @@ p.navigation
     | &nbsp;
     span(class=p_klass[:note][:show])
       | (
-    - if @note && !@note.new_record?
+    - if note && !note.new_record?
       - if action_name == "show"
         span.title SHOW
       - elsif action_name.in?(%w[edit update])
-        = link_to "show", note_path(@note)
+        = link_to "show", note_path(note)
       - else
         | show
     - else
@@ -70,7 +70,7 @@ p.navigation
     - if controller_name == "notes" && action_name.in?(%w[new create])
       span.title NEW 'LEAF
     - else
-      = link_to "new 'leaf", new_node_note_path(@node)
+      = link_to "new 'leaf", new_node_note_path(node)
     span(class=p_klass[:note][:new])
       | )
     span(class=p_klass[:note][:show])
@@ -78,7 +78,7 @@ p.navigation
     span(class=p_klass[:note][:edit])
       | )
   - else
-    = link_to "show", node_path(@node.parent)
+    = link_to "show", node_path(node.parent)
     | &nbsp;
     span(class=p_klass[:node][:new])
       | (
@@ -94,18 +94,18 @@ p.navigation
     | edit&nbsp;
     span(class=p_klass[:note][:show])
       | (
-    - if @note && !@note.new_record?
+    - if note && !note.new_record?
       - if action_name == "show"
         span.title SHOW
       - elsif action_name.in?(%w[edit update])
-        = link_to "show", note_path(@note)
+        = link_to "show", note_path(note)
       - else
         | show
     - else
       | show
     | &nbsp;
     | (
-    = link_to "new 'leaf", new_node_note_path(node)
+    = link_to "new 'leaf", new_node_note_path(current_node)
     | )
     span(class=p_klass[:note][:show])
       | )
@@ -113,7 +113,7 @@ p.navigation
   | )
 
 p.path
-  - if @node.new_record? || !node.root? || controller_name == "notes"
+  - if node.new_record? || !current_node.root? || controller_name == "notes"
     == render_paths(node.paths)
     - if action_name.in?(%w[new create]) || (controller_name == "notes" && !action_name.in?(%w[index show]))
       | &nbsp;/
