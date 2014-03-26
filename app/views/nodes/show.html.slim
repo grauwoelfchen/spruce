@@ -1,4 +1,7 @@
 #nodes
   = render "shared/navigation", parent: @parent, node: @node, note: nil
-  .tree
-    = render "list", node: @node
+  - unless @node.children.any?
+    p.none none
+  - else
+    .tree
+      = render "list", node: @node

@@ -11,10 +11,15 @@ ul.notes
     span.updated
       color silver
     pre
-      border-top 1px solid #EBEBEB
-      padding    9px 0px
-      margin     9px 0px
-      width      700px
+      white-space pre-wrap
+      white-space -moz-pre-wrap
+      white-space -pre-wrap
+      white-space -o-pre-wrap
+      word-wrap   break-word
+      border-top  1px solid #EBEBEB
+      padding     9px 0px
+      margin      9px 0px
+      width       700px
 
 // canvas
 #notes
@@ -22,7 +27,6 @@ ul.notes
     margin      9px 0px 9px 0px
     line-height 1.44
   textarea#canvas
-    resize        none
     padding       0px 4px 3px 4px
     margin        0px
     border        none
@@ -30,5 +34,6 @@ ul.notes
     overflow      auto
     min-height    144px
     min-width     700px
+    //width         calc(100% - 45px * 2)
     &:focus
       background-color #FCFCFC

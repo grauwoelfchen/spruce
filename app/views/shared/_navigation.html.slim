@@ -113,9 +113,10 @@ p.navigation
   | )
 
 p.path
-  - if node.new_record? || !current_node.root? || controller_name == "notes"
-    == render_paths(node.paths)
+  - if current_node.new_record? || !current_node.root? || controller_name == "notes"
+    == render_paths(current_node.paths)
     - if action_name.in?(%w[new create]) || (controller_name == "notes" && !action_name.in?(%w[index show]))
       | &nbsp;/
   - else
-    | / root
+    | /&nbsp;
+    span.wd root
