@@ -20,6 +20,9 @@ Spruce::Application.routes.draw do
     resources :notes, :path => "l", :except => [:index], :with => [:delete]
   end
 
+  # versions
+  post "versions/:id/revert" => "versions#revert", :as => "revert_version"
+
   # pages
   get "introduction", :to => "pages#introduction"
   get "changelog",    :to => "pages#changelog"

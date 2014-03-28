@@ -6,9 +6,9 @@ class Node < ActiveRecord::Base
     :dependent   => :delete_all,
     :name_column => :name,
     :order       => :name
-
   belongs_to :user
   has_many :notes, :dependent => :delete_all
+  has_paper_trail :meta => { :user_id => :user_id }
 
   validates :name, :presence => true
   validates :name, :uniqueness => {:scope => [:user_id, :parent_id]}

@@ -25,8 +25,8 @@ class NodesController < ApplicationController
   def create
     @node = Node.new(node_params).assign_to(current_user)
     @node.parent = @parent
-    if @node.valid? && @parent.add_child(@node)
-      redirect_to node_url(@node.parent)
+    if @node.save
+      redirect_to node_url(@node.parent), :notice => "Successfully created branch. #{undo_link}"
     else
       render :new
     end
@@ -37,7 +37,7 @@ class NodesController < ApplicationController
 
   def update
     if @node.update_attributes(node_params)
-      redirect_to @node
+      redirect_to @node, :notice => "Successfully updated branch. #{undo_link}"
     else
       render :edit
     end
@@ -49,7 +49,7 @@ class NodesController < ApplicationController
 
   def destroy
     @node.destroy
-    redirect_to nodes_url
+    redirect_to nodes_url, :notice => "Successfully destroyed branch. #{undo_link}"
   end
 
   private
@@ -70,5 +70,9 @@ class NodesController < ApplicationController
 
   def node_params
     params.require(:node).permit(:name)
+  end
+
+  def undo_link
+    view_context.link_to("undo", revert_version_path(@node.versions.last), :method => :post)
   end
 end

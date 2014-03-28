@@ -14,4 +14,5 @@
     | &nbsp;
     - unless node.new_record? || node.root?
       .destroy
-        = link_to "Delete", [:delete, node], {method: :delete, data: {confirm: "Are you sure?"}}
+        - if node.children.empty?
+          = link_to "Delete", [:delete, node], {method: :delete, data: {confirm: "Are you sure?"}}

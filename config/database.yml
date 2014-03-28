@@ -1,7 +1,7 @@
 <%
 require "uri"
 
-def scheme(database_url)
+def render_scheme_yaml(database_url)
   uri = URI.parse(database_url || "")
   {
     :adapter  => uri.scheme == "postgres" ? "postgresql" : uri.scheme,
@@ -20,12 +20,12 @@ end
 
 <% %w[development test].map do |env| %>
 <%= "#{env}:" %>
-<%= scheme(ENV["DATABASE_URL_#{env.upcase}"]) %>
+<%= render_scheme_yaml(ENV["DATABASE_URL_#{env.upcase}"]) %>
   pool: 5
   timeout: 5000
 <% end %>
 
 production:
-<%= scheme(ENV["DATABASE_URL"]) %>
+<%= render_scheme_yaml(ENV["DATABASE_URL"]) %>
   pool: 5
   timeout: 5000

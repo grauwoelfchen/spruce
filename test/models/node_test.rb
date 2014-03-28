@@ -84,7 +84,9 @@ class NodeTest < ActiveSupport::TestCase
     user = users(:tim)
     node = Node.new(:name => "Tim's node").assign_to(user)
     node.parent = nodes(:tim_s_home)
-    assert node.save
+    assert_difference("PaperTrail::Version.count", 1) do
+      assert node.save
+    end
   end
 
   def test_update_with_errors
@@ -94,7 +96,9 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_update_without_errors
     node = nodes(:var)
-    assert node.update_attributes(:name => "Tim's awesome home")
+    assert_difference("PaperTrail::Version.count", 1) do
+      assert node.update_attributes(:name => "Tim's awesome home")
+    end
   end
 
   def test_delete
@@ -108,7 +112,9 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_destroy
     node = nodes(:bob_s_home)
-    node.destroy
+    assert_difference("PaperTrail::Version.count", 1) do
+      node.destroy
+    end
     assert_nil Node.where(:id => node.id).first
     assert Node.where(:user => node.user).empty?
     assert Note.where(:node => node).empty?
@@ -128,6 +134,18 @@ class NodeTest < ActiveSupport::TestCase
   def test_visible_to
     user = users(:bob)
     assert_kind_of ActiveRecord::Relation, Node.visible_to(user)
+  end
+
+  def test_user_id_was_for_new_instance
+    user = users(:bob)
+    node = Node.new.assign_to(user)
+    assert_equal user.id, node.user_id_was
+  end
+
+  def test_user_id_was_for_existed_node
+    user = users(:bob)
+    node = nodes(:tim_s_home).assign_to(user) # unexpected flow
+    assert_equal user.id, node.user_id_was
   end
 
   def test_assign_to

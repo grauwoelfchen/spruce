@@ -1,4 +1,4 @@
 .flash-messages
   ul
     - flash.each do |name, message|
-      li(class="#{name}")= message
+      li(class="#{name}")= message.html_safe

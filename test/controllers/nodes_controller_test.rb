@@ -96,6 +96,9 @@ class NodesControllerTest < ActionController::TestCase
     end
     assert_response :redirect
     assert_redirected_to node_url(@node)
+    assert_equal \
+      "Successfully created branch. undo",
+      ActionController::Base.helpers.strip_tags(flash[:notice])
   end
 
   def test_get_edit_with_root_node
@@ -172,6 +175,9 @@ class NodesControllerTest < ActionController::TestCase
     put :update, params
     assert_response :redirect
     assert_redirected_to assigns(:node)
+    assert_equal \
+      "Successfully updated branch. undo",
+      ActionController::Base.helpers.strip_tags(flash[:notice])
   end
 
   def test_get_delete_with_root_node
@@ -219,6 +225,21 @@ class NodesControllerTest < ActionController::TestCase
     end
     assert_response :redirect
     assert_redirected_to nodes_url
+    assert_equal \
+      "Successfully destroyed branch. undo",
+      ActionController::Base.helpers.strip_tags(flash[:notice])
+  end
+
+  # methods
+
+  def test_undo_link
+    controller = NodesController.new
+    controller.stubs(:revert_version_path).returns("/versions/1/revert")
+    controller.instance_variable_set(:@node, @node)
+    expected = <<-LINK.gsub(/^\s{6}|\n/, "")
+      <a data-method="post" href="/versions/1/revert" rel="nofollow">undo</a>
+    LINK
+    assert_equal expected, controller.send(:undo_link)
   end
 
   private
