@@ -73,6 +73,6 @@ class NodesController < ApplicationController
   end
 
   def undo_link
-    view_context.link_to("undo", revert_version_path(@node.versions.last), :method => :post)
+    view_context.link_to("undo", revert_version_path(@node.versions.last, "b"), :method => :post)
   end
 end

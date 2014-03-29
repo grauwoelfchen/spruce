@@ -234,10 +234,10 @@ class NodesControllerTest < ActionController::TestCase
 
   def test_undo_link
     controller = NodesController.new
-    controller.stubs(:revert_version_path).returns("/versions/1/revert")
+    controller.stubs(:revert_version_path).returns("/versions/1/b/revert")
     controller.instance_variable_set(:@node, @node)
     expected = <<-LINK.gsub(/^\s{6}|\n/, "")
-      <a data-method="post" href="/versions/1/revert" rel="nofollow">undo</a>
+      <a data-method="post" href="/versions/1/b/revert" rel="nofollow">undo</a>
     LINK
     assert_equal expected, controller.send(:undo_link)
   end

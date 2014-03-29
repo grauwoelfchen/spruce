@@ -112,6 +112,9 @@ class NotesControllerTest < ActionController::TestCase
     end
     assert_response :redirect
     assert_redirected_to note_url(assigns(:note))
+    assert_equal \
+      "Successfully created leaf. undo",
+      ActionController::Base.helpers.strip_tags(flash[:notice])
   end
 
   def test_get_edit_with_others_note
@@ -161,6 +164,9 @@ class NotesControllerTest < ActionController::TestCase
     put :update, params
     assert_response :redirect
     assert_redirected_to note_url(assigns(:note))
+    assert_equal \
+      "Successfully updated leaf. undo",
+      ActionController::Base.helpers.strip_tags(flash[:notice])
   end
 
   def test_get_delete_with_others_note
@@ -191,6 +197,21 @@ class NotesControllerTest < ActionController::TestCase
     end
     assert_response :redirect
     assert_redirected_to node_url(@note.node)
+    assert_equal \
+      "Successfully destroyed leaf. undo",
+      ActionController::Base.helpers.strip_tags(flash[:notice])
+  end
+
+  # methods
+
+  def test_undo_link
+    controller = NotesController.new
+    controller.stubs(:revert_version_path).returns("/versions/1/l/revert")
+    controller.instance_variable_set(:@note, @note)
+    expected = <<-LINK.gsub(/^\s{6}|\n/, "")
+      <a data-method="post" href="/versions/1/l/revert" rel="nofollow">undo</a>
+    LINK
+    assert_equal expected, controller.send(:undo_link)
   end
 
   private

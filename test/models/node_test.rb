@@ -84,7 +84,7 @@ class NodeTest < ActiveSupport::TestCase
     user = users(:tim)
     node = Node.new(:name => "Tim's node").assign_to(user)
     node.parent = nodes(:tim_s_home)
-    assert_difference("PaperTrail::Version.count", 1) do
+    assert_difference("Version::Ring.count", 1) do
       assert node.save
     end
   end
@@ -96,7 +96,7 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_update_without_errors
     node = nodes(:var)
-    assert_difference("PaperTrail::Version.count", 1) do
+    assert_difference("Version::Ring.count", 1) do
       assert node.update_attributes(:name => "Tim's awesome home")
     end
   end
@@ -112,7 +112,7 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_destroy
     node = nodes(:bob_s_home)
-    assert_difference("PaperTrail::Version.count", 1) do
+    assert_difference("Version::Ring.count", 1) do
       node.destroy
     end
     assert_nil Node.where(:id => node.id).first
