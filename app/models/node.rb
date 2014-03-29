@@ -2,13 +2,16 @@ class Node < ActiveRecord::Base
   include Assignable
   include Visible
 
+  belongs_to :user
+  has_many   :notes, :dependent => :delete_all
+
   acts_as_tree \
     :dependent   => :delete_all,
     :name_column => :name,
     :order       => :name
-
-  belongs_to :user
-  has_many :notes, :dependent => :delete_all
+  has_paper_trail \
+    :class_name => "Version::Ring",
+    :meta       => { :user_id => :user_id }
 
   validates :name, :presence => true
   validates :name, :uniqueness => {:scope => [:user_id, :parent_id]}

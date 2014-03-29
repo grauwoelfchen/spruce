@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140306171412) do
+ActiveRecord::Schema.define(version: 20140329085620) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,6 +31,19 @@ ActiveRecord::Schema.define(version: 20140306171412) do
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+
+  create_table "layers", force: true do |t|
+    t.string   "item_type",  null: false
+    t.integer  "user_id"
+    t.integer  "item_id",    null: false
+    t.string   "event",      null: false
+    t.string   "whodunnit"
+    t.text     "object"
+    t.datetime "created_at"
+  end
+
+  add_index "layers", ["item_type", "item_id"], name: "index_layers_on_item_type_and_item_id", using: :btree
+  add_index "layers", ["user_id"], name: "index_layers_on_user_id", using: :btree
 
   create_table "node_hierarchies", id: false, force: true do |t|
     t.integer "ancestor_id",   limit: 8, null: false
@@ -65,6 +78,19 @@ ActiveRecord::Schema.define(version: 20140306171412) do
   add_index "notes", ["node_id"], name: "index_notes_on_node_id", using: :btree
   add_index "notes", ["user_id", "node_id", "name"], name: "index_notes_on_user_id_and_node_id_and_name", unique: true, using: :btree
   add_index "notes", ["user_id"], name: "index_notes_on_user_id", using: :btree
+
+  create_table "rings", force: true do |t|
+    t.string   "item_type",  null: false
+    t.integer  "user_id"
+    t.integer  "item_id",    null: false
+    t.string   "event",      null: false
+    t.string   "whodunnit"
+    t.text     "object"
+    t.datetime "created_at"
+  end
+
+  add_index "rings", ["item_type", "item_id"], name: "index_rings_on_item_type_and_item_id", using: :btree
+  add_index "rings", ["user_id"], name: "index_rings_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "username",                        null: false

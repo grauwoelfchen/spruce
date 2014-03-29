@@ -8,6 +8,7 @@ gem "pg"
 gem "sorcery"
 gem "closure_tree"
 gem "delayed_job_active_record"
+gem "paper_trail", "~> 3.0.1"
 
 gem "turbolinks"
 gem 'uglifier', '>= 1.3.0'

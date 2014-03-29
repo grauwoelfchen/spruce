@@ -7,7 +7,7 @@ Spruce::Application.routes.draw do
   # signup & activation
   get  "signup" => "users#new", :as => :signup
   post "signup" => "users#create"
-  get "users/:token/activate", \
+  get "users/:token/activate",
     :to          => "users#activate",
     :as          => :activate,
     :constraints => {:token => /[A-z0-9]+/}
@@ -19,6 +19,11 @@ Spruce::Application.routes.draw do
     resources :nodes, :path => "b", :except => [:index], :with => [:delete]
     resources :notes, :path => "l", :except => [:index], :with => [:delete]
   end
+
+  # versions
+  post "v/:id/:type/revert" => "versions#revert",
+    :as          => "revert_version",
+    :constraints => {:type => /b|l/}
 
   # pages
   get "introduction", :to => "pages#introduction"

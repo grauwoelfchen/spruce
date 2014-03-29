@@ -1,5 +1,5 @@
 class CreateNodes < ActiveRecord::Migration
-  def change
+  def up
     create_table :nodes, :id => false
 
     execute "ALTER TABLE nodes ADD COLUMN id BIGSERIAL PRIMARY KEY;"
@@ -12,5 +12,9 @@ class CreateNodes < ActiveRecord::Migration
     end
 
     add_index :nodes, :user_id
+  end
+
+  def down
+    drop_table :nodes
   end
 end

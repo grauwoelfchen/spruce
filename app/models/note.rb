@@ -5,6 +5,10 @@ class Note < ActiveRecord::Base
   belongs_to :user
   belongs_to :node
 
+  has_paper_trail \
+    :class_name => "Version::Layer",
+    :meta       => { :user_id => :user_id }
+
   validates :name, :presence => true, :if => ->(n) { n.content.present? }
   validates :name,
     :length => {:maximum => 64},
