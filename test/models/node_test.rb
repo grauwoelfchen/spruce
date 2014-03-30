@@ -84,7 +84,7 @@ class NodeTest < ActiveSupport::TestCase
     user = users(:tim)
     node = Node.new(:name => "Tim's node").assign_to(user)
     node.parent = nodes(:tim_s_home)
-    assert_difference("Version::Ring.count", 1) do
+    assert_difference("Version::Cycle.count", 1) do
       assert node.save
     end
   end
@@ -96,8 +96,10 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_update_without_errors
     node = nodes(:var)
-    assert_difference("Version::Ring.count", 1) do
-      assert node.update_attributes(:name => "Tim's awesome home")
+    assert_difference("Version::Cycle.count", 1) do
+      assert_difference("Version::Ring.count", 1) do
+        assert node.update_attributes(:name => "Tim's awesome home")
+      end
     end
   end
 
@@ -112,7 +114,7 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_destroy
     node = nodes(:bob_s_home)
-    assert_difference("Version::Ring.count", 1) do
+    assert_difference("Version::Cycle.count", 1) do
       node.destroy
     end
     assert_nil Node.where(:id => node.id).first
@@ -159,6 +161,32 @@ class NodeTest < ActiveSupport::TestCase
   def test_roots
     roots = Node.roots
     assert_equal Node.where(:parent_id => nil).length, roots.length
+  end
+
+  def test_revert_at_undo
+    node = nodes(:var)
+    node.update_attributes(:name => "var v2")
+    assert_difference("Version::Cycle.count", 1) do
+      assert_difference("Version::Ring.count", 1) do
+        node.versions.last.revert!
+        node.reload
+        assert_equal "var", node.name
+      end
+    end
+  end
+
+  def test_revert_at_redo
+    node = nodes(:var)
+    node.update_attributes(:name => "var v2")
+    version = node.versions.last
+    version.revert!
+    assert_difference("Version::Cycle.count", 1) do
+      assert_difference("Version::Ring.count", 1) do
+        version.next.revert!
+        node.reload
+        assert_equal "var v2", node.name
+      end
+    end
   end
 
   # methods

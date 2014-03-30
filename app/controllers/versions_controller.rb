@@ -9,16 +9,19 @@ class VersionsController < ApplicationController
   private
 
   def load_version
-    klass = params[:type] == "b" ? Version::Ring : Version::Layer
-    @version = klass
+    @version = Version::Cycle
       .where(:id => params[:id], :user_id => current_user.id).first
     redirect_to root_url unless @version
   end
 
   def redo_link
-    text = params[:redo] == "true" ? "undo" : "redo"
-    view_context
-      .link_to(text, revert_version_path(@version.next, params[:type], :redo => text != "undo"), :method => :post)
+    unless @version.next
+      nil
+    else
+      text = params[:redo] == "true" ? "undo" : "redo"
+      href = revert_version_path(@version.next, params[:type], :redo => text != "undo")
+      view_context.link_to(text, href, :method => :post)
+    end
   end
 
   def back_url

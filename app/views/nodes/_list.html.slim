@@ -1,6 +1,6 @@
 - if node.children
   ul class="nodes"
-    - node.children.includes(:children, :notes).each do |n|
+    - node.children.includes(:children, :notes).order(:name => :asc).each do |n|
       li
         span.name
           - if n.notes.present? || n.children.present?
@@ -14,7 +14,7 @@
         span class="nodes-#{n.id}"
 - if node.notes
   ul class="notes"
-    - node.notes.each do |n|
+    - node.notes.order(:name => :asc).each do |n|
       li
         span.name
           | -&nbsp;

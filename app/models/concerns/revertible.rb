@@ -9,5 +9,3 @@ module Revertible
     end
   end
 end
-
-

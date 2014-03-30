@@ -139,6 +139,7 @@ class VersionsControllerTest < ActionController::TestCase
     node = nodes(:var)
     node.update_attributes(:name => "var v2")
     version = node.versions.last
+    version.revert!
     controller.instance_variable_set(:@version, version)
     expected = <<-LINK.gsub(/^\s{6}|\n/, "")
       <a data-method="post" href="/versions/2/b/revert?redo=true" rel="nofollow">redo</a>

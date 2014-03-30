@@ -21,7 +21,8 @@ Spruce::Application.routes.draw do
   end
 
   # versions
-  post "v/:id/:type/revert" => "versions#revert",
+  post "v/:id/:type/revert",
+    :to          => "versions#revert",
     :as          => "revert_version",
     :constraints => {:type => /b|l/}
 
