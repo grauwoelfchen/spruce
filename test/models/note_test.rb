@@ -77,7 +77,9 @@ class NoteTest < ActiveSupport::TestCase
     }
     user = users(:tim)
     note = Note.new(attributes).assign_to(user)
-    assert note.save
+    assert_difference("Version::Cycle.count", 1) do
+      assert note.save
+    end
   end
 
   def test_update_with_errors
@@ -93,7 +95,11 @@ class NoteTest < ActiveSupport::TestCase
       NOTE
     }
     note = notes(:linux_book)
-    assert note.update_attributes(attributes)
+    assert_difference("Version::Cycle.count", 1) do
+      assert_difference("Version::Layer.count", 1) do
+        assert note.update_attributes(attributes)
+      end
+    end
   end
 
   def test_delete
@@ -104,7 +110,9 @@ class NoteTest < ActiveSupport::TestCase
 
   def test_destroy
     note = notes(:shopping_list)
-    note.destroy
+    assert_difference("Version::Cycle.count", 1) do
+      note.destroy
+    end
     assert_nil Note.where(:id => note.id).first
   end
 
@@ -124,12 +132,50 @@ class NoteTest < ActiveSupport::TestCase
     assert_kind_of ActiveRecord::Relation, Note.visible_to(user)
   end
 
+  def test_user_id_was_for_new_instance
+    user = users(:bob)
+    note = Note.new.assign_to(user)
+    assert_equal user.id, note.user_id_was
+  end
+
+  def test_user_id_was_for_existed_note
+    user = users(:bob)
+    note = notes(:wish_list).assign_to(user) # unexpected flow
+    assert_equal user.id, note.user_id_was
+  end
+
   def test_assign_to
     note = Note.new
     user = users(:bob)
     result = note.assign_to(user)
     assert_kind_of Note, result
     assert_equal user, result.user
+  end
+
+  def test_restore_at_undo
+    note = notes(:wish_list)
+    note.update_attributes(:name => "# My Wishlist (private)")
+    assert_difference("Version::Cycle.count", 1) do
+      assert_difference("Version::Layer.count", 1) do
+        note.versions.last.restore!
+        note.reload
+        assert_equal "# My Wishlist", note.name
+      end
+    end
+  end
+
+  def test_restore_at_redo
+    note = notes(:wish_list)
+    note.update_attributes(:content => "# My Wishlist (private)\r\n")
+    version = note.versions.last
+    version.restore!
+    assert_difference("Version::Cycle.count", 1) do
+      assert_difference("Version::Layer.count", 1) do
+        version.next.restore!
+        note.reload
+        assert_equal "# My Wishlist (private)", note.name
+      end
+    end
   end
 
   # methods

@@ -1,13 +1,20 @@
 class Note < ActiveRecord::Base
   include Assignable
   include Visible
+  include ChangeRecordable
 
   belongs_to :user
   belongs_to :node
+  has_many   :recorded_changes,
+    lambda { order(:created_at => :asc) },
+    :class_name => "Version::Layer",
+    :as         => :item
 
   has_paper_trail \
-    :class_name => "Version::Layer",
+    :class_name => "Version::Cycle",
     :meta       => { :user_id => :user_id }
+
+  after_update :record_version, :on => :update
 
   validates :name, :presence => true, :if => ->(n) { n.content.present? }
   validates :name,
@@ -23,5 +30,15 @@ class Note < ActiveRecord::Base
 
   def name
     content && content.split(/\r?\n/).first
+  end
+
+  private
+
+  def record_version
+    original_only = self.paper_trail_options[:only]
+    self.paper_trail_options[:only] = %w[content]
+    result = store_changes
+    self.paper_trail_options[:only] = original_only
+    result
   end
 end

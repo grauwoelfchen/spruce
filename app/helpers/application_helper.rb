@@ -27,24 +27,24 @@ module ApplicationHelper
     end
   end
 
-  def parentheses
-    css_klass = "parenthesis-highlight"
-    at_node   = (controller_name == "nodes")
-    in_edit   = action_name.in?(%w[index edit update])
-    in_show   = action_name.in?(%w[show])
-    in_new    = action_name.in?(%w[new create])
-    {
-      node: {
-        edit: at_node && in_edit ? css_klass : nil,
-        show: at_node && in_show ? css_klass : nil,
-        new:  at_node && in_new  ? css_klass : nil
-      },
-      note: {
-        edit: !at_node && in_edit ? css_klass : nil,
-        show: !at_node && in_show ? css_klass : nil,
-        new:  !at_node && in_new  ? css_klass : nil
-      }
+  def parenthesis_styles
+    style = "parenthesis-highlight"
+    node  = controller_name == "nodes"
+    note  = controller_name == "notes"
+    edit  = action_name.in?(%w[index edit update])
+    show  = action_name.in?(%w[show])
+    new   = action_name.in?(%w[new create])
+    styles = {
+      node: {},
+      note: {}
     }
+    styles[:node][:edit] = style if node && edit
+      styles[:node][:show] = style if node && show
+        styles[:node][:new] = style if node && new
+    styles[:note][:edit] = style if note && edit
+      styles[:note][:show] = style if note && show
+        styles[:note][:new] = style if note && new
+    styles
   end
 
   def render_paths(paths)

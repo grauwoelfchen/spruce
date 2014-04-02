@@ -6,7 +6,7 @@ module DeleteResourceRoute
 
   # Add additional `:delete` routes
   #
-  #    resources :books, :with => [:delete]
+  #   resources :books, :with => [:delete]
   #
   def resources(*args, &block)
     opts = args.last.delete(:with)

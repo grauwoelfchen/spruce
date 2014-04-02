@@ -14,7 +14,7 @@
         span class="nodes-#{n.id}"
 - if node.notes
   ul class="notes"
-    - node.notes.each do |n|
+    - node.notes.order(:name => :asc).each do |n|
       li
         span.name
           | -&nbsp;

@@ -1,6 +1,6 @@
 #nodes
   = render "shared/navigation", parent: @parent, node: @node, note: nil
-  - unless @node.children.any?
+  - if @node.children.empty? && @node.notes.empty?
     p.none none
   - else
     .tree

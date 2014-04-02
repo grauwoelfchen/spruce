@@ -1,0 +1,11 @@
+#application
+  .revert
+    - behavior = params[:redo] == "true" ? "redo" : "undo"
+    h3 Are You sure you want to #{behavior} previous operation?
+    = form_tag request.url, method: :post do
+      .actions
+        = submit_tag behavior.capitalize
+        - ref = request.referer
+        - if ref.present? && ref != request.url
+          .cancel
+            = link_to "Cancel", ref

@@ -1,9 +1,9 @@
 ruby:
   current_node = node.new_record? ? parent : node
-  p_klass      = parentheses
+  styles       = parenthesis_styles
 p.navigation
   | (
-  span(class=p_klass[:node][:edit])
+  span(class=styles[:node][:edit])
     | (
   - if controller_name == "nodes" && !current_node.root?
     - if action_name.in?(%w[show])
@@ -19,7 +19,7 @@ p.navigation
   - else
     | edit
   | &nbsp;
-  span(class=p_klass[:node][:show])
+  span(class=styles[:node][:show])
     | (
   - unless node.new_record?
     - if controller_name == "nodes" && action_name == "show"
@@ -31,17 +31,17 @@ p.navigation
     - else
       | show
     | &nbsp;
-    span(class=p_klass[:node][:new])
+    span(class=styles[:node][:new])
       | (
     = link_to "new 'branch", new_node_node_path(node)
-    span(class=p_klass[:node][:new])
+    span(class=styles[:node][:new])
       | )
-    span(class=p_klass[:node][:show])
+    span(class=styles[:node][:show])
       | )
-    span(class=p_klass[:node][:edit])
+    span(class=styles[:node][:edit])
       | )
     |&nbsp;
-    span(class=p_klass[:note][:edit])
+    span(class=styles[:note][:edit])
       | (
     - if controller_name == "notes"
       - if action_name == "show"
@@ -53,7 +53,7 @@ p.navigation
     - else
       | edit
     | &nbsp;
-    span(class=p_klass[:note][:show])
+    span(class=styles[:note][:show])
       | (
     - if note && !note.new_record?
       - if action_name == "show"
@@ -65,34 +65,34 @@ p.navigation
     - else
       | show
     | &nbsp;
-    span(class=p_klass[:note][:new])
+    span(class=styles[:note][:new])
       | (
     - if controller_name == "notes" && action_name.in?(%w[new create])
       span.title NEW 'LEAF
     - else
       = link_to "new 'leaf", new_node_note_path(node)
-    span(class=p_klass[:note][:new])
+    span(class=styles[:note][:new])
       | )
-    span(class=p_klass[:note][:show])
+    span(class=styles[:note][:show])
       | )
-    span(class=p_klass[:note][:edit])
+    span(class=styles[:note][:edit])
       | )
   - else
     = link_to "show", node_path(node.parent)
     | &nbsp;
-    span(class=p_klass[:node][:new])
+    span(class=styles[:node][:new])
       | (
     span.title NEW 'BRANCH
-    span(class=p_klass[:node][:new])
+    span(class=styles[:node][:new])
       | )
-    span(class=p_klass[:node][:show])
+    span(class=styles[:node][:show])
       | )
-    span(class=p_klass[:node][:edit])
+    span(class=styles[:node][:edit])
       | )
     | &nbsp;
     | (
     | edit&nbsp;
-    span(class=p_klass[:note][:show])
+    span(class=styles[:note][:show])
       | (
     - if note && !note.new_record?
       - if action_name == "show"
@@ -107,7 +107,7 @@ p.navigation
     | (
     = link_to "new 'leaf", new_node_note_path(current_node)
     | )
-    span(class=p_klass[:note][:show])
+    span(class=styles[:note][:show])
       | )
     | )
   | )

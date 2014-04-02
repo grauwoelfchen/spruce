@@ -1,6 +1,6 @@
 module Version
   class Ring < PaperTrail::Version
-    include Revertible
+    include Restorable
 
     self.table_name    = :rings
     self.sequence_name = :ring_id_seq
