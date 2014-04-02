@@ -8,27 +8,77 @@ class VersionsControllerTest < ActionController::TestCase
 
   # actions
 
-  def test_post_revert_node_with_invalid_version
+  # revert
+
+  def test_get_revert_node_with_invalid_version
     params = {
       :id   => "invalid",
       :type => "b"
     }
-    post :revert, params
+    get :revert, params
     assert_response :redirect
     assert_redirected_to root_url
   end
 
-  def test_post_revert_note_with_invalid_version
+  def test_get_revert_note_with_invalid_version
     params = {
       :id   => "invalid",
       :type => "l"
     }
-    post :revert, params
+    get :revert, params
     assert_response :redirect
     assert_redirected_to root_url
   end
 
-  def test_post_revert_node_with_others_version
+  def test_get_revert_node_with_valid_version
+    node = nodes(:var)
+    node.update_attributes(:name => "var v2")
+    request.env["HTTP_REFERER"] = nodes_url
+    params = {
+      :id   => node.versions.last.id,
+      :type => "b"
+    }
+    get :revert, params
+    assert_response :success
+    assert_template :revert
+  end
+
+  def test_get_revert_note_with_valid_version
+    note = notes(:wish_list)
+    note.update_attributes(:content => "New Wishlist\n\n")
+    request.env["HTTP_REFERER"] = note_url(note)
+    params = {
+      :id   => note.versions.last.id,
+      :type => "l"
+    }
+    get :revert, params
+    assert_response :success
+    assert_template :revert
+  end
+
+  # restore
+
+  def test_post_restore_node_with_invalid_version
+    params = {
+      :id   => "invalid",
+      :type => "b"
+    }
+    post :restore, params
+    assert_response :redirect
+    assert_redirected_to root_url
+  end
+
+  def test_post_restore_note_with_invalid_version
+    params = {
+      :id   => "invalid",
+      :type => "l"
+    }
+    post :restore, params
+    assert_response :redirect
+    assert_redirected_to root_url
+  end
+
+  def test_post_restore_node_with_others_version
     node = nodes(:work)
     node.update_attributes(:name => "Bob's Home v2")
     request.env["HTTP_REFERER"] = nodes_url
@@ -36,28 +86,29 @@ class VersionsControllerTest < ActionController::TestCase
       :id   => node.versions.last.id,
       :type => "b"
     }
-    post :revert, params
+    post :restore, params
     assert_response :redirect
     assert_redirected_to root_url
   end
 
-  def test_post_revert_note_with_others_version
+  def test_post_restore_note_with_others_version
     note = notes(:shopping_list)
-    note.update_attributes(:name => "Shopping list v2")
+    note.update_attributes(:content => "Shopping list v2\n\n")
     request.env["HTTP_REFERER"] = note_url(note)
     params = {
       :id   => note.versions.last.id,
       :type => "l"
     }
-    post :revert, params
+    post :restore, params
     assert_response :redirect
     assert_redirected_to root_url
   end
-  # revert create
 
-  # revert update
+  # restore create
 
-  def test_post_revert_update_node_on_undo
+  # restore update
+
+  def test_post_restore_update_node_on_undo
     node = nodes(:var)
     node.update_attributes(:name => "var v2")
     request.env["HTTP_REFERER"] = nodes_url
@@ -66,7 +117,7 @@ class VersionsControllerTest < ActionController::TestCase
       :type => "b",
       :redo => "false"
     }
-    post :revert, params
+    post :restore, params
     assert_response :redirect
     assert_redirected_to nodes_url
     assert_equal \
@@ -74,7 +125,7 @@ class VersionsControllerTest < ActionController::TestCase
       ActionController::Base.helpers.strip_tags(flash[:notice])
   end
 
-  def test_post_revert_update_note_on_undo
+  def test_post_restore_update_note_on_undo
     note = notes(:wish_list)
     request.env["HTTP_REFERER"] = note_url(note)
     note.update_attributes(:name => "My Wishlist v2")
@@ -83,7 +134,7 @@ class VersionsControllerTest < ActionController::TestCase
       :type => "l",
       :redo => "false"
     }
-    post :revert, params
+    post :restore, params
     assert_response :redirect
     assert_redirected_to note_url(note)
     assert_equal \
@@ -91,17 +142,17 @@ class VersionsControllerTest < ActionController::TestCase
       ActionController::Base.helpers.strip_tags(flash[:notice])
   end
 
-  def test_post_revert_update_node_on_redo
+  def test_post_restore_update_node_on_redo
     node = nodes(:var)
     node.update_attributes(:name => "var v2")
-    node.versions.last.revert!
+    node.versions.last.restore!
     request.env["HTTP_REFERER"] = nodes_url
     params = {
       :id   => node.versions.last.id,
       :type => "b",
       :redo => "true",
     }
-    post :revert, params
+    post :restore, params
     assert_response :redirect
     assert_redirected_to nodes_url
     assert_equal \
@@ -109,17 +160,17 @@ class VersionsControllerTest < ActionController::TestCase
       ActionController::Base.helpers.strip_tags(flash[:notice])
   end
 
-  def test_post_revert_update_note_on_redo
+  def test_post_restore_update_note_on_redo
     note = notes(:wish_list)
     note.update_attributes(:name => "var v2")
-    note.versions.last.revert!
+    note.versions.last.restore!
     request.env["HTTP_REFERER"] = note_url(note)
     params = {
       :id   => note.versions.last.id,
       :type => "l",
       :redo => "true",
     }
-    post :revert, params
+    post :restore, params
     assert_response :redirect
     assert_redirected_to note_url(note)
     assert_equal \
@@ -127,7 +178,7 @@ class VersionsControllerTest < ActionController::TestCase
       ActionController::Base.helpers.strip_tags(flash[:notice])
   end
 
-  # revert destroy
+  # restore destroy
 
 
   # methods
@@ -139,7 +190,7 @@ class VersionsControllerTest < ActionController::TestCase
     node = nodes(:var)
     node.update_attributes(:name => "var v2")
     version = node.versions.last
-    version.revert!
+    version.restore!
     controller.instance_variable_set(:@version, version)
     expected = <<-LINK.gsub(/^\s{6}|\n/, "")
       <a data-method="post" href="/versions/2/b/revert?redo=true" rel="nofollow">redo</a>
@@ -154,7 +205,7 @@ class VersionsControllerTest < ActionController::TestCase
     node = nodes(:var)
     node.update_attributes(:name => "var v2")
     version = node.versions.last
-    version.revert!
+    version.restore!
     controller.instance_variable_set(:@version, version)
     expected = <<-LINK.gsub(/^\s{6}|\n/, "")
       <a data-method="post" href="/versions/2/b/revert?redo=false" rel="nofollow">undo</a>
@@ -172,7 +223,7 @@ class VersionsControllerTest < ActionController::TestCase
     node = nodes(:tim_s_home).children.new(attributes)
     node.save
     version = node.versions.last
-    version.revert!
+    version.restore!
     controller.instance_variable_set(:@version, version)
     request.stubs(:referer).returns(node_url(node))
     controller.stubs(:request).returns(request)
@@ -189,7 +240,7 @@ class VersionsControllerTest < ActionController::TestCase
     node = nodes(:tim_s_home).children.new(attributes)
     node.save
     version = node.versions.last
-    version.revert!
+    version.restore!
     controller.instance_variable_set(:@version, version)
     request.stubs(:referer).returns(nil)
     controller.stubs(:request).returns(request)
@@ -205,7 +256,7 @@ class VersionsControllerTest < ActionController::TestCase
     note = nodes(:tim_s_home).notes.new(attributes)
     note.save
     version = note.versions.last
-    version.revert!
+    version.restore!
     controller.instance_variable_set(:@version, version)
     controller.stubs(:request).returns(request)
     assert_equal node_url(version.item.node), controller.send(:back_url)
@@ -216,7 +267,7 @@ class VersionsControllerTest < ActionController::TestCase
     node = nodes(:var)
     node.update_attributes(:name => "var v2")
     version = node.versions.last
-    version.revert!
+    version.restore!
     controller.instance_variable_set(:@version, version)
     request.stubs(:referer).returns(node_url(node))
     controller.stubs(:request).returns(request)
@@ -228,7 +279,7 @@ class VersionsControllerTest < ActionController::TestCase
     note = notes(:linux_book)
     note.update_attributes(:content => "More hard Linux beginner's Book\n\n")
     version = note.versions.last
-    version.revert!
+    version.restore!
     controller.instance_variable_set(:@version, version)
     request.stubs(:referer).returns(note_url(note))
     controller.stubs(:request).returns(request)
@@ -240,7 +291,7 @@ class VersionsControllerTest < ActionController::TestCase
     node = nodes(:var)
     node.update_attributes(:name => "var v2")
     version = node.versions.last
-    version.revert!
+    version.restore!
     controller.instance_variable_set(:@version, version)
     request.stubs(:referer).returns(nil)
     controller.stubs(:request).returns(request)
@@ -252,7 +303,7 @@ class VersionsControllerTest < ActionController::TestCase
     note = notes(:linux_book)
     note.update_attributes(:content => "More hard Linux beginner's Book\n\n")
     version = note.versions.last
-    version.revert!
+    version.restore!
     controller.instance_variable_set(:@version, version)
     request.stubs(:referer).returns(nil)
     controller.stubs(:request).returns(request)

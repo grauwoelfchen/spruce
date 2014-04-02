@@ -152,26 +152,26 @@ class NoteTest < ActiveSupport::TestCase
     assert_equal user, result.user
   end
 
-  def test_revert_at_undo
+  def test_restore_at_undo
     note = notes(:wish_list)
     note.update_attributes(:name => "# My Wishlist (private)")
     assert_difference("Version::Cycle.count", 1) do
       assert_difference("Version::Layer.count", 1) do
-        note.versions.last.revert!
+        note.versions.last.restore!
         note.reload
         assert_equal "# My Wishlist", note.name
       end
     end
   end
 
-  def test_revert_at_redo
+  def test_restore_at_redo
     note = notes(:wish_list)
     note.update_attributes(:content => "# My Wishlist (private)\r\n")
     version = note.versions.last
-    version.revert!
+    version.restore!
     assert_difference("Version::Cycle.count", 1) do
       assert_difference("Version::Layer.count", 1) do
-        version.next.revert!
+        version.next.restore!
         note.reload
         assert_equal "# My Wishlist (private)", note.name
       end

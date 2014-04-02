@@ -4,6 +4,7 @@
     = form_tag request.url, method: :delete do
       .actions
         = submit_tag "Destroy"
-        - if request.referrer.present?
+        - ref = request.referer
+        - if ref.present? && ref != request.url
           .cancel
-            = link_to "Cancel", request.referrer
+            = link_to "Cancel", ref

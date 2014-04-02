@@ -1,7 +1,7 @@
-module Revertible
+module Restorable
   extend ActiveSupport::Concern
 
-  def revert!
+  def restore!
     if reify
       reify.save!
     else

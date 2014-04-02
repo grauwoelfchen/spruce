@@ -2,7 +2,11 @@ class VersionsController < ApplicationController
   before_filter :load_version
 
   def revert
-    @version.revert!
+    render :layout => "minimal"
+  end
+
+  def restore
+    @version.restore!
     redirect_to back_url, :notice => "Undid #{@version.event}. #{redo_link}"
   end
 
@@ -28,7 +32,7 @@ class VersionsController < ApplicationController
     if @version.item_type == "Note" && !@version.object
       node_url(@version.item.node)
     else
-      request.referer ? :back : nodes_url
+      request.referer && request.referer !~ /\/revert\/?/ ? :back : nodes_url
     end
   end
 end

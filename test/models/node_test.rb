@@ -163,26 +163,26 @@ class NodeTest < ActiveSupport::TestCase
     assert_equal Node.where(:parent_id => nil).length, roots.length
   end
 
-  def test_revert_at_undo
+  def test_restore_at_undo
     node = nodes(:var)
     node.update_attributes(:name => "var v2")
     assert_difference("Version::Cycle.count", 1) do
       assert_difference("Version::Ring.count", 1) do
-        node.versions.last.revert!
+        node.versions.last.restore!
         node.reload
         assert_equal "var", node.name
       end
     end
   end
 
-  def test_revert_at_redo
+  def test_restore_at_redo
     node = nodes(:var)
     node.update_attributes(:name => "var v2")
     version = node.versions.last
-    version.revert!
+    version.restore!
     assert_difference("Version::Cycle.count", 1) do
       assert_difference("Version::Ring.count", 1) do
-        version.next.revert!
+        version.next.restore!
         node.reload
         assert_equal "var v2", node.name
       end
