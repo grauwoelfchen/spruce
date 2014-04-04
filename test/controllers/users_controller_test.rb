@@ -33,7 +33,7 @@ class UsersControllerTest < ActionController::TestCase
         :password_confirmation => "secret"
       }
     }
-    assert_no_difference("User.count", 1) do
+    assert_no_difference "User.count", 1 do
       post :create, params
     end
     assert_response :redirect
@@ -49,7 +49,7 @@ class UsersControllerTest < ActionController::TestCase
         :password_confirmation => ""
       }
     }
-    assert_no_difference("User.count") do
+    assert_no_difference "User.count" do
       post :create, params
     end
     assert_response :success
@@ -67,7 +67,7 @@ class UsersControllerTest < ActionController::TestCase
         :password_confirmation => "secret"
       }
     }
-    assert_difference("User.count", 1) do
+    assert_difference "User.count", 1 do
       post :create, params
     end
     assert_response :redirect
@@ -83,7 +83,7 @@ class UsersControllerTest < ActionController::TestCase
       "User.where(:activation_state => \"active\").count",
       "Node.where(:user_id => #{user.id}).count"
     ]
-    assert_no_difference(expressions, 1) do
+    assert_no_difference expressions, 1 do
       get :activate, :token => token
     end
     assert_response :redirect
@@ -96,7 +96,7 @@ class UsersControllerTest < ActionController::TestCase
       "User.where(:activation_state => \"active\").count",
       "Node.where(:user_id => #{user.id}).count"
     ]
-    assert_no_difference(expressions, 1) do
+    assert_no_difference expressions, 1 do
       get :activate, :token => "invalid"
     end
     assert_response :redirect
@@ -109,7 +109,7 @@ class UsersControllerTest < ActionController::TestCase
       "User.where(:activation_state => \"active\").count",
       "Node.where(:user_id => #{user.id}).count"
     ]
-    assert_difference(expressions, 1) do
+    assert_difference expressions, 1 do
       get :activate, :token => user.activation_token
     end
     assert_response :redirect

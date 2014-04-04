@@ -36,7 +36,8 @@ class NodesController < ApplicationController
   end
 
   def update
-    if @node.update_attributes(node_params)
+    recorder = ChangeRecorder.new(@node)
+    if recorder.update_attributes(node_params)
       redirect_to @node, :notice => "Successfully updated branch. #{undo_link}"
     else
       render :edit

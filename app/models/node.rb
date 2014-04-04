@@ -19,8 +19,6 @@ class Node < ActiveRecord::Base
     :versions   => :versions,
     :meta       => { :user_id => :user_id }
 
-  after_update :record_version, :on => :update
-
   validates :name, :presence => true
   validates :name, :uniqueness => {:scope => [:user_id, :parent_id]}
   validates :name,
@@ -37,15 +35,5 @@ class Node < ActiveRecord::Base
   def paths
     self_and_ancestors
       .reorder("node_hierarchies.generations DESC")
-  end
-
-  private
-
-  def record_version
-    original_only = self.paper_trail_options[:only]
-    self.paper_trail_options[:only] = %w[name]
-    result = store_changes
-    self.paper_trail_options[:only] = original_only
-    result
   end
 end

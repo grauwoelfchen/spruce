@@ -23,43 +23,43 @@ class NoteTest < ActiveSupport::TestCase
 
   def test_validation_without_user_id
     note = Note.new(:user_id => nil)
-    note.valid?
+    assert_not note.valid?
     assert_equal ["can't be blank"], note.errors[:user_id]
   end
 
   def test_validation_without_node_id
     note = Note.new(:node_id => nil)
-    note.valid?
+    assert_not note.valid?
     assert_equal ["can't be blank"], note.errors[:node_id]
   end
 
   def test_validation_without_name
     note = Note.new(:content => "\r\n\r\ntest")
-    note.valid?
+    assert_not note.valid?
     assert_equal ["can't be blank"], note.errors[:name]
   end
 
   def test_validation_with_dot_name
     note = Note.new(:content => ".test\r\n")
-    note.valid?
+    assert_not note.valid?
     assert_equal ["can't start with ."], note.errors[:name]
   end
 
   def test_validation_with_too_long_name
     note = Note.new(:content => "long" * 100 + "\r\nlong")
-    note.valid?
+    assert_not note.valid?
     assert_equal ["is too long (maximum is 64 characters)"], note.errors[:name]
   end
 
   def test_validation_with_invalid_name
     note = Note.new(:content => "~test\r\n")
-    note.valid?
+    assert_not note.valid?
     assert_equal ["can't contain %~/\\*`"], note.errors[:name]
   end
 
   def test_validation_without_content
     note = Note.new(:content => "")
-    note.valid?
+    assert_not note.valid?
     assert_equal ["can't be blank"], note.errors[:content]
   end
 
@@ -77,9 +77,10 @@ class NoteTest < ActiveSupport::TestCase
     }
     user = users(:tim)
     note = Note.new(attributes).assign_to(user)
-    assert_difference("Version::Cycle.count", 1) do
+    assert_difference "Version::Cycle.count", 1 do
       assert note.save
     end
+    assert_empty note.errors
   end
 
   def test_update_with_errors
@@ -95,23 +96,22 @@ class NoteTest < ActiveSupport::TestCase
       NOTE
     }
     note = notes(:linux_book)
-    assert_difference("Version::Cycle.count", 1) do
-      assert_difference("Version::Layer.count", 1) do
-        assert note.update_attributes(attributes)
-      end
+    assert_difference "Version::Cycle.count", 1 do
+      assert note.update_attributes(attributes)
     end
+    assert_empty note.errors
   end
 
   def test_delete
     note = notes(:shopping_list)
-    note.delete
+    assert note.delete
     assert_nil Note.where(:id => note.id).first
   end
 
   def test_destroy
     note = notes(:shopping_list)
-    assert_difference("Version::Cycle.count", 1) do
-      note.destroy
+    assert_difference "Version::Cycle.count", 1 do
+      assert note.destroy
     end
     assert_nil Note.where(:id => note.id).first
   end
@@ -155,13 +155,11 @@ class NoteTest < ActiveSupport::TestCase
   def test_restore_at_undo
     note = notes(:wish_list)
     note.update_attributes(:name => "# My Wishlist (private)")
-    assert_difference("Version::Cycle.count", 1) do
-      assert_difference("Version::Layer.count", 1) do
-        note.versions.last.restore!
-        note.reload
-        assert_equal "# My Wishlist", note.name
-      end
+    assert_difference "Version::Cycle.count", 1 do
+      assert note.versions.last.restore!
     end
+    note.reload
+    assert_equal "# My Wishlist", note.name
   end
 
   def test_restore_at_redo
@@ -169,13 +167,11 @@ class NoteTest < ActiveSupport::TestCase
     note.update_attributes(:content => "# My Wishlist (private)\r\n")
     version = note.versions.last
     version.restore!
-    assert_difference("Version::Cycle.count", 1) do
-      assert_difference("Version::Layer.count", 1) do
-        version.next.restore!
-        note.reload
-        assert_equal "# My Wishlist (private)", note.name
-      end
+    assert_difference "Version::Cycle.count", 1 do
+      assert version.next.restore!
     end
+    note.reload
+    assert_equal "# My Wishlist (private)", note.name
   end
 
   # methods

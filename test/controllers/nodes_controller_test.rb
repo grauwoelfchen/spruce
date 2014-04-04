@@ -60,7 +60,7 @@ class NodesControllerTest < ActionController::TestCase
         :name => "Not allowed, right?"
       }
     }
-    assert_no_difference("Node.count", 1) do
+    assert_no_difference "Node.count", 1 do
       post :create, params
     end
     assert_response :redirect
@@ -74,7 +74,7 @@ class NodesControllerTest < ActionController::TestCase
         :name => ""
       }
     }
-    assert_no_difference("Node.count", 1) do
+    assert_no_difference "Node.count", 1 do
       post :create, params
     end
     assert_response :success
@@ -91,7 +91,7 @@ class NodesControllerTest < ActionController::TestCase
         :name => "New child node"
       }
     }
-    assert_difference("Node.count", 1) do
+    assert_difference "Node.count", 1 do
       post :create, params
     end
     assert_response :redirect
@@ -202,7 +202,7 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_delete_destroy_with_root_node
-    assert_no_difference("Node.count", -1) do
+    assert_no_difference "Node.count", -1 do
       delete :destroy, :id => @node.id
     end
     assert_response :redirect
@@ -211,7 +211,7 @@ class NodesControllerTest < ActionController::TestCase
 
   def test_delete_destroy_with_others_node
     node = nodes(:tim_s_home).children.first
-    assert_no_difference("Node.count", -1) do
+    assert_no_difference "Node.count", -1 do
       delete :destroy, :id => node.id
     end
     assert_response :redirect
@@ -220,7 +220,7 @@ class NodesControllerTest < ActionController::TestCase
 
   def test_delete_destroy
     node = @node.children.first
-    assert_difference("Node.count", -1) do
+    assert_difference "Node.count", -1 do
       delete :destroy, :id => node.id
     end
     assert_response :redirect

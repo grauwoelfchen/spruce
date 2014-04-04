@@ -26,7 +26,8 @@ class NotesController < ApplicationController
   end
 
   def update
-    if @note.update_attributes(note_params)
+    recorder = ChangeRecorder.new(@note)
+    if recorder.update_attributes(note_params)
       redirect_to @note, :notice => "Successfully updated leaf. #{undo_link}"
     else
       render :edit

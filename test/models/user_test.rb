@@ -32,50 +32,50 @@ class UserTest < ActiveSupport::TestCase
 
   def test_validation_with_blank_username
     user = User.new(:username => "")
-    user.valid?
+    assert_not user.valid?
     assert_equal ["can't be blank"], user.errors[:username]
   end
 
   def test_validation_with_invalid_username
     user = User.new(:username => "!INVALID!")
-    user.valid?
+    assert_not user.valid?
     assert_equal ["must be alphanumeric characters and _"], user.errors[:username]
   end
 
   def test_validation_with_too_short_username
     user = User.new(:username => "t")
-    user.valid?
+    assert_not user.valid?
     assert_equal ["is too short (minimum is 3 characters)"], user.errors[:username]
   end
 
   def test_validation_with_too_long_username
     user = User.new(:username => "testtesttesttesttesttest")
-    user.valid?
+    assert_not user.valid?
     assert_equal ["is too long (maximum is 18 characters)"], user.errors[:username]
   end
 
   def test_validation_with_existing_username
     existing_user = users(:tim)
     user = User.new(:username => existing_user.username)
-    user.valid?
+    assert_not user.valid?
     assert_equal ["has already been taken"], user.errors[:username]
   end
 
   def test_validation_with_blank_email
     user = User.new(:email => "")
-    user.valid?
+    assert_not user.valid?
     assert_equal ["can't be blank"], user.errors[:email]
   end
 
   def test_validation_with_invalid_email
     user = User.new(:email => "t@t.t")
-    user.valid?
+    assert_not user.valid?
     assert_equal ["is invalid"], user.errors[:email]
   end
 
   def test_validation_with_too_long_email
     user = User.new(:email => ("long" * 100) + "@example.org")
-    user.valid?
+    assert_not user.valid?
     assert_equal ["is too long (maximum is 64 characters)"], user.errors[:email]
   end
 
@@ -88,25 +88,25 @@ class UserTest < ActiveSupport::TestCase
 
   def test_validation_with_blank_password
     user = User.new(:password => "")
-    user.valid?
+    assert_not user.valid?
     assert_equal ["can't be blank"], user.errors[:password]
   end
 
   def test_validation_with_too_short_password
     user = User.new(:password => "s")
-    user.valid?
+    assert_not user.valid?
     assert_equal ["is too short (minimum is 4 characters)"], user.errors[:password]
   end
 
   def test_validation_with_blank_password_confirmation
     user = User.new(:password => "", :password_confirmation => "")
-    user.valid?
+    assert_not user.valid?
     assert_equal ["can't be blank"], user.errors[:password_confirmation]
   end
 
   def test_validation_with_not_matched_password_confirmation
     user = User.new(:password => "foo", :password_confirmation => "bar")
-    user.valid?
+    assert_not user.valid?
     assert_equal ["doesn't match Password"], user.errors[:password_confirmation]
   end
 
@@ -145,7 +145,7 @@ class UserTest < ActiveSupport::TestCase
 
   def test_delete
     user = users(:bob)
-    user.delete
+    assert user.delete
     assert_nil User.where(:id => user.id).first
     assert Node.where(:user => user).present?
     assert Note.where(:user => user).present?
@@ -153,7 +153,7 @@ class UserTest < ActiveSupport::TestCase
 
   def test_destroy
     user = users(:bob)
-    user.destroy
+    assert user.destroy
     assert_nil User.where(:id => user.id).first
     assert Node.where(:user => user).present?
     assert Note.where(:user => user).present?
@@ -168,7 +168,7 @@ class UserTest < ActiveSupport::TestCase
       :password_confirmation => "secret"
     }
     user = users(:bob)
-    user.update_attributes(attributes)
+    assert user.update_attributes(attributes)
     assert_not user.active?
   end
 
@@ -179,7 +179,7 @@ class UserTest < ActiveSupport::TestCase
       :password_confirmation => "secret"
     }
     user = users(:bob)
-    user.update_attributes(attributes)
+    assert user.update_attributes(attributes)
     assert user.active?
   end
 end

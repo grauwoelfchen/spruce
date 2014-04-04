@@ -14,8 +14,6 @@ class Note < ActiveRecord::Base
     :class_name => "Version::Cycle",
     :meta       => { :user_id => :user_id }
 
-  after_update :record_version, :on => :update
-
   validates :name, :presence => true, :if => ->(n) { n.content.present? }
   validates :name,
     :length => {:maximum => 64},
@@ -30,15 +28,5 @@ class Note < ActiveRecord::Base
 
   def name
     content && content.split(/\r?\n/).first
-  end
-
-  private
-
-  def record_version
-    original_only = self.paper_trail_options[:only]
-    self.paper_trail_options[:only] = %w[content]
-    result = store_changes
-    self.paper_trail_options[:only] = original_only
-    result
   end
 end

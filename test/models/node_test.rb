@@ -25,51 +25,51 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_validation_without_name
     node = Node.new(:name => "")
-    node.valid?
+    assert_not node.valid?
     assert_equal ["can't be blank"], node.errors[:name]
   end
 
   def test_validation_with_dot_name
     node = Node.new(:name => ".test")
-    node.valid?
+    assert_not node.valid?
     assert_equal ["can't start with ."], node.errors[:name]
   end
 
   def test_validation_with_too_long_name
     node = Node.new(:name => "long" * 100)
-    node.valid?
+    assert_not node.valid?
     assert_equal ["is too long (maximum is 32 characters)"], node.errors[:name]
   end
 
   def test_validation_with_invalid_name
     node = Node.new(:name => "~test")
-    node.valid?
+    assert_not node.valid?
     assert_equal ["can't contain %~/\\*`"], node.errors[:name]
   end
 
   def test_validation_with_duplicate_name
     existing_node = nodes(:var)
     node = Node.new(:name => "var", :parent => existing_node.parent).assign_to(existing_node.user)
-    node.valid?
+    assert_not node.valid?
     assert_equal ["has already been taken"], node.errors[:name]
   end
 
   def test_validation_without_user_id
     node = Node.new(:user_id => nil)
-    node.valid?
+    assert_not node.valid?
     assert_equal ["can't be blank"], node.errors[:user_id]
   end
 
   def test_validation_without_parent_id
     node = Node.new(:parent_id => nil)
-    node.valid?
+    assert_not node.valid?
     assert_equal ["can't be blank"], node.errors[:parent_id]
   end
 
   def test_validation_with_invalid_parent_id
     node = nodes(:bob_s_home)
     node.parent = node
-    node.valid?
+    assert_not node.valid?
     assert_equal ["You cannot add an ancestor as a descendant"], node.errors[:parent_id]
   end
 
@@ -84,9 +84,10 @@ class NodeTest < ActiveSupport::TestCase
     user = users(:tim)
     node = Node.new(:name => "Tim's node").assign_to(user)
     node.parent = nodes(:tim_s_home)
-    assert_difference("Version::Cycle.count", 1) do
+    assert_difference "Version::Cycle.count", 1 do
       assert node.save
     end
+    assert_empty node.errors
   end
 
   def test_update_with_errors
@@ -96,11 +97,10 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_update_without_errors
     node = nodes(:var)
-    assert_difference("Version::Cycle.count", 1) do
-      assert_difference("Version::Ring.count", 1) do
-        assert node.update_attributes(:name => "Tim's awesome home")
-      end
+    assert_difference "Version::Cycle.count", 1 do
+      assert node.update_attributes(:name => "Tim's awesome home")
     end
+    assert_empty node.errors
   end
 
   def test_delete
@@ -114,8 +114,8 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_destroy
     node = nodes(:bob_s_home)
-    assert_difference("Version::Cycle.count", 1) do
-      node.destroy
+    assert_difference "Version::Cycle.count", 1 do
+      assert node.destroy
     end
     assert_nil Node.where(:id => node.id).first
     assert Node.where(:user => node.user).empty?
@@ -166,13 +166,11 @@ class NodeTest < ActiveSupport::TestCase
   def test_restore_at_undo
     node = nodes(:var)
     node.update_attributes(:name => "var v2")
-    assert_difference("Version::Cycle.count", 1) do
-      assert_difference("Version::Ring.count", 1) do
-        node.versions.last.restore!
-        node.reload
-        assert_equal "var", node.name
-      end
+    assert_difference "Version::Cycle.count", 1 do
+      assert node.versions.last.restore!
     end
+    node.reload
+    assert_equal "var", node.name
   end
 
   def test_restore_at_redo
@@ -180,13 +178,11 @@ class NodeTest < ActiveSupport::TestCase
     node.update_attributes(:name => "var v2")
     version = node.versions.last
     version.restore!
-    assert_difference("Version::Cycle.count", 1) do
-      assert_difference("Version::Ring.count", 1) do
-        version.next.restore!
-        node.reload
-        assert_equal "var v2", node.name
-      end
+    assert_difference "Version::Cycle.count", 1 do
+      assert version.next.restore!
     end
+    node.reload
+    assert_equal "var v2", node.name
   end
 
   # methods

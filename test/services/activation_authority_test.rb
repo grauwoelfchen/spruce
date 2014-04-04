@@ -5,7 +5,7 @@ class ActivationAuthorityTest < ActiveSupport::TestCase
 
   def test_activate_with_invalid_token
     user = signed_up_user
-    assert_no_difference("Node.count", 1) do
+    assert_no_difference "Node.count", 1 do
       authority = ActivationAuthority.new("invalid")
       assert_not authority.activate!
     end
@@ -13,7 +13,7 @@ class ActivationAuthorityTest < ActiveSupport::TestCase
 
   def test_activate_with_existing_user
     user = users(:bob)
-    assert_no_difference("Node.count", 1) do
+    assert_no_difference "Node.count", 1 do
       authority = ActivationAuthority.new
       assert_not authority.activate!
     end
@@ -21,7 +21,7 @@ class ActivationAuthorityTest < ActiveSupport::TestCase
 
   def test_activate
     user = signed_up_user
-    assert_difference("Node.count", 1) do
+    assert_difference "Node.count", 1 do
       authority = ActivationAuthority.new(user.activation_token)
       assert authority.activate!
     end
@@ -29,7 +29,7 @@ class ActivationAuthorityTest < ActiveSupport::TestCase
 
   def test_create_home_with_existing_user
     user = users(:bob)
-    assert_no_difference("Node.count", 1) do
+    assert_no_difference "Node.count", 1 do
       authority = ActivationAuthority.new
       refute_nil authority.send(:create_home, user)
     end
@@ -37,7 +37,7 @@ class ActivationAuthorityTest < ActiveSupport::TestCase
 
   def test_create_home_signed_up_user
     user = signed_up_user
-    assert_difference("Node.count", 1) do
+    assert_difference "Node.count", 1 do
       authority = ActivationAuthority.new(user.activation_token)
       refute_nil authority.send(:create_home, user)
     end

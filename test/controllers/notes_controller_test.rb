@@ -76,7 +76,7 @@ class NotesControllerTest < ActionController::TestCase
         :content => "Not allowed, right?\r\n"
       }
     }
-    assert_no_difference("Node.count", 1) do
+    assert_no_difference "Node.count", 1 do
       post :create, params
     end
     assert_response :redirect
@@ -90,7 +90,7 @@ class NotesControllerTest < ActionController::TestCase
         :content => ""
       }
     }
-    assert_no_difference("Note.count", 1) do
+    assert_no_difference "Note.count", 1 do
       post :create, params
     end
     assert_response :success
@@ -107,7 +107,7 @@ class NotesControllerTest < ActionController::TestCase
         :content => "More hard Linux beginner's Book\r\n"
       }
     }
-    assert_difference("Note.count", 1) do
+    assert_difference "Note.count", 1 do
       post :create, params
     end
     assert_response :redirect
@@ -184,7 +184,7 @@ class NotesControllerTest < ActionController::TestCase
 
   def test_delete_destroy_with_others_note
     bob_s_note = notes(:idea_note)
-    assert_no_difference("Note.count", -1) do
+    assert_no_difference "Note.count", -1 do
       delete :destroy, :id => bob_s_note.id
     end
     assert_response :redirect
@@ -192,7 +192,7 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_delete_destroy
-    assert_difference("Note.count", -1) do
+    assert_difference "Note.count", -1 do
       delete :destroy, :id => @note.id
     end
     assert_response :redirect

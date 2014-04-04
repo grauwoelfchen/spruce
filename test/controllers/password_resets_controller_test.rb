@@ -26,7 +26,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
         :password_confirmation => "secret"
       }
     }
-    assert_no_difference("User.where(:reset_password_token => nil).count", 1) do
+    assert_no_difference "User.where(:reset_password_token => nil).count", 1 do
       put :update, params
     end
     assert_response :redirect
@@ -41,7 +41,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
         :password_confirmation => ""
       }
     }
-    assert_no_difference("User.where(:reset_password_token => nil).count", 1) do
+    assert_no_difference "User.where(:reset_password_token => nil).count", 1 do
       put :update, params
     end
     assert_response :success
@@ -58,7 +58,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
         :password_confirmation => "secret"
       }
     }
-    assert_difference("User.where(:reset_password_token => nil).count", 1) do
+    assert_difference "User.where(:reset_password_token => nil).count", 1 do
       put :update, params
     end
     assert_response :redirect
