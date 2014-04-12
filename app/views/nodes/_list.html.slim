@@ -14,10 +14,10 @@
         span class="nodes-#{n.id}"
 - if node.notes
   ul class="notes"
-    - node.notes.order(:name => :asc).each do |n|
+    - node.notes.order(name: :asc).each do |n|
       li
         span.name
           | -&nbsp;
-          = link_to n.name, note_path(n)
+          = link_to truncate(n.name, length: 36), note_path(n)
         | &nbsp;
         span.updated= n.updated_at.strftime("%Y-%m-%dT%H:%M:%S")
