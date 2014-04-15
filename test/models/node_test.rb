@@ -190,7 +190,7 @@ class NodeTest < ActiveSupport::TestCase
   def test_paths
     node = nodes(:lib)
     assert_kind_of ActiveRecord::Relation, node.paths
-    assert_equal ["Tim's Home", "var", "lib"], node.paths.map(&:name)
+    assert_equal [nil, "var", "lib"], node.paths.map(&:name)
   end
 
   private
