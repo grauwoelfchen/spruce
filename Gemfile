@@ -11,12 +11,15 @@ gem "delayed_job_active_record"
 gem "paper_trail", "~> 3.0.1"
 
 gem "turbolinks"
-gem 'uglifier', '>= 1.3.0'
+gem "uglifier", ">= 1.3.0"
 gem "slim"
 gem "stylus"
 
 group :development do
   gem "slim-rails", "~> 2.0.4"
+
+  gem "capistrano", "~> 3.2.0"
+  gem "capistrano-rails"
 end
 
 group :test do
