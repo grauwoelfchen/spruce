@@ -3,7 +3,7 @@
 tim_s_home:
   user: tim
   parent:
-  name: Tim's Home
+  name:
 var:
   user: tim
   parent: tim_s_home
@@ -16,7 +16,7 @@ lib:
 bob_s_home:
   user: bob
   parent:
-  name: Bob's Home
+  name:
 work:
   user: bob
   parent: bob_s_home

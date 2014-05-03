@@ -26,6 +26,7 @@ class User < ActiveRecord::Base
   validates :password, :confirmation => true, :presence => true
   validates :password_confirmation, :presence => true
 
+  has_many :nodes
   has_many :notes
 
   def active?
