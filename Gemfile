@@ -2,6 +2,7 @@ source "https://rubygems.org"
 
 gem "foreman"
 gem "rails", "4.0.2"
+gem "dotenv-deployment"
 
 gem "pg"
 

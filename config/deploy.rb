@@ -35,8 +35,43 @@ set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public
 # Default value for keep_releases is 5
 # set :keep_releases, 5
 
-namespace :deploy do
+SSHKit.config.command_map[:rake] = "foreman run rake"
 
+set :bundle_cmd, "source $HOME/.bashrc && bundle"
+
+namespace :foreman do
+  desc "Export runit configuration scripts"
+  task :export do
+    on roles(:app) do |host|
+      within release_path do
+        execute :bundle, <<-CMD.gsub(/\s{2}/, "")
+exec \
+foreman export runit /etc/sv \
+  -f ./Procfile \
+  -a #{fetch(:application)} \
+  -u #{host.user} \
+  -l #{shared_path.join("log")}
+        CMD
+      end
+    end
+  end
+
+  desc "Start"
+  task :start do
+    on roles(:app) do
+      execute :sudo, "sv start #{fetch(:application)}"
+    end
+  end
+
+  desc "Stop"
+  task :stop do
+    on roles(:app) do
+      execute :sudo, "sv stop #{fetch(:application)}"
+    end
+  end
+end
+
+namespace :deploy do
   desc "Restart application"
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
@@ -55,5 +90,7 @@ namespace :deploy do
       # end
     end
   end
-
 end
+
+before "deploy:assets:precompile", "foreman:export"
+after "deploy", "foreman:stop", "foreman:start"
