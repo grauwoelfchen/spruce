@@ -12,4 +12,4 @@ stderr_path "#{app_shared_path}/log/unicorn.stderr.log"
 
 pid "#{app_shared_path}/tmp/pids/unicorn.pid"
 
-preload_apr true
+preload_app true
