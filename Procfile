@@ -1,2 +1,2 @@
-dev: rails server --port 5000
-job: ./bin/delayed_job run
+unicorn: bundle exec unicorn -c config/unicorn/production.rb RAILS_ENV=production
+worker: bundle exec rake jobs:work RAILS_ENV=production
