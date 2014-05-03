@@ -27,7 +27,14 @@ set :deploy_to, "/var/www/spruce"
 set :linked_files, %w[.env]
 
 # Default value for linked_dirs is []
-set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/shared}
+set :linked_dirs, %w{
+bin log
+tmp/pids tmp/cache tmp/sockets
+public/shared
+bundle
+node_modules
+vendor/assets/components
+}
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -38,38 +45,6 @@ set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public
 SSHKit.config.command_map[:rake] = "foreman run rake"
 
 set :bundle_cmd, "source $HOME/.bashrc && bundle"
-
-namespace :foreman do
-  desc "Export runit configuration scripts"
-  task :export do
-    on roles(:app) do |host|
-      within release_path do
-        execute :bundle, <<-CMD.gsub(/\s{2}/, "")
-exec \
-foreman export runit /etc/sv \
-  -f ./Procfile \
-  -a #{fetch(:application)} \
-  -u #{host.user} \
-  -l #{shared_path.join("log")}
-        CMD
-      end
-    end
-  end
-
-  desc "Start"
-  task :start do
-    on roles(:app) do
-      execute :sudo, "sv start #{fetch(:application)}"
-    end
-  end
-
-  desc "Stop"
-  task :stop do
-    on roles(:app) do
-      execute :sudo, "sv stop #{fetch(:application)}"
-    end
-  end
-end
 
 namespace :deploy do
   desc "Restart application"
@@ -92,5 +67,76 @@ namespace :deploy do
   end
 end
 
-before "deploy:assets:precompile", "foreman:export"
-after "deploy", "foreman:stop", "foreman:start"
+namespace :foreman do
+  desc "Export runit configuration scripts"
+  task :export do
+    on roles(:app) do |host|
+      within release_path do
+        execute :bundle, <<-CMD.gsub(/\s{2}/, "")
+exec \
+foreman export runit /etc/service \
+  -f ./Procfile \
+  -a #{fetch(:application)} \
+  -u #{host.user} \
+  -l #{shared_path.join("log")}
+        CMD
+      end
+    end
+  end
+
+  {
+    :app    => "unicorn",
+    :worker => "worker"
+  }.each do |type, process|
+    namespace type do
+      desc "Start"
+      task :start do
+        on roles(:app) do
+          execute :sudo, "sv start /etc/service/#{fetch(:application)}-#{process}-1"
+        end
+      end
+
+      desc "Stop"
+      task :stop do
+        on roles(:app) do
+          execute :sudo, "sv stop /etc/service/#{fetch(:application)}-#{process}-1"
+        end
+      end
+
+      desc "Restart"
+      task :restart do
+        on roles(:app) do
+          execute :sudo, "sv restart /etc/service/#{fetch(:application)}-#{process}-1"
+        end
+      end
+    end
+  end
+end
+
+after "deploy", "foreman:export"
+after "deploy", "foreman:app:restart"
+
+namespace :deploy do
+  namespace :assets do
+    desc "Install bower"
+    task :install_bower do
+      on roles(:app) do
+        within release_path do
+          execute "cd #{release_path}; npm install bower --quiet"
+        end
+      end
+    end
+
+    desc "Install components"
+    task :install_components do
+      on roles(:app) do
+        within  release_path do
+          execute "cd #{release_path}; ./node_modules/.bin/bower install"
+        end
+      end
+    end
+  end
+end
+
+before "deploy:assets:precompile", "deploy:assets:install_bower"
+before "deploy:assets:precompile", "deploy:assets:install_components"
