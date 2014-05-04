@@ -1,6 +1,8 @@
 source "https://rubygems.org"
 
 gem "foreman"
+gem "dotenv-rails", "~> 0.11.1"
+
 gem "rails", "4.0.2"
 
 gem "pg"
