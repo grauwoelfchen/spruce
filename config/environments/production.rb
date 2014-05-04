@@ -14,27 +14,6 @@ Spruce::Application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
-  # Mailer
-  config.action_mailer.perform_deliveries    = true
-  config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings   = {
-    address:              ENV["MAILER_ADDRESS"],
-    port:                 ENV["MAILER_PORT"],
-    domain:               ENV["MAILER_DOMAIN"],
-    user_name:            ENV["MAILER_USER_NAME"],
-    password:             ENV["MAILER_PASSWORD"],
-    authentication:       ENV["MAILER_AUTHENTICATION"],
-    enable_starttls_auto: true
-  }
-  config.action_mailer.default_options = {
-    from: ENV["MAILER_FROM"]
-  }
-  config.action_mailer.default_url_options = {
-    host: ENV["MAILER_HOST"]
-  }
-
-
   # Enable Rack::Cache to put a simple HTTP cache in front of your application
   # Add `rack-cache` to your Gemfile before enabling this.
   # For large-scale production use, consider using a caching reverse proxy like nginx, varnish or squid.
@@ -81,6 +60,27 @@ Spruce::Application.configure do
   # Precompile additional assets.
   # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
   # config.assets.precompile += %w( search.js )
+
+  # Mailer
+  config.action_mailer.perform_deliveries    = true
+  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings   = {
+    address:        ENV["MAILER_ADDRESS"],
+    port:           ENV["MAILER_PORT"],
+    domain:         ENV["MAILER_DOMAIN"],
+    user_name:      ENV["MAILER_USER_NAME"],
+    password:       ENV["MAILER_PASSWORD"],
+    authentication: ENV["MAILER_AUTHENTICATION"],
+    enable_starttls_auto: true
+  }
+  config.action_mailer.default_options = {
+    from: ENV["MAILER_FROM"]
+  }
+  config.action_mailer.default_url_options = {
+    protocol: "https",
+    host:      ENV["MAILER_HOST"]
+  }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
