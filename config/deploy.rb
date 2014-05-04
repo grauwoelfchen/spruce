@@ -91,21 +91,21 @@ foreman export runit /etc/service \
     namespace type do
       desc "Start"
       task :start do
-        on roles(:app) do
+        on roles(:app), wait: 15  do
           execute :sudo, "sv start /etc/service/#{fetch(:application)}-#{process}-1"
         end
       end
 
       desc "Stop"
       task :stop do
-        on roles(:app) do
+        on roles(:app), wait: 15  do
           execute :sudo, "sv stop /etc/service/#{fetch(:application)}-#{process}-1"
         end
       end
 
       desc "Restart"
       task :restart do
-        on roles(:app) do
+        on roles(:app), wait: 15 do
           execute :sudo, "sv restart /etc/service/#{fetch(:application)}-#{process}-1"
         end
       end
