@@ -23,6 +23,8 @@
 
 # personal
 /Gemfile.personal
-/Guardfile
-/.env
 
+/Guardfile
+
+/.env
+/Procfile
