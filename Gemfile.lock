@@ -59,8 +59,6 @@ GEM
     dotenv (0.11.1)
       dotenv-deployment (~> 0.0.2)
     dotenv-deployment (0.0.2)
-    dotenv-rails (0.11.1)
-      dotenv (= 0.11.1)
     erubis (2.7.0)
     execjs (2.0.2)
     faraday (0.9.0)
@@ -179,7 +177,6 @@ DEPENDENCIES
   closure_tree
   database_cleaner
   delayed_job_active_record
-  dotenv-rails (~> 0.11.1)
   foreman
   mocha
   paper_trail (~> 3.0.1)
