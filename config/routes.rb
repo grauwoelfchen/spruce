@@ -28,5 +28,7 @@ Spruce::Application.routes.draw do
   get "introduction", :to => "pages#introduction"
   get "changelog",    :to => "pages#changelog"
 
+  get "sitemap", :to => "sitemap#index", :constraints => {:format => "xml"}
+
   root "pages#index"
 end
