@@ -29,7 +29,13 @@
     li= screenshot "spruce-leaf-with-firefox.png",   "leaf with firefox"
     li= screenshot "spruce-with-elinks.png",         "spruce with elinks"
   h3 Author
-  p
+  p.author
+    span.name Yasuhiro Asaka
+    span.links
+    | (
+    = link_to "humans.txt", "/humans.txt"
+    | ,&nbsp;
     = link_to "@grauwoelfchen", "https://twitter.com/grauwoelfchen", target: "_blank"
+    | )
   p
     | If you have any problem, please tell me :)
