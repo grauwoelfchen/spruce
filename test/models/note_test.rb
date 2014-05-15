@@ -64,11 +64,11 @@ class NoteTest < ActiveSupport::TestCase
   end
 
   def test_validation_with_invalid_syntax_no_bullet_points
-    note = Note.new(:content => "Title\r\n\r\nNo asterisk")
+    note = Note.new(:content => "Title\r\n\r\nNo bullet")
     assert_not note.valid?
     expected = {
       :message => "must start with bullet points '* '",
-      :line    => 3,
+      :lines   => [3],
     }
     assert_equal [expected], note.errors[:content]
   end
@@ -78,7 +78,7 @@ class NoteTest < ActiveSupport::TestCase
     assert_not note.valid?
     expected = {
       :message => "must start with bullet points '* '",
-      :line    => 3,
+      :lines  => [3],
     }
     assert_equal [expected], note.errors[:content]
   end
@@ -88,7 +88,17 @@ class NoteTest < ActiveSupport::TestCase
     assert_not note.valid?
     expected = {
       :message => "must start with bullet points '* '",
-      :line    => 3,
+      :lines   => [3],
+    }
+    assert_equal [expected], note.errors[:content]
+  end
+
+  def test_validation_with_invalid_syntax_at_multiple_lines
+    note = Note.new(:content => "Title\r\n\r\nNo bullet\r\n*No whitespace")
+    assert_not note.valid?
+    expected = {
+      :message => "must start with bullet points '* '",
+      :lines   => [3, 4],
     }
     assert_equal [expected], note.errors[:content]
   end

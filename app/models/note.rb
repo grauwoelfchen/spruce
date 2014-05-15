@@ -40,14 +40,16 @@ class Note < ActiveRecord::Base
   private
 
   def content_must_be_valid_outline_syntax
-    content.each_line.with_index(1) do |s, i|
-      if i > 1 && s !~ /\A(\s*\*\s[^\s].*|)(\r?\n)?\z/
-        feedback = {
-          :message => "must start with bullet points '* '",
-          :line    => i
-        }
-        errors.add(:content, feedback)
-      end
+    lines = \
+      content.each_line.map.with_index(1) { |s, l|
+        l if l > 1 && s !~ /\A(\s*\*\s[^\s].*|)(\r?\n)?\z/
+      }.compact
+    unless lines.empty?
+      feedback = {
+        :message => "must start with bullet points '* '",
+        :lines   => lines
+      }
+      errors.add(:content, feedback)
     end
   end
 
