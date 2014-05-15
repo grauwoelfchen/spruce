@@ -64,7 +64,7 @@ class NotesControllerTest < ActionController::TestCase
 
   def test_post_create_without_nest
     assert_raise ActionController::UrlGenerationError do
-      post :create, :note => {:content => "Unknown Note\n\nUnexpected"}
+      post :create, :note => {:content => "Unknown Note\r\n\r\n* Unexpected"}
     end
   end
 
@@ -104,7 +104,7 @@ class NotesControllerTest < ActionController::TestCase
     params = {
       :node_id => @note.node.id,
       :note    => {
-        :content => "More hard Linux beginner's Book\r\n"
+        :content => "More Hard Linux beginner's Book\r\n"
       }
     }
     assert_difference "Note.count", 1 do
@@ -158,7 +158,7 @@ class NotesControllerTest < ActionController::TestCase
     params = {
       :id   => @note.id,
       :note => {
-        :content => "Little hard Linux user's Book\r\n"
+        :content => "Little Hard Linux user's Book\r\n\r\n* Getting Started"
       }
     }
     put :update, params
