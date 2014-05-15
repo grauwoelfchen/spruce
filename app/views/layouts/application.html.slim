@@ -10,6 +10,7 @@ html lang="en"
     title
       | Spruce
     = stylesheet_link_tag    "application", media: "all", data: {"turbolinks-track" => true}
+    = yield :style
     = javascript_include_tag "application", data: {"turbolinks-track"=> true}
     = csrf_meta_tags
     link type="text/plain" rel="author" href="/humans.txt"
