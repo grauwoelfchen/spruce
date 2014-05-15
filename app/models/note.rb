@@ -20,7 +20,7 @@ class Note < ActiveRecord::Base
     :length => {:maximum => 64},
     :if     => ->(n) { n.name.present? }
   validates :name,
-    :format => {:with => /\A^[^.]+\z/, :message => "can't start with ."},
+    :format => {:with => /\A[^\.\s]/, :message => "can't start with dot and whitespace"},
     :if     => ->(n) { n.name.present? }
   validates :name,
     :format => {:with => /\A[^%~\/\\*`]+\z/, :message => "can't contain %~/\\*`"},
@@ -28,14 +28,31 @@ class Note < ActiveRecord::Base
   validates :content,
     :length => {:maximum => 1024 * 9},
     :if     => ->(n) { n.content.present? }
-  validates :content,
-    :format => {
-      :with    => /\A^*\s/, :multiline => true,
-      :message => "must start with bulet points '* '"
-    },
+  validate \
+    :content_must_be_valid_outline_syntax,
+    :content_must_be_valid_indent,
     :if => ->(n) { n.content.present? && n.content != n.name }
 
   def name
     content && content.split(/\r?\n/).first
+  end
+
+  private
+
+  def content_must_be_valid_outline_syntax
+    content.each_line.with_index(1) do |s, i|
+      if i > 1 && s !~ /\A(\s*\*\s[^\s].*|)(\r?\n)?\z/
+        feedback = {
+          :message => "must start with bullet points '* '",
+          :line    => i
+        }
+        errors.add(:content, feedback)
+      end
+    end
+  end
+
+  def content_must_be_valid_indent
+    # pending
+    true
   end
 end
