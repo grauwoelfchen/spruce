@@ -5,7 +5,8 @@ linux_book:
   node: tim_s_home
   name: Little hard Linux beginner's Book
   content: |
-    # Little hard Linux beginner's Book
+    Little hard Linux beginner's Book
+
     * Preface
     * Table of Contents
     * Setup box
@@ -18,7 +19,8 @@ wish_list:
   node: var
   name: My Wishlist
   content: |
-    # My Wishlist
+    My Wishlist
+
     * Comfortable Sofa
     * Cool Percolator
     * Awesome Coffee Table
@@ -28,7 +30,8 @@ idea_note:
   node: bob_s_home
   name: My Ideas
   content: |
-    # My Ideas
+    My Ideas
+
     * Tiny RSS agregator
     * Scheme Markdown Parser
 shopping_list:
@@ -36,7 +39,8 @@ shopping_list:
   node: bob_s_home
   name: Shopping list
   content: |
-    # Shopping list
+    Shopping list
+
     * Tofu
     * Salad
     * Orange Juce

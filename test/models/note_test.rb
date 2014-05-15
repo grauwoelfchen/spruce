@@ -42,7 +42,7 @@ class NoteTest < ActiveSupport::TestCase
   def test_validation_with_dot_name
     note = Note.new(:content => ".test\r\n")
     assert_not note.valid?
-    assert_equal ["can't start with ."], note.errors[:name]
+    assert_equal ["can't start with dot and whitespace"], note.errors[:name]
   end
 
   def test_validation_with_too_long_name
@@ -63,6 +63,50 @@ class NoteTest < ActiveSupport::TestCase
     assert_equal ["can't be blank"], note.errors[:content]
   end
 
+  def test_validation_with_invalid_syntax_no_bullet_points
+    note = Note.new(:content => "Title\r\n\r\nNo bullet")
+    assert_not note.valid?
+    expected = {
+      :message => "must start with bullet points '* '",
+      :lines   => [3],
+    }
+    assert_equal [expected], note.errors[:content]
+  end
+
+  def test_validation_with_invalid_syntax_no_whitespace
+    note = Note.new(:content => "Title\r\n\r\n*No whitespace")
+    assert_not note.valid?
+    expected = {
+      :message => "must start with bullet points '* '",
+      :lines  => [3],
+    }
+    assert_equal [expected], note.errors[:content]
+  end
+
+  def test_validation_with_invalid_syntax_too_many_whitespace
+    note = Note.new(:content => "Title\r\n\r\n*  Too many whitespace")
+    assert_not note.valid?
+    expected = {
+      :message => "must start with bullet points '* '",
+      :lines   => [3],
+    }
+    assert_equal [expected], note.errors[:content]
+  end
+
+  def test_validation_with_invalid_syntax_at_multiple_lines
+    note = Note.new(:content => "Title\r\n\r\nNo bullet\r\n*No whitespace")
+    assert_not note.valid?
+    expected = {
+      :message => "must start with bullet points '* '",
+      :lines   => [3, 4],
+    }
+    assert_equal [expected], note.errors[:content]
+  end
+
+  def test_validation_with_invalid_indent
+    skip
+  end
+
   # actions
 
   def test_save_with_errors
@@ -72,7 +116,7 @@ class NoteTest < ActiveSupport::TestCase
 
   def test_save_without_errors
     attributes = {
-      :content => "Test\r\nThis is test",
+      :content => "Test\r\n* This is test",
       :node    => nodes(:var)
     }
     user = users(:tim)
@@ -91,8 +135,9 @@ class NoteTest < ActiveSupport::TestCase
   def test_update_without_errors
     attributes = {
       :content => <<-NOTE
-# "New" Little hard Linux beginner's Book
-...
+New Little hard Linux beginner's Book
+
+* Getting Started
       NOTE
     }
     note = notes(:linux_book)
@@ -154,24 +199,24 @@ class NoteTest < ActiveSupport::TestCase
 
   def test_restore_at_undo
     note = notes(:wish_list)
-    note.update_attributes(:name => "# My Wishlist (private)")
+    note.update_attributes(:name => "My Wishlist (private)")
     assert_difference "Version::Cycle.count", 1 do
       assert note.versions.last.restore!
     end
     note.reload
-    assert_equal "# My Wishlist", note.name
+    assert_equal "My Wishlist", note.name
   end
 
   def test_restore_at_redo
     note = notes(:wish_list)
-    note.update_attributes(:content => "# My Wishlist (private)\r\n")
+    note.update_attributes(:content => "My Wishlist (private)\r\n")
     version = note.versions.last
     version.restore!
     assert_difference "Version::Cycle.count", 1 do
       assert version.next.restore!
     end
     note.reload
-    assert_equal "# My Wishlist (private)", note.name
+    assert_equal "My Wishlist (private)", note.name
   end
 
   # methods

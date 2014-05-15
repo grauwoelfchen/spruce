@@ -5,6 +5,18 @@
     = link_to "back", url
 - if note.errors.any?
   = render "shared/errors", resource: note
+  - ce = note.errors[:content]
+  - if ce.any? && ce.first.is_a?(Hash)
+    - content_for :style do
+      ruby:
+        selectors = \
+          ce.first[:lines].map { |n|
+            ".line-no.l-#{n}"
+          }.join(",")
+      css:
+        #{selectors} {
+          color: red !important;
+        }
 = form_for shallow_args(node, note) do |f|
   .field
     = f.text_area :content, id: "canvas", placeholder: "e.g. How to stretch your branches ?", autofocus: true

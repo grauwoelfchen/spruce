@@ -29,10 +29,17 @@ class NodeTest < ActiveSupport::TestCase
     assert_equal ["can't be blank"], node.errors[:name]
   end
 
-  def test_validation_with_dot_name
-    node = Node.new(:name => ".test")
+  def test_validation_with_duplicate_name
+    existing_node = nodes(:var)
+    node = Node.new(:name => "var", :parent => existing_node.parent).assign_to(existing_node.user)
     assert_not node.valid?
-    assert_equal ["can't start with ."], node.errors[:name]
+    assert_equal ["has already been taken"], node.errors[:name]
+  end
+
+  def test_validation_with_reserved_names
+    node = Node.new(:name => "root")
+    assert_not node.valid?
+    assert_equal ["root is reserved"], node.errors[:name]
   end
 
   def test_validation_with_too_long_name
@@ -41,17 +48,21 @@ class NodeTest < ActiveSupport::TestCase
     assert_equal ["is too long (maximum is 32 characters)"], node.errors[:name]
   end
 
-  def test_validation_with_invalid_name
-    node = Node.new(:name => "~test")
+  def test_validation_with_dot_name
+    node = Node.new(:name => ".test")
     assert_not node.valid?
-    assert_equal ["can't contain %~/\\*`"], node.errors[:name]
+    assert_equal ["can't start with ."], node.errors[:name]
   end
 
-  def test_validation_with_duplicate_name
-    existing_node = nodes(:var)
-    node = Node.new(:name => "var", :parent => existing_node.parent).assign_to(existing_node.user)
+  def test_validation_with_invalid_name
+    node = Node.new
+    node.name = "~test"
     assert_not node.valid?
-    assert_equal ["has already been taken"], node.errors[:name]
+    assert_equal ["can't contain %~/\\*`"], node.errors[:name]
+    node.name = "%test"
+    assert_not node.valid?
+    assert_equal ["can't contain %~/\\*`"], node.errors[:name]
+    # TODO It needs more cases
   end
 
   def test_validation_without_user_id

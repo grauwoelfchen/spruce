@@ -10,17 +10,21 @@ class Node < ActiveRecord::Base
     :class_name => "Version::Ring",
     :as         => :item
 
+  has_paper_trail \
+    :class_name => "Version::Cycle",
+    :versions   => :versions,
+    :meta       => {:user_id => :user_id}
   acts_as_tree \
     :dependent   => :delete_all,
     :name_column => :name,
     :order       => :name
-  has_paper_trail \
-    :class_name => "Version::Cycle",
-    :versions   => :versions,
-    :meta       => { :user_id => :user_id }
 
   validates :name, :presence => true
   validates :name, :uniqueness => {:scope => [:user_id, :parent_id]}
+  validates :name, :exclusion => {
+    :in      => %w[root],
+    :message => "%{value} is reserved"
+  }
   validates :name,
     :length => {:maximum => 32},
     :if     => ->(n) { n.name.present? }
