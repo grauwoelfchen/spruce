@@ -4,11 +4,11 @@
       li
         span.name
           - if n.notes.present? || n.children.present?
-            = link_to "d", node_path(n), data: {remote: true}, class: "node node-#{n.id}"
+            = link_to "d", n, data: {remote: true}, class: "node node-#{n.id}"
           - else
             span.node d
           | &nbsp;
-          = link_to n.name, node_path(n)
+          = link_to n.name, n
         | &nbsp;
         span.updated= n.updated_at.strftime("%Y-%m-%dT%H:%M:%S")
         span class="nodes-#{n.id}"
@@ -18,6 +18,6 @@
       li
         span.name
           | -&nbsp;
-          = link_to truncate(n.name, length: 36), note_path(n)
+          = link_to truncate(n.name, length: 36), n
         | &nbsp;
         span.updated= n.updated_at.strftime("%Y-%m-%dT%H:%M:%S")

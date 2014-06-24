@@ -27,5 +27,5 @@ end
 
 production:
 <%= render_scheme_yaml(ENV["DATABASE_URL"]) %>
-  pool: 5
+  pool: 15
   timeout: 5000
