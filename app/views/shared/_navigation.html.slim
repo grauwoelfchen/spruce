@@ -25,9 +25,9 @@ p.navigation
     - if controller_name == "nodes" && action_name == "show"
       span.title SHOW
     - elsif action_name.in?(%w[show edit update])
-      = link_to "show", node_path(node)
+      = link_to "show", node
     - elsif note && action_name.in?(%w[new create edit update])
-      = link_to "show", node_path(node)
+      = link_to "show", node
     - else
       | show
     | &nbsp;
@@ -59,7 +59,7 @@ p.navigation
       - if action_name == "show"
         span.title SHOW
       - elsif action_name.in?(%w[edit update])
-        = link_to "show", note_path(note)
+        = link_to "show", note
       - else
         | show
     - else
@@ -78,7 +78,7 @@ p.navigation
     span(class=styles[:note][:edit])
       | )
   - else
-    = link_to "show", node_path(node.parent)
+    = link_to "show", node.parent
     | &nbsp;
     span(class=styles[:node][:new])
       | (
@@ -98,7 +98,7 @@ p.navigation
       - if action_name == "show"
         span.title SHOW
       - elsif action_name.in?(%w[edit update])
-        = link_to "show", note_path(note)
+        = link_to "show", note
       - else
         | show
     - else
