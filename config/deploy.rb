@@ -138,5 +138,6 @@ namespace :deploy do
   end
 end
 
-before "deploy:assets:precompile", "deploy:assets:install_bower"
-before "deploy:assets:precompile", "deploy:assets:install_components"
+# does not run every time
+#before "deploy:assets:precompile", "deploy:assets:install_bower"
+#before "deploy:assets:precompile", "deploy:assets:install_components"
