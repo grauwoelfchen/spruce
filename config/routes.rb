@@ -11,7 +11,9 @@ Spruce::Application.routes.draw do
     :constraints => {:token => /[A-z0-9]+/}
 
   # reset password
-  resources :password_resets, :param => :token, :except => [:index, :show, :destroy]
+  resources :password_resets,
+    :param  => :token,
+    :except => [:index, :show, :destroy]
 
   resources :nodes, :path => "b", :shallow => true, :only => [:index] do
     resources :nodes, :path => "b", :except => [:index], :with => [:delete]
@@ -31,9 +33,10 @@ Spruce::Application.routes.draw do
   get "sitemap", :to => "sitemap#index", :constraints => {:format => "xml"}
 
   # errors
-  %w(404 406 422 500).each do |code|
-    get code, :to => "errors#show", :code => code
-  end
+  match ":code",
+    :to          => "errors#show",
+    :constraints => {:status => /\d{3}/ },
+    :via         => :all
 
   root "pages#index"
 end
