@@ -4,17 +4,16 @@ html lang="en"
     meta charset="utf-8"
     meta name="title" content="Spruce"
     - description = capture do
-      | Spruce is simple outliner built as text sharing on file system like tree.
+      | Spruce is simple tree outliner.
       | The interface is suitable for Text-based web browser.
     meta name="description" content=description
     title
       | Spruce
-    = stylesheet_link_tag    "application", media: "all", data: {"turbolinks-track" => true}
-    = javascript_include_tag "application", data: {"turbolinks-track"=> true}
+    = stylesheet_link_tag "application.min", media: "all"
     = csrf_meta_tags
     link type="text/plain" rel="author" href="/humans.txt"
     link href="/favicon.ico" rel="shortcut icon"
-  body.minimal
+  body.error
     section
       .main
         == yield

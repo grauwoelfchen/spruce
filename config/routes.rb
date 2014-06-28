@@ -11,7 +11,9 @@ Spruce::Application.routes.draw do
     :constraints => {:token => /[A-z0-9]+/}
 
   # reset password
-  resources :password_resets, :param => :token, :except => [:index, :show, :destroy]
+  resources :password_resets,
+    :param  => :token,
+    :except => [:index, :show, :destroy]
 
   resources :nodes, :path => "b", :shallow => true, :only => [:index] do
     resources :nodes, :path => "b", :except => [:index], :with => [:delete]
@@ -29,6 +31,12 @@ Spruce::Application.routes.draw do
   get "changelog",    :to => "pages#changelog"
 
   get "sitemap", :to => "sitemap#index", :constraints => {:format => "xml"}
+
+  # errors
+  match ":code",
+    :to          => "errors#show",
+    :constraints => {:status => /\d{3}/ },
+    :via         => :all
 
   root "pages#index"
 end
