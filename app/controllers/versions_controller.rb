@@ -2,7 +2,7 @@ class VersionsController < ApplicationController
   before_filter :load_version
 
   def revert
-    render :layout => "minimal"
+    render :layout => "application.min"
   end
 
   def restore
