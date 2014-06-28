@@ -30,5 +30,10 @@ Spruce::Application.routes.draw do
 
   get "sitemap", :to => "sitemap#index", :constraints => {:format => "xml"}
 
+  # errors
+  %w(404 406 422 500).each do |code|
+    get code, :to => "errors#show", :code => code
+  end
+
   root "pages#index"
 end
