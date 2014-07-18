@@ -26,4 +26,18 @@ see `.bowerrc` and `bower.json`
 (spruce) % bundle exec foreman run dev
 ```
 
-see `Procfile`
+### Test
+
+```
+;; suit
+(spruce) % bundle exec foreman run rake test
+;; run file
+(spruce) % bundle exec foreman run ruby -I.:test test/models/node_test.rb
+;; see minitest help
+(spruce) % bundle exec foreman run ruby -I.:test test/test_helper.rb --help
+minitest options:
+    -h, --help                       Display this help.
+    -s, --seed SEED                  Sets random seed
+    -v, --verbose                    Verbose. Show progress processing files.
+    -n, --name PATTERN               Filter test names on pattern (e.g. /foo/)
+```
