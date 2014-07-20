@@ -19,6 +19,8 @@ class NodeTest < ActiveSupport::TestCase
     node = Node.new
     assert_respond_to node, :user
     assert_respond_to node, :notes
+    assert_respond_to node, :recorded_changes
+    assert_respond_to node, :versions
   end
 
   # validations
@@ -31,7 +33,10 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_validation_with_duplicate_name
     existing_node = nodes(:var)
-    node = Node.new(:name => "var", :parent => existing_node.parent).assign_to(existing_node.user)
+    node = Node.new(
+      :name   => "var",
+      :parent => existing_node.parent
+    ).assign_to(existing_node.user)
     assert_not node.valid?
     assert_equal ["has already been taken"], node.errors[:name]
   end
@@ -62,7 +67,9 @@ class NodeTest < ActiveSupport::TestCase
     node.name = "%test"
     assert_not node.valid?
     assert_equal ["can't contain %~/\\*`"], node.errors[:name]
-    # TODO It needs more cases
+    node.name = "foo/bar"
+    assert_not node.valid?
+    assert_equal ["can't contain %~/\\*`"], node.errors[:name]
   end
 
   def test_validation_without_user_id
@@ -81,7 +88,8 @@ class NodeTest < ActiveSupport::TestCase
     node = nodes(:bob_s_home)
     node.parent = node
     assert_not node.valid?
-    assert_equal ["You cannot add an ancestor as a descendant"], node.errors[:parent_id]
+    assert_equal ["You cannot add an ancestor as a descendant"],
+      node.errors[:parent_id]
   end
 
   # actions
@@ -133,35 +141,25 @@ class NodeTest < ActiveSupport::TestCase
     assert Note.where(:node => node).empty?
   end
 
-  # included methods
+  # visibility and assignment
 
-  def test_responding_to_visible_to
+  def test_availability_of_visible_to
     assert_respond_to Node, :visible_to
   end
 
-  def test_responding_to_assign_to
-    node = Node.new
-    assert_respond_to node, :assign_to
+  def test_availability_of_assign_to
+    assert_respond_to Node.new, :assign_to
   end
 
-  def test_visible_to
+  def test_relation_by_visible_to
     user = users(:bob)
-    assert_kind_of ActiveRecord::Relation, Node.visible_to(user)
+    relation = Node.visible_to(user)
+    assert_kind_of ActiveRecord::Relation, relation
+    assert_equal ["#{Node.table_name}.user_id = #{user.id}"],
+      relation.where_values
   end
 
-  def test_user_id_was_for_new_instance
-    user = users(:bob)
-    node = Node.new.assign_to(user)
-    assert_equal user.id, node.user_id_was
-  end
-
-  def test_user_id_was_for_existed_node
-    user = users(:bob)
-    node = nodes(:tim_s_home).assign_to(user) # unexpected flow
-    assert_equal user.id, node.user_id_was
-  end
-
-  def test_assign_to
+  def test_assignment_by_assign_to
     node = Node.new
     user = users(:bob)
     result = node.assign_to(user)
@@ -169,10 +167,22 @@ class NodeTest < ActiveSupport::TestCase
     assert_equal user, result.user
   end
 
-  def test_roots
-    roots = Node.roots
-    assert_equal Node.where(:parent_id => nil).length, roots.length
+  def test_owner_consistency_after_init
+    user = users(:bob)
+    node = Node.new.assign_to(user)
+    assert_equal user.id, node.user_id
+    assert_equal user.id, node.user_id_was
   end
+
+  def test_owner_consistency_after_transfer
+    new_user = users(:bob)
+    original_node = nodes(:tim_s_home)
+    node = original_node.assign_to(new_user)
+    assert_equal new_user.id, node.user_id
+    assert_equal new_user.id, node.user_id_was
+  end
+
+  # restoration
 
   def test_restore_at_undo
     node = nodes(:var)
@@ -197,6 +207,11 @@ class NodeTest < ActiveSupport::TestCase
   end
 
   # methods
+
+  def test_roots
+    roots = Node.roots
+    assert_equal Node.where(:parent_id => nil).length, roots.length
+  end
 
   def test_paths
     node = nodes(:lib)

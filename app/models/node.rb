@@ -32,8 +32,11 @@ class Node < ActiveRecord::Base
     :format => {:with => /\A^[^\.]/, :message => "can't start with ."},
     :if     => ->(n) { n.name.present? }
   validates :name,
-    :format => {:with => /\A[^%~\/\\*`]+\z/, :message => "can't contain %~/\\*`"},
-    :if     => ->(n) { n.name.present? }
+    :format => {
+      :with    => /\A[^%~\/\\*`]+\z/,
+      :message => "can't contain %~/\\*`"
+    },
+    :if => ->(n) { n.name.present? }
   validates :user_id, :parent_id, :presence => true
 
   def paths

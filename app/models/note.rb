@@ -20,11 +20,17 @@ class Note < ActiveRecord::Base
     :length => {:maximum => 64},
     :if     => ->(n) { n.name.present? }
   validates :name,
-    :format => {:with => /\A[^\.\s]/, :message => "can't start with dot and whitespace"},
-    :if     => ->(n) { n.name.present? }
+    :format => {
+      :with    => /\A[^\.\s]/,
+      :message => "can't start with dot and whitespace"
+    },
+    :if => ->(n) { n.name.present? }
   validates :name,
-    :format => {:with => /\A[^%~\/\\*`]+\z/, :message => "can't contain %~/\\*`"},
-    :if     => ->(n) { n.name.present? }
+    :format => {
+      :with    => /\A[^%~\/\\*`]+\z/,
+      :message => "can't contain %~/\\*`"
+    },
+    :if => ->(n) { n.name.present? }
   validates :content,
     :length => {:maximum => 1024 * 9},
     :if     => ->(n) { n.content.present? }

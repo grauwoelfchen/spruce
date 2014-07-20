@@ -17,6 +17,8 @@ class NoteTest < ActiveSupport::TestCase
     note = Note.new
     assert_respond_to note, :user
     assert_respond_to note, :node
+    assert_respond_to note, :recorded_changes
+    assert_respond_to note, :versions
   end
 
   # validations
@@ -169,41 +171,47 @@ New Little hard Linux beginner's Book
     assert_nil Note.where(:id => note.id).first
   end
 
-  # included methods
+  # visibility and assignment
 
-  def test_responding_to_visible_to
+  def test_availability_of_visible_to
     assert_respond_to Note, :visible_to
   end
 
-  def test_responding_to_assign_to
-    note = Note.new
-    assert_respond_to note, :assign_to
+  def test_availability_of_assign_to
+    assert_respond_to Note.new, :assign_to
   end
 
-  def test_visible_to
+  def test_relation_by_visible_to
     user = users(:bob)
-    assert_kind_of ActiveRecord::Relation, Note.visible_to(user)
+    relation = Note.visible_to(user)
+    assert_kind_of ActiveRecord::Relation, relation
+    assert_equal ["#{Note.table_name}.user_id = #{user.id}"],
+      relation.where_values
   end
 
-  def test_user_id_was_for_new_instance
+  def test_assignment_by_assign_to
     user = users(:bob)
     note = Note.new.assign_to(user)
+    assert_kind_of Note, note
+    assert_equal user, note.user
+  end
+
+  def test_owner_consistency_after_init
+    user = users(:bob)
+    note = Note.new.assign_to(user)
+    assert_equal user.id, note.user_id
     assert_equal user.id, note.user_id_was
   end
 
-  def test_user_id_was_for_existed_note
-    user = users(:bob)
-    note = notes(:wish_list).assign_to(user) # unexpected flow
-    assert_equal user.id, note.user_id_was
+  def test_owner_consistency_after_transfer
+    new_user = users(:bob)
+    original_note = notes(:wish_list)
+    note = original_note.assign_to(new_user)
+    assert_equal new_user.id, note.user_id
+    assert_equal new_user.id, note.user_id_was
   end
 
-  def test_assign_to
-    note = Note.new
-    user = users(:bob)
-    result = note.assign_to(user)
-    assert_kind_of Note, result
-    assert_equal user, result.user
-  end
+  # restoration
 
   def test_restore_at_undo
     note = notes(:wish_list)

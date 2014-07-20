@@ -6,8 +6,11 @@ class User < ActiveRecord::Base
     :length => {:minimum => 3, :maximum => 18},
     :if     => ->(u) { u.username.present? && u.errors[:username].empty? }
   validates :username,
-    :format => {:with => /\A[a-z0-9\_]+\z/, :message => "must be alphanumeric characters and _"},
-    :if     => ->(u) { u.username.present? }
+    :format => {
+      :with    => /\A[a-z0-9\_]+\z/,
+      :message => "must be alphanumeric characters and _"
+    },
+    :if => ->(u) { u.username.present? }
   validates :username,
     :uniqueness => true,
     :if         => ->(u) { u.username.present? }
