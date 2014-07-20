@@ -13,6 +13,14 @@ module ApplicationHelper
     "#{controller_name}##{action_name}".in?(options)
   end
 
+  def display_favicon_link(env)
+    if env == "development"
+      favicon_link_tag "/favicon-development.ico"
+    else
+      favicon_link_tag "/favicon.ico"
+    end
+  end
+
   # Handles parent, child to consider its in shallow context.
   # if @node is given, parent is loaded via @node.parent.
   #

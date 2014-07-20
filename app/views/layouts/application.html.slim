@@ -14,7 +14,7 @@ html lang="en"
     = javascript_include_tag "application", data: {"turbolinks-track"=> true}
     = csrf_meta_tags
     link type="text/plain" rel="author" href="/humans.txt"
-    link href="/favicon.ico" rel="shortcut icon"
+    = display_favicon_link Rails.env
   body.application
     header
       h1
