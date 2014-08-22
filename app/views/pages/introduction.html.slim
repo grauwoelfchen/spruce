@@ -3,27 +3,36 @@
   .links
     | >&nbsp;
     = link_to "back", root_path
+
   h3 What's Spruce
   ul.descriptions
     li
+      strong * Simple Outliner
       ul
-        li
-          span * Simple Outliner
-          ul
-            li * Textarea (Leaf) only
-            li * You can draw tree with only text
-            li * Moving syntax support such as `<` or `-` (under development)
-        li
-          span * Directory Organizer
-          ul
-            li * Node (Branch) tree viewer
-            li * You can put outlines into tree like filesystem
+        li * Textarea (Leaf) only
+        li * You can draw tree with only text
+        li * Moving syntax support such as `<` or `-` (under development)
+    li
+      strong * Directory Organizer
+      ul
+        li * Node (Branch) tree viewer
+        li * You can put outlines into tree like filesystem
+
+  h3 Features
+  ul.features
+    li * Undo/Redo support
+    li * SSL support
+    li * Expand view with Ajax
+    li * Text browser friendly design
+    li * Simple syntax
+
   h3 Screenshots
   p Do you use text-browser? No problem, it is also supported ;)
   ul.screenshots
     li= screenshot "spruce-branch-with-firefox.png", "branch with firefox"
     li= screenshot "spruce-leaf-with-firefox.png",   "leaf with firefox"
     li= screenshot "spruce-with-elinks.png",         "spruce with elinks"
+
   h3 Author
   p.author
     span.name Yasuhiro Asaka
@@ -33,5 +42,4 @@
     | ,&nbsp;
     = link_to "@grauwoelfchen", "https://twitter.com/grauwoelfchen", target: "_blank"
     | )
-  p
-    | If you have any problem, please tell me :)
+  p If you have any problem, please tell me :)
