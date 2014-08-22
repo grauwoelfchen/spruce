@@ -4,25 +4,31 @@ ul.links
   padding 0
   li
     list-style none
+    ul
+      margin  3px 0 3px 12px
+      padding 0
 
 // introduction
 #pages
-  ul.descriptions
-    margin  9px 0px 9px 5px
-    padding 0
+  ul
     li
       list-style none
-      span
-        font-weight bold
-      ul
-        margin  4px 0px 4px 18px
-        padding 0
+  ul.descriptions,
+  ul.features
+    margin  3px 0px 3px 20px
+
+  ul.descriptions,
+  ul.features,
   ul.screenshots
-    margin  9px 0px
     padding 0
     li
-      display    inline
-      list-style none
+      ul
+        margin  3px 0px 3px 18px
+        padding 0
+
+  ul.screenshots
+    li
+      display inline
       margin 0px 9px 0px 0px
       img
         border 1px solid lightgray
