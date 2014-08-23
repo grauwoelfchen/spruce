@@ -21,6 +21,56 @@ class NoteTest < ActiveSupport::TestCase
     assert_respond_to note, :versions
   end
 
+  # callbacks
+
+  def test_operation_application_with_unindent_sign
+    content = <<-CONTENT
+Test
+
+* foo
+  -* bar
+    CONTENT
+    attributes = {
+      :content => content,
+      :node    => nodes(:var)
+    }
+    user = users(:tim)
+    note = Note.new(attributes).assign_to(user)
+    note.save
+    assert_empty note.errors
+    expected = <<-EXPECTED
+Test
+
+* foo
+* bar
+    EXPECTED
+    assert_equal expected, note.content
+  end
+
+  def test_operation_application_with_indent_sign
+    content = <<-CONTENT
+Test
+
+* foo
++* bar
+    CONTENT
+    attributes = {
+      :content => content,
+      :node    => nodes(:var)
+    }
+    user = users(:tim)
+    note = Note.new(attributes).assign_to(user)
+    note.save
+    assert_empty note.errors
+    expected = <<-EXPECTED
+Test
+
+* foo
+  * bar
+    EXPECTED
+    assert_equal expected, note.content
+  end
+
   # validations
 
   def test_validation_without_user_id

@@ -4,8 +4,8 @@ class Node < ActiveRecord::Base
   include ChangeRecordable
 
   belongs_to :user
-  has_many   :notes, :dependent => :delete_all
-  has_many   :recorded_changes,
+  has_many :notes, :dependent => :delete_all
+  has_many :recorded_changes,
     lambda { order(:created_at => :asc) },
     :class_name => "Version::Ring",
     :as         => :item
