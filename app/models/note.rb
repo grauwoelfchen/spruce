@@ -5,7 +5,7 @@ class Note < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :node
-  has_many   :recorded_changes,
+  has_many :recorded_changes,
     lambda { order(:created_at => :asc) },
     :class_name => "Version::Layer",
     :as         => :item
@@ -13,6 +13,8 @@ class Note < ActiveRecord::Base
   has_paper_trail \
     :class_name => "Version::Cycle",
     :meta       => {:user_id => :user_id}
+
+  before_validation :apply_operations
 
   validates_presence_of :user_id, :node_id, :content
   validates :name, :presence => true, :if => ->(n) { n.content.present? }
@@ -45,22 +47,36 @@ class Note < ActiveRecord::Base
 
   private
 
-  def content_must_be_valid_outline_syntax
-    lines = \
-      content.each_line.map.with_index(1) { |s, l|
-        l if l > 1 && s !~ /\A(\s*\*\s[^\s].*|)(\r?\n)?\z/
-      }.compact
-    unless lines.empty?
-      feedback = {
-        :message => "must start with bullet points '* '",
-        :lines   => lines
-      }
-      errors.add(:content, feedback)
+    def apply_operations
+      # TODO improve operation
+      if content
+        # -
+        self.content = content
+          .gsub(/^(\s*)\s{2}\-\*/, '\1*')
+          .gsub(/\u0001/, "")
+        # +
+        self.content = content
+          .gsub(/^(\s*)\+\*/u, '\1  *')
+          .gsub(/\u0001/, "")
+      end
     end
-  end
 
-  def content_must_be_valid_indent
-    # pending
-    true
-  end
+    def content_must_be_valid_outline_syntax
+      lines = \
+        content.each_line.map.with_index(1) { |line, i|
+          i if i > 1 && line !~ /\A(\s*\*\s[^\s].*|)(\r?\n)?\z/
+        }.compact
+      unless lines.empty?
+        feedback = {
+          :message => "must start with bullet points '* '",
+          :lines   => lines
+        }
+        errors.add(:content, feedback)
+      end
+    end
+
+    def content_must_be_valid_indent
+      # pending
+      true
+    end
 end
