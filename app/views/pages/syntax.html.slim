@@ -1,0 +1,52 @@
+#pages.syntax
+  h2 Syntax
+  .links
+    | >&nbsp;
+    = link_to "return to the top", root_path
+
+  h3 Rules
+  ul.descriptions
+    li
+      strong * Put the title
+      ul
+        li * First line is treated as title
+        li * Leave second line as blank
+    li
+      strong * Start with bullet + a whitespace
+      ul
+        li * Entry must be started with `* `
+    li
+      strong * Indent with `  `
+      ul
+        li * Indent must be 2 whitespaces
+
+  h3 Operators
+  ul.descriptions
+    li
+      strong * `-` (minus sign)
+      ul
+        li * Unindent one level
+    li
+      strong * `+` (plus sign)
+      ul
+        li * Indent one level
+
+  h3 Example
+  p e.g. indent with `+`
+  pre.example.before
+    | Issues
+    
+      * foo
+      +* bar
+        * baz
+      * qux
+      * quux
+  p after save, result:
+  pre.example.after
+    | Issues
+    
+      * foo
+        * bar
+        * baz
+      * qux
+      * quux

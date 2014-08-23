@@ -1,8 +1,8 @@
-#pages
+#pages.introduction
   h2 Introduction
   .links
     | >&nbsp;
-    = link_to "back", root_path
+    = link_to "return to the top", root_path
 
   h3 What's Spruce
   ul.descriptions
@@ -26,8 +26,13 @@
     li * Text browser friendly design
     li * Simple syntax
 
+  h3 Syntax
+  p.syntax
+    | See&nbsp;
+    = link_to "syntax page", syntax_path
+
   h3 Screenshots
-  p Do you use text-browser? No problem, it is also supported ;)
+  p.screenshots Do you use text-browser? No problem, it is also supported ;)
   ul.screenshots
     li= screenshot "spruce-branch-with-firefox.png", "branch with firefox"
     li= screenshot "spruce-leaf-with-firefox.png",   "leaf with firefox"
@@ -40,6 +45,7 @@
     | (
     = link_to "humans.txt", "/humans.txt"
     | ,&nbsp;
-    = link_to "@grauwoelfchen", "https://twitter.com/grauwoelfchen", target: "_blank"
+    = link_to "@grauwoelfchen",
+      "https://twitter.com/grauwoelfchen", target: "_blank"
     | )
-  p If you have any problem, please tell me :)
+  p.note If you have any problem, please tell me :)

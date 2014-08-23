@@ -1,45 +1,56 @@
-#pages
+#pages.changelog
   h2 Changelog
   .links
     | >&nbsp;
-    = link_to "back", root_path
+    = link_to "return to the top", root_path
+
   h3 Recent changes
   ul.changelog
     li.entry
+      | * Indent/Unindent operator support
+      | &nbsp;
+      span.released 2014-08-24
+      ul
+        li
+          | * Add operator + (plus sign) and - (minus sign)
+          ul
+            li * Use + for indent, - for unindent before bullet (like: `-*`)
+        li * Create #{link_to("Syntax page", syntax_path)}
+    li.entry
       | * Alpha release
       | &nbsp;
-      span.released 2014-05-05T10:00:00
+      span.released 2014-05-05
       ul
         li * Fix various stuff of production environment
-        li * Publish as #{link_to("https://spruce-tree.net/", "https://spruce-tree.net/")}
+        li * Publish as #{link_to("https://spruce-tree.net/", root_path)}
     li.entry
       | * Deployment
       | &nbsp;
-      span.released 2014-04-20T20:00:00
+      span.released 2014-04-20
       ul
         li * Introduce automation flow for deploy and infra setup
     li.entry
       | * Version Management
       | &nbsp;
-      span.released 2014-03-30T18:00:00
+      span.released 2014-03-30
       ul
         li * LifeCycle Tracking (undo & redo)
     li.entry
       | * Background Job
       | &nbsp;
-      span.released 2014-03-20T18:00:00
+      span.released 2014-03-20
       ul
         li * Add worker for background jobs
     li.entry
       | * Navigation for text-browser
       | &nbsp;
-      span.released 2014-03-19T18:00:00
+      span.released 2014-03-19
       ul
         li * Delete & Logout link without JavaScript
     li.entry
       | * First release!
       | &nbsp;
-      span.released 2014-03-18T20:00:00
+      span.released 2014-03-18
       ul
         li * Authentication, Activation
         li * Node(branch), Note(leaf)
