@@ -68,12 +68,6 @@ class RoutesTest < ActionDispatch::IntegrationTest
     assert_routing(
       {:method => "put", :path => "/b/1"},
       {:controller => "nodes", :action => "update",  :id => "1"})
-    #assert_routing(
-    #  {:method => "delete", :path => "/b/1"},
-    #  {:controller => "nodes", :action => "destroy", :id => "1"})
-    assert_recognizes(
-      {:controller => "nodes", :action => "destroy", :id => "1"},
-      {:method => "delete", :path => "/b/1"})
     assert_routing(
       {:method => "get", :path => "/b/1/delete"},
       {:controller => "nodes", :action => "delete", :id => "1"})
@@ -98,12 +92,6 @@ class RoutesTest < ActionDispatch::IntegrationTest
     assert_routing(
       {:method => "put", :path => "/l/1"},
       {:controller => "notes", :action => "update", :id => "1"})
-    #assert_routing(
-    #  {:method => "delete", :path => "/l/1"},
-    #  {:controller => "notes", :action => "destroy", :id => "1"})
-    assert_recognizes(
-      {:controller => "notes", :action => "destroy", :id => "1"},
-      {:method => "delete", :path => "/l/1"})
     assert_routing(
       {:method => "get", :path => "/l/1/delete"},
       {:controller => "notes", :action => "delete", :id => "1"})

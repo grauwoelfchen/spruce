@@ -16,8 +16,9 @@ Spruce::Application.routes.draw do
     :except => [:index, :show, :destroy]
 
   resources :nodes, :path => "b", :shallow => true, :only => [:index] do
-    resources :nodes, :path => "b", :except => [:index], :with => [:delete]
-    resources :notes, :path => "l", :except => [:index], :with => [:delete]
+    options = {:except => [:index, :destroy], :with => [:delete]}
+    resources :nodes, {:path => "b"}.merge(options)
+    resources :notes, {:path => "l"}.merge(options)
   end
 
   # versions
