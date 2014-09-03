@@ -81,7 +81,7 @@ class Note < ActiveRecord::Base
       c = 0;
       lines = \
         content.each_line.map.with_index(1) { |line, i|
-          line.gsub(/\r\n/, '') =~ /\A([\s]+)/
+          line.gsub(/\r\n|\n/, '') =~ /\A([\s]+)/
           indent = $1.to_s.length
           if (i == 1 && indent != 0) ||
              (i == 2 && indent != 0) ||
