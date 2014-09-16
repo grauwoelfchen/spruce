@@ -91,7 +91,24 @@ class Note < ActiveRecord::Base
     end
 
     def content_must_be_valid_indent
-      # pending
-      true
+      c = 0; # current indent
+      lines = \
+        content.each_line.map.with_index(1) { |line, i|
+          line.gsub(/\r\n|\n/, '') =~ /\A([\s]+)/
+          indent = $1.to_s.length
+          if (i == 1 && indent != 0) || ![c - 2, c, c + 2].include?(indent)
+            i
+          else
+            c = indent
+            nil
+          end
+        }.compact
+      unless lines.empty?
+        feedback = {
+          :message => "has invalid indent",
+          :lines   => lines
+        }
+        errors.add(:content, feedback)
+      end
     end
 end

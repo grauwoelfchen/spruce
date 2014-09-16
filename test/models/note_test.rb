@@ -169,13 +169,11 @@ class NoteTest < ActiveSupport::TestCase
   end
 
   def test_validation_with_invalid_indent
-    # not implemented yet
-    skip
-    note = Note.new(:content => "Title\r\n  * Indent")
+    note = Note.new(:content => "* Title\r\n    * Indent")
     assert_not note.valid?
     expected = {
       :message => "has invalid indent",
-      :lies    => [2]
+      :lines   => [2]
     }
     assert_equal [expected], note.errors[:content]
   end
