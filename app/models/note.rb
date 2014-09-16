@@ -29,7 +29,7 @@ class Note < ActiveRecord::Base
     :if => ->(n) { n.name.present? }
   validates :name,
     :format => {
-      :with    => /\A[^%~\/\\*`]+\z/,
+      :with    => /\A[^%~\/\\`]+\z/,
       :message => "can't contain %~/\\*`"
     },
     :if => ->(n) { n.name.present? }
@@ -37,12 +37,13 @@ class Note < ActiveRecord::Base
     :length => {:maximum => 1024 * 9},
     :if     => ->(n) { n.content.present? }
   validate \
+    :content_must_not_contain_blank_line,
     :content_must_be_valid_outline_syntax,
     :content_must_be_valid_indent,
     :if => ->(n) { n.content.present? && n.content != n.name }
 
   def name
-    content && content.split(/\r?\n/).first
+    content.to_s.split(/\r?\n/).first.to_s.gsub(/^\*?\s*/, "")
   end
 
   private
@@ -61,10 +62,24 @@ class Note < ActiveRecord::Base
       end
     end
 
+    def content_must_not_contain_blank_line
+      lines = \
+        content.each_line.map.with_index(1) { |line, i|
+          i if line.gsub(/\r?\n/, "").empty?
+        }.compact
+      unless lines.empty?
+        feedback = {
+          :message => "must not contain blank line",
+          :lines   => lines
+        }
+        errors.add(:content, feedback)
+      end
+    end
+
     def content_must_be_valid_outline_syntax
       lines = \
         content.each_line.map.with_index(1) { |line, i|
-          i if i > 1 && line !~ /\A(\s*\*\s[^\s].*|)(\r?\n)?\z/
+          i if line !~ /\A(\s*\*\s[^\s].*|)(\r?\n)?\z/
         }.compact
       unless lines.empty?
         feedback = {

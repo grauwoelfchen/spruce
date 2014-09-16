@@ -5,33 +5,29 @@ linux_book:
   node: tim_s_home
   name: Little hard Linux beginner's Book
   content: |
-    Little hard Linux beginner's Book
-
-    * Preface
-    * Table of Contents
-    * Setup box
-      * Gentoo and Funtoo
-      * About X Window System
-      * Xterm
-      * Tiling Window Managers
+    * Little hard Linux beginner's Book
+      * Preface
+      * Table of Contents
+      * Setup box
+        * Gentoo and Funtoo
+        * About X Window System
+        * Xterm
+        * Tiling Window Managers
 wish_list:
   user: tim
   node: var
   name: My Wishlist
   content: |
-    My Wishlist
-
-    * Comfortable Sofa
-    * Cool Percolator
-    * Awesome Coffee Table
+    * My Wishlist
+      * Comfortable Sofa
+      * Cool Percolator
+      * Awesome Coffee Table
 ## bob's
 idea_note:
   user: bob
   node: bob_s_home
   name: My Ideas
   content: |
-    My Ideas
-
     * Tiny RSS agregator
     * Scheme Markdown Parser
 shopping_list:
@@ -39,8 +35,7 @@ shopping_list:
   node: bob_s_home
   name: Shopping list
   content: |
-    Shopping list
-
-    * Tofu
-    * Salad
-    * Orange Juce
+    * Shopping list
+      * Tofu
+      * Salad
+      * Orange Juce

@@ -25,8 +25,7 @@ class NoteTest < ActiveSupport::TestCase
 
   def test_operation_application_with_unindent_sign
     content = <<-CONTENT
-Test
-
+* test
 * foo
   -* bar
     CONTENT
@@ -39,8 +38,7 @@ Test
     note.save
     assert_empty note.errors
     expected = <<-EXPECTED
-Test
-
+* test
 * foo
 * bar
     EXPECTED
@@ -49,10 +47,9 @@ Test
 
   def test_operation_application_with_indent_sign
     content = <<-CONTENT
-Test
-
-* foo
-+* bar
+* test
+  * foo
+  +* bar
     CONTENT
     attributes = {
       :content => content,
@@ -63,10 +60,9 @@ Test
     note.save
     assert_empty note.errors
     expected = <<-EXPECTED
-Test
-
-* foo
-  * bar
+* test
+  * foo
+    * bar
     EXPECTED
     assert_equal expected, note.content
   end
@@ -86,7 +82,7 @@ Test
   end
 
   def test_validation_without_name
-    note = Note.new(:content => "\r\n\r\ntest")
+    note = Note.new(:content => "\r\ntest")
     assert_not note.valid?
     assert_equal ["can't be blank"], note.errors[:name]
   end
@@ -115,42 +111,59 @@ Test
     assert_equal ["can't be blank"], note.errors[:content]
   end
 
+  def test_validation_with_too_long_content
+    note = Note.new(:content => "loong" * 2000)
+    assert_not note.valid?
+    assert_equal ["is too long (maximum is 9216 characters)"],
+      note.errors[:content]
+  end
+
+  def test_validation_with_blank_line
+    note = Note.new(:content => "* First entry\r\n\r\n* Third entry\r\n")
+    assert_not note.valid?
+    expected = {
+      :message => "must not contain blank line",
+      :lines   => [2],
+    }
+    assert_equal [expected], note.errors[:content]
+  end
+
   def test_validation_with_invalid_syntax_no_bullet_points
-    note = Note.new(:content => "Title\r\n\r\nNo bullet")
+    note = Note.new(:content => "Title\r\nNo bullet")
     assert_not note.valid?
     expected = {
       :message => "must start with bullet points '* '",
-      :lines   => [3],
+      :lines   => [1, 2],
     }
     assert_equal [expected], note.errors[:content]
   end
 
   def test_validation_with_invalid_syntax_no_whitespace
-    note = Note.new(:content => "Title\r\n\r\n*No whitespace")
+    note = Note.new(:content => "* Title\r\n*No whitespace")
     assert_not note.valid?
     expected = {
       :message => "must start with bullet points '* '",
-      :lines  => [3],
+      :lines  => [2],
     }
     assert_equal [expected], note.errors[:content]
   end
 
   def test_validation_with_invalid_syntax_too_many_whitespace
-    note = Note.new(:content => "Title\r\n\r\n*  Too many whitespace")
+    note = Note.new(:content => "* Title\r\n*  Too many whitespace")
     assert_not note.valid?
     expected = {
       :message => "must start with bullet points '* '",
-      :lines   => [3],
+      :lines   => [2],
     }
     assert_equal [expected], note.errors[:content]
   end
 
   def test_validation_with_invalid_syntax_at_multiple_lines
-    note = Note.new(:content => "Title\r\n\r\nNo bullet\r\n*No whitespace")
+    note = Note.new(:content => "* Title\r\nNo bullet\r\n*No whitespace")
     assert_not note.valid?
     expected = {
       :message => "must start with bullet points '* '",
-      :lines   => [3, 4],
+      :lines   => [2, 3],
     }
     assert_equal [expected], note.errors[:content]
   end
@@ -158,11 +171,11 @@ Test
   def test_validation_with_invalid_indent
     # not implemented yet
     skip
-    note = Note.new(:content => "Title\r\n\r\n  * Indent")
+    note = Note.new(:content => "Title\r\n  * Indent")
     assert_not note.valid?
     expected = {
       :message => "has invalid indent",
-      :lies    => [3]
+      :lies    => [2]
     }
     assert_equal [expected], note.errors[:content]
   end
@@ -176,7 +189,7 @@ Test
 
   def test_save_without_errors
     attributes = {
-      :content => "Test\r\n* This is test",
+      :content => "* Test\r\n* This is test",
       :node    => nodes(:var)
     }
     user = users(:tim)
@@ -195,9 +208,8 @@ Test
   def test_update_without_errors
     attributes = {
       :content => <<-NOTE
-New Little hard Linux beginner's Book
-
-* Getting Started
+* New Little hard Linux beginner's Book
+  * Getting Started
       NOTE
     }
     note = notes(:linux_book)
@@ -265,7 +277,7 @@ New Little hard Linux beginner's Book
 
   def test_restore_at_undo
     note = notes(:wish_list)
-    note.update_attributes(:name => "My Wishlist (private)")
+    note.update_attributes(:name => "* My Wishlist (private)")
     assert_difference "Version::Cycle.count", 1 do
       assert note.versions.last.restore!
     end
@@ -275,7 +287,7 @@ New Little hard Linux beginner's Book
 
   def test_restore_at_redo
     note = notes(:wish_list)
-    note.update_attributes(:content => "My Wishlist (private)\r\n")
+    note.update_attributes(:content => "* My Wishlist (private)\r\n")
     version = note.versions.last
     version.restore!
     assert_difference "Version::Cycle.count", 1 do
@@ -290,12 +302,12 @@ New Little hard Linux beginner's Book
   def test_name_with_blank_content
     note = notes(:linux_book)
     note.content = ""
-    assert_nil note.name
+    assert_empty note.name
   end
 
   def test_name_with_nil_content
     note = notes(:linux_book)
     note.content = nil
-    assert_nil note.name
+    assert_empty note.name
   end
 end

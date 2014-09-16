@@ -7,6 +7,17 @@
   h3 Recent changes
   ul.changelog
     li.entry
+      | * Blank line validation and title handling improvement
+      | &nbsp;
+      span.released 2014-09-17
+      ul
+        li
+          | * First entry is always treated as title
+          ul
+            li * All lines are entry (Removed specialized title and second blank line)
+            li * See #{link_to("Syntax page", syntax_path)}
+        li * Dis-allow blank line
+    li.entry
       | * Indent/Unindent operator support
       | &nbsp;
       span.released 2014-08-24
