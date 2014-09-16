@@ -10,7 +10,6 @@
       strong * Put the title
       ul
         li * First line is treated as title
-        li * Leave second line as blank
     li
       strong * Start with bullet + a whitespace
       ul
@@ -34,19 +33,17 @@
   h3 Example
   p e.g. indent with `+`
   pre.example.before
-    | Issues
-    
-      * foo
-      +* bar
-        * baz
-      * qux
-      * quux
+    | * Issues
+        * foo
+        +* bar
+          * baz
+        * qux
+        * quux
   p after save, result:
   pre.example.after
-    | Issues
-    
-      * foo
-        * bar
-        * baz
-      * qux
-      * quux
+    | * Issues
+        * foo
+          * bar
+          * baz
+        * qux
+        * quux

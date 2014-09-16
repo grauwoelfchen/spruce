@@ -13,9 +13,8 @@ class ChangeRecorderTest < ActiveSupport::TestCase
   def test_recording_of_update_note
     attributes = {
       :content => <<-NOTE
-New Little hard Linux beginner's Book
-
-* Getting Started
+* New Little hard Linux beginner's Book
+  * Getting Started
       NOTE
     }
     recorder = ChangeRecorder.new(notes(:linux_book))

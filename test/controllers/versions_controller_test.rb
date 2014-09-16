@@ -45,7 +45,7 @@ class VersionsControllerTest < ActionController::TestCase
 
   def test_get_revert_note_with_valid_version
     note = notes(:wish_list)
-    note.update_attributes(:content => "New Wishlist\n\n")
+    note.update_attributes(:content => "* New Wishlist\r\n")
     request.env["HTTP_REFERER"] = note_url(note)
     params = {
       :id   => note.versions.last.id,
@@ -93,7 +93,7 @@ class VersionsControllerTest < ActionController::TestCase
 
   def test_post_restore_note_with_others_version
     note = notes(:shopping_list)
-    note.update_attributes(:content => "Shopping list v2\n\n")
+    note.update_attributes(:content => "* Shopping list v2\r\n")
     request.env["HTTP_REFERER"] = note_url(note)
     params = {
       :id   => note.versions.last.id,
@@ -128,7 +128,7 @@ class VersionsControllerTest < ActionController::TestCase
   def test_post_restore_update_note_on_undo
     note = notes(:wish_list)
     request.env["HTTP_REFERER"] = note_url(note)
-    note.update_attributes(:name => "My Wishlist v2")
+    note.update_attributes(:name => "* My Wishlist v2")
     params = {
       :id   => note.versions.last.id,
       :type => "l",
@@ -185,7 +185,8 @@ class VersionsControllerTest < ActionController::TestCase
 
   def test_redo_link_for_node_on_undo
     controller = VersionsController.new
-    controller.stubs(:revert_version_path).returns("/versions/2/b/revert?redo=true")
+    controller.stubs(:revert_version_path)
+      .returns("/versions/2/b/revert?redo=true")
     controller.stubs(:params).returns(:type => "b", :redo => "false")
     node = nodes(:var)
     node.update_attributes(:name => "var v2")
@@ -193,14 +194,16 @@ class VersionsControllerTest < ActionController::TestCase
     version.restore!
     controller.instance_variable_set(:@version, version)
     expected = <<-LINK.gsub(/^\s{6}|\n/, "")
-      <a data-method="post" href="/versions/2/b/revert?redo=true" rel="nofollow">redo</a>
+      <a data-method="post" href="/versions/2/b/revert?redo=true"
+       rel="nofollow">redo</a>
     LINK
     assert_equal expected, controller.send(:redo_link)
   end
 
   def test_redo_link_for_node_on_redo
     controller = VersionsController.new
-    controller.stubs(:revert_version_path).returns("/versions/2/b/revert?redo=false")
+    controller.stubs(:revert_version_path)
+      .returns("/versions/2/b/revert?redo=false")
     controller.stubs(:params).returns(:type => "b", :redo => "true")
     node = nodes(:var)
     node.update_attributes(:name => "var v2")
@@ -208,7 +211,8 @@ class VersionsControllerTest < ActionController::TestCase
     version.restore!
     controller.instance_variable_set(:@version, version)
     expected = <<-LINK.gsub(/^\s{6}|\n/, "")
-      <a data-method="post" href="/versions/2/b/revert?redo=false" rel="nofollow">undo</a>
+      <a data-method="post" href="/versions/2/b/revert?redo=false"
+       rel="nofollow">undo</a>
     LINK
     assert_equal expected, controller.send(:redo_link)
   end
@@ -250,7 +254,7 @@ class VersionsControllerTest < ActionController::TestCase
   def test_back_url_for_new_note
     controller = VersionsController.new
     attributes = {
-      :content => "New note\r\n",
+      :content => "* New note\r\n",
       :user    => users(:tim),
     }
     note = nodes(:tim_s_home).notes.new(attributes)
@@ -277,7 +281,7 @@ class VersionsControllerTest < ActionController::TestCase
   def test_back_url_for_note_with_referer
     controller = VersionsController.new
     note = notes(:linux_book)
-    note.update_attributes(:content => "More hard Linux beginner's Book\n\n")
+    note.update_attributes(:content => "* More hard Linux beginner's Book\r\n")
     version = note.versions.last
     version.restore!
     controller.instance_variable_set(:@version, version)
@@ -301,7 +305,7 @@ class VersionsControllerTest < ActionController::TestCase
   def test_back_url_for_note_without_referer
     controller = VersionsController.new
     note = notes(:linux_book)
-    note.update_attributes(:content => "More hard Linux beginner's Book\n\n")
+    note.update_attributes(:content => "* More hard Linux beginner's Book\r\n")
     version = note.versions.last
     version.restore!
     controller.instance_variable_set(:@version, version)
