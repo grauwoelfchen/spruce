@@ -43,7 +43,7 @@ class Note < ActiveRecord::Base
     :if => ->(n) { n.content.present? && n.content != n.name }
 
   def name
-    content.to_s.split(/\r?\n/).first.to_s.gsub(/^\*?\s*/, "")
+    content.to_s.split(/\r?\n/).first.to_s.gsub(/^\*?\s*/, '')
   end
 
   private
@@ -96,7 +96,9 @@ class Note < ActiveRecord::Base
         content.each_line.map.with_index(1) { |line, i|
           line.gsub(/\r\n|\n/, '') =~ /\A([\s]+)/
           indent = $1.to_s.length
-          if (i == 1 && indent != 0) || ![c - 2, c, c + 2].include?(indent)
+          if (i == 1 && indent != 0) ||
+             indent.odd? ||
+             indent > (c + 2)
             i
           else
             c = indent
