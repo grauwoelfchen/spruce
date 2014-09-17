@@ -24,14 +24,13 @@ class NoteTest < ActiveSupport::TestCase
   # callbacks
 
   def test_operation_application_with_unindent_sign
-    content = <<-CONTENT
+    attributes = {
+      :node    => nodes(:var),
+      :content => <<-CONTENT
 * test
 * foo
   -* bar
-    CONTENT
-    attributes = {
-      :content => content,
-      :node    => nodes(:var)
+      CONTENT
     }
     user = users(:tim)
     note = Note.new(attributes).assign_to(user)
@@ -46,14 +45,13 @@ class NoteTest < ActiveSupport::TestCase
   end
 
   def test_operation_application_with_indent_sign
-    content = <<-CONTENT
+    attributes = {
+      :node    => nodes(:var),
+      :content => <<-CONTENT
 * test
   * foo
   +* bar
-    CONTENT
-    attributes = {
-      :content => content,
-      :node    => nodes(:var)
+      CONTENT
     }
     user = users(:tim)
     note = Note.new(attributes).assign_to(user)
@@ -168,8 +166,18 @@ class NoteTest < ActiveSupport::TestCase
     assert_equal [expected], note.errors[:content]
   end
 
-  def test_validation_with_invalid_indent
+  def test_validation_with_invalid_indent_by_many_spaces
     note = Note.new(:content => "* Title\r\n    * Indent")
+    assert_not note.valid?
+    expected = {
+      :message => "has invalid indent",
+      :lines   => [2]
+    }
+    assert_equal [expected], note.errors[:content]
+  end
+
+  def test_validation_with_invalid_indent_by_odd_spaces
+    note = Note.new(:content => "* Title\r\n * Indent")
     assert_not note.valid?
     expected = {
       :message => "has invalid indent",
@@ -183,6 +191,25 @@ class NoteTest < ActiveSupport::TestCase
   def test_save_with_errors
     note = Note.new
     assert_not note.save
+  end
+
+  def test_save_without_errors_at_line_after_deep_indent
+    attributes = {
+      :node    => nodes(:var),
+      :content => <<-NOTE
+* foo
+  * bar
+    * baz
+      * qux
+* quux
+      NOTE
+    }
+    user = users(:tim)
+    note = Note.new(attributes).assign_to(user)
+    assert_difference "Version::Cycle.count", 1 do
+      assert note.save
+    end
+    assert_empty note.errors
   end
 
   def test_save_without_errors
