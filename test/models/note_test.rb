@@ -20,7 +20,6 @@ class NoteTest < ActiveSupport::TestCase
     assert_respond_to note, :recorded_changes
     assert_respond_to note, :versions
   end
-
   # callbacks
 
   def test_operation_application_with_unindent_sign
@@ -119,71 +118,71 @@ class NoteTest < ActiveSupport::TestCase
   def test_validation_with_blank_line
     note = Note.new(:content => "* First entry\r\n\r\n* Third entry\r\n")
     assert_not note.valid?
-    expected = {
+    feedback = {
       :message => "must not contain blank line",
       :lines   => [2],
     }
-    assert_equal [expected], note.errors[:content]
+    assert_equal [feedback], note.errors[:content]
   end
 
   def test_validation_with_invalid_syntax_no_bullet_points
     note = Note.new(:content => "Title\r\nNo bullet")
     assert_not note.valid?
-    expected = {
+    feedback = {
       :message => "must start with bullet points '* '",
       :lines   => [1, 2],
     }
-    assert_equal [expected], note.errors[:content]
+    assert_equal [feedback], note.errors[:content]
   end
 
   def test_validation_with_invalid_syntax_no_whitespace
     note = Note.new(:content => "* Title\r\n*No whitespace")
     assert_not note.valid?
-    expected = {
+    feedback = {
       :message => "must start with bullet points '* '",
       :lines  => [2],
     }
-    assert_equal [expected], note.errors[:content]
+    assert_equal [feedback], note.errors[:content]
   end
 
   def test_validation_with_invalid_syntax_too_many_whitespace
     note = Note.new(:content => "* Title\r\n*  Too many whitespace")
     assert_not note.valid?
-    expected = {
+    feedback = {
       :message => "must start with bullet points '* '",
       :lines   => [2],
     }
-    assert_equal [expected], note.errors[:content]
+    assert_equal [feedback], note.errors[:content]
   end
 
   def test_validation_with_invalid_syntax_at_multiple_lines
     note = Note.new(:content => "* Title\r\nNo bullet\r\n*No whitespace")
     assert_not note.valid?
-    expected = {
+    feedback = {
       :message => "must start with bullet points '* '",
       :lines   => [2, 3],
     }
-    assert_equal [expected], note.errors[:content]
+    assert_equal [feedback], note.errors[:content]
   end
 
   def test_validation_with_invalid_indent_by_many_spaces
     note = Note.new(:content => "* Title\r\n    * Indent")
     assert_not note.valid?
-    expected = {
+    feedback = {
       :message => "has invalid indent",
       :lines   => [2]
     }
-    assert_equal [expected], note.errors[:content]
+    assert_equal [feedback], note.errors[:content]
   end
 
   def test_validation_with_invalid_indent_by_odd_spaces
     note = Note.new(:content => "* Title\r\n * Indent")
     assert_not note.valid?
-    expected = {
+    feedback = {
       :message => "has invalid indent",
       :lines   => [2]
     }
-    assert_equal [expected], note.errors[:content]
+    assert_equal [feedback], note.errors[:content]
   end
 
   # actions
@@ -334,5 +333,61 @@ class NoteTest < ActiveSupport::TestCase
     note = notes(:linux_book)
     note.content = nil
     assert_empty note.name
+  end
+
+  # private methods
+
+  def test_content_must_not_contain_blank_line_catches_error_with_blank_line
+    note = notes(:linux_book)
+    note.content = "\r\n"
+    note.send(:content_must_not_contain_blank_line)
+    assert_not_empty note.errors[:content]
+  end
+
+  def test_content_must_not_contain_blank_line_catches_error_with_blank_lines
+    note = notes(:linux_book)
+    note.content = "foo\r\n\r\nbar\r\n\r\n"
+    note.send(:content_must_not_contain_blank_line)
+    assert_not_empty note.errors[:content]
+  end
+
+  def test_content_must_not_contain_blank_line_catches_error_with_whitespace
+    note = notes(:linux_book)
+    note.content = " \r\n"
+    note.send(:content_must_not_contain_blank_line)
+    assert_not_empty note.errors[:content]
+  end
+
+  def test_content_must_be_valid_outline_syntax_without_bullet
+    note = notes(:linux_book)
+    note.content = "foo\r\nbar\r\n"
+    note.send(:content_must_be_valid_outline_syntax)
+    feedback = {
+      :message => "must start with bullet points '* '",
+      :lines   => [1, 2]
+    }
+    assert_equal [feedback], note.errors[:content]
+  end
+
+  def test_content_must_be_valid_indent_with_too_many_indent
+    note = notes(:linux_book)
+    note.content = "* foo\r\n    * bar\r\n"
+    note.send(:content_must_be_valid_indent)
+    feedback = {
+      :message => "has invalid indent",
+      :lines   => [2]
+    }
+    assert_equal [feedback], note.errors[:content]
+  end
+
+  def test_content_must_be_valid_indent_with_too_few_indent
+    note = notes(:linux_book)
+    note.content = "* foo\r\n * bar\r\n"
+    note.send(:content_must_be_valid_indent)
+    feedback = {
+      :message => "has invalid indent",
+      :lines   => [2]
+    }
+    assert_equal [feedback], note.errors[:content]
   end
 end
