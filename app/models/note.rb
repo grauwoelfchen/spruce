@@ -63,9 +63,9 @@ class Note < ActiveRecord::Base
     end
 
     def content_must_not_contain_blank_line
-      lines = \
+      lines =
         content.each_line.map.with_index(1) { |line, i|
-          i if line.gsub(/\r?\n/, "").empty?
+          i unless line.present?
         }.compact
       unless lines.empty?
         feedback = {
@@ -77,7 +77,7 @@ class Note < ActiveRecord::Base
     end
 
     def content_must_be_valid_outline_syntax
-      lines = \
+      lines =
         content.each_line.map.with_index(1) { |line, i|
           i if line !~ /\A(\s*\*\s[^\s].*|)(\r?\n)?\z/
         }.compact
@@ -92,7 +92,7 @@ class Note < ActiveRecord::Base
 
     def content_must_be_valid_indent
       c = 0; # current indent
-      lines = \
+      lines =
         content.each_line.map.with_index(1) { |line, i|
           line.gsub(/\r\n|\n/, '') =~ /\A([\s]+)/
           indent = $1.to_s.length
