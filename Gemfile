@@ -3,7 +3,7 @@ source "https://rubygems.org"
 gem "foreman"
 gem "dotenv-rails", "~> 0.11.1"
 
-gem "rails", "4.0.2"
+gem "rails", "~> 4.1.7"
 
 gem "pg"
 
@@ -13,18 +13,18 @@ gem "delayed_job_active_record"
 gem "paper_trail", "~> 3.0.1"
 
 gem "turbolinks"
-gem "uglifier", ">= 1.3.0"
+gem "uglifier"
 gem "slim"
 gem "stylus"
 
 group :development do
-  gem "slim-rails", "~> 2.0.4"
-
+  gem "slim-rails"
   gem "capistrano", "~> 3.2.0"
   gem "capistrano-rails"
 end
 
 group :test do
+  gem "minitest", "~> 5.4"
   gem "mocha"
   gem "database_cleaner"
 end

@@ -29,8 +29,8 @@ class NodesControllerTest < ActionController::TestCase
     assert_template :show
   end
 
-  def test_get_show_js
-    get :show, :id => @node.id, :format => :js
+  def test_get_show_js_via_xhr
+    xhr :get, :show, :id => @node.id, :format => :js
     assert_response :success
     assert_equal @node, assigns(:node)
     assert_template :show
