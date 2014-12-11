@@ -31,6 +31,7 @@ end
 
 group :production do
   gem "unicorn"
+  gem "newrelic_rpm"
 end
 
 personal = File.expand_path("../Gemfile.personal", __FILE__)

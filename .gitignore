@@ -21,6 +21,9 @@
 /vendor/assets/components
 /public/assets
 
+# service
+/config/newrelic.yml
+
 # personal
 /Gemfile.personal
 
