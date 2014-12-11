@@ -10,20 +10,20 @@ Spruce::Application.configure do
   config.eager_load = false
 
   # Show full error reports and disable caching.
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local = true
   config.action_controller.perform_caching = false
 
   # Mailer
-  config.action_mailer.perform_deliveries    = true
+  config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings   = {
-    address:              ENV["MAILER_ADDRESS"],
-    port:                 ENV["MAILER_PORT"],
-    domain:               ENV["MAILER_DOMAIN"],
-    user_name:            ENV["MAILER_USER_NAME"],
-    password:             ENV["MAILER_PASSWORD"],
-    authentication:       ENV["MAILER_AUTHENTICATION"],
+    address: ENV["MAILER_ADDRESS"],
+    port: ENV["MAILER_PORT"],
+    domain: ENV["MAILER_DOMAIN"],
+    user_name: ENV["MAILER_USER_NAME"],
+    password: ENV["MAILER_PASSWORD"],
+    authentication: ENV["MAILER_AUTHENTICATION"],
     enable_starttls_auto: true
   }
   config.action_mailer.default_options = {
