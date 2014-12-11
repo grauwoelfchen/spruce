@@ -24,7 +24,7 @@ set :deploy_to, "/var/www/spruce"
 # set :pty, false
 
 # Default value for :linked_files is []
-set :linked_files, %w[.env Procfile]
+set :linked_files, %w[.env Procfile config/newrelic.yml]
 
 # Default value for linked_dirs is []
 set :linked_dirs, %w{
