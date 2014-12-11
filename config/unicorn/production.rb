@@ -1,7 +1,7 @@
 app_path = "/var/www/spruce"
 app_shared_path = "#{app_path}/shared"
 
-worker_processes 5
+worker_processes 3
 
 working_directory "#{app_path}/current/"
 
