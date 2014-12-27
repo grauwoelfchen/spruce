@@ -77,9 +77,9 @@ exec \
 foreman export runit $HOME/service \
   -f ./Procfile \
   -a #{fetch(:application)} \
-  -u #{host.user} \
   -l #{shared_path.join("log")} \
-  -t #{shared_path.join("runit.template")}
+  -u #{host.user} \
+  -t #{shared_path.join("runit-template")}
         CMD
       end
     end
@@ -93,7 +93,7 @@ foreman export runit $HOME/service \
       desc "Start"
       task :start do
         on roles(:app), wait: 20  do
-          execute "sv -w 15 start $HOME/service/#{fetch(:application)}-#{process}-1"
+          execute "sv -w 60 start $HOME/service/#{fetch(:application)}-#{process}-1"
         end
       end
 
