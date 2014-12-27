@@ -93,21 +93,21 @@ foreman export runit $HOME/service \
       desc "Start"
       task :start do
         on roles(:app), wait: 20  do
-          execute "sv -w 60 start $HOME/service/#{fetch(:application)}-#{process}-1"
+          execute "sv -w 15 start $HOME/service/#{fetch(:application)}-#{process}-1"
         end
       end
 
       desc "Stop"
       task :stop do
         on roles(:app), wait: 60  do
-          execute "sv -w 60 stop $HOME/service/#{fetch(:application)}-#{process}-1"
+          execute "sv -w 30 stop $HOME/service/#{fetch(:application)}-#{process}-1"
         end
       end
 
       desc "Restart"
       task :restart do
         on roles(:app), wait: 60 do
-          execute "sv -w 60 restart $HOME/service/#{fetch(:application)}-#{process}-1"
+          execute "sv -w 30 restart $HOME/service/#{fetch(:application)}-#{process}-1"
         end
       end
     end
