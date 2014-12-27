@@ -74,11 +74,12 @@ namespace :foreman do
       within release_path do
         execute :bundle, <<-CMD.gsub(/\s{2}/, "")
 exec \
-foreman export runit /etc/service \
+foreman export runit $HOME/service \
   -f ./Procfile \
   -a #{fetch(:application)} \
   -u #{host.user} \
-  -l #{shared_path.join("log")}
+  -l #{shared_path.join("log")} \
+  -t #{shared_path.join("runit.template")}
         CMD
       end
     end
@@ -92,21 +93,21 @@ foreman export runit /etc/service \
       desc "Start"
       task :start do
         on roles(:app), wait: 20  do
-          execute :sudo, "sv -w 15 start /etc/service/#{fetch(:application)}-#{process}-1"
+          execute "sv -w 15 start $HOME/service/#{fetch(:application)}-#{process}-1"
         end
       end
 
       desc "Stop"
       task :stop do
         on roles(:app), wait: 60  do
-          execute :sudo, "sv -w 60 stop /etc/service/#{fetch(:application)}-#{process}-1"
+          execute "sv -w 60 stop $HOME/service/#{fetch(:application)}-#{process}-1"
         end
       end
 
       desc "Restart"
       task :restart do
         on roles(:app), wait: 60 do
-          execute :sudo, "sv -w 60 restart /etc/service/#{fetch(:application)}-#{process}-1"
+          execute "sv -w 60 restart $HOME/service/#{fetch(:application)}-#{process}-1"
         end
       end
     end
