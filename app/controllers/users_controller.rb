@@ -19,7 +19,7 @@ class UsersController < ApplicationController
   def activate
     authority = ActivationAuthority.new(params[:token])
     if authority.activate!
-      redirect_to login_url, :notice => "Your were successfully activated :-D"
+      redirect_to login_url, :notice => "Your were successfully activated, Please login :-D"
     else
       not_authenticated
     end

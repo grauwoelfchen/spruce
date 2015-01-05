@@ -31,6 +31,7 @@ Spruce::Application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
   config.action_mailer.default_options = {
+    to: "to@example.org",
     from: "from@example.org"
   }
   config.action_mailer.default_url_options = {
@@ -43,4 +44,11 @@ Spruce::Application.configure do
   # Prevent `ActionView::Template::Error Asset logical path has no extension against some files`
   config.assets.compile = false
   config.assets.digest  = true
+
+
+  # Overwrite notification config
+  config.notification = {
+    to: "notification-to@example.org",
+    from: "notification-from@example.org"
+  }
 end

@@ -10,6 +10,11 @@ class ActivationAuthority
         user.activate!
         create_home(user)
       end
+
+      if Rails.application.config.notification[:to]
+        notify_about_new_user(user)
+      end
+
       user.active?
     else
       false
@@ -26,5 +31,9 @@ class ActivationAuthority
       home.save(:validate => false)
     end
   end
-  handle_asynchronously :create_home
+
+  def notify_about_new_user(user)
+    NotificationMailer.new_user_email(user).deliver
+  end
+  handle_asynchronously :notify_about_new_user
 end
