@@ -21,9 +21,14 @@ class ActivationAuthorityTest < ActiveSupport::TestCase
 
   def test_activate
     user = signed_up_user
-    assert_difference "Node.count", 1 do
-      authority = ActivationAuthority.new(user.activation_token)
-      assert authority.activate!
+    mail = Minitest::Mock.new
+    mail.expect :deliver, :return_value
+    NotificationMailer.stub :new_user_email, mail do
+      assert_difference "Node.count", 1 do
+        authority = ActivationAuthority.new(user.activation_token)
+        assert authority.activate!
+        mail.verify
+      end
     end
   end
 
@@ -40,6 +45,17 @@ class ActivationAuthorityTest < ActiveSupport::TestCase
     assert_difference "Node.count", 1 do
       authority = ActivationAuthority.new(user.activation_token)
       refute_nil authority.send(:create_home, user)
+    end
+  end
+
+  def test_notify_about_new_user
+    user = signed_up_user
+    mail = Minitest::Mock.new
+    mail.expect :deliver, :return_value
+    NotificationMailer.stub :new_user_email, mail do
+      authority = ActivationAuthority.new(user.activation_token)
+      authority.send(:notify_about_new_user, user)
+      mail.verify
     end
   end
 

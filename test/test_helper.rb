@@ -3,6 +3,7 @@ helper = lambda {
   require File.expand_path("../../config/environment", __FILE__)
   require "rails/test_help"
   require "mocha/mini_test"
+  require "minitest/mock"
   require "minitest/pride" if ENV["TEST_PRIDE"]
   require "database_cleaner"
 
