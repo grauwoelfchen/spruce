@@ -31,6 +31,7 @@ end
 
 group :production do
   gem "unicorn"
+  gem "unicorn-worker-killer"
   gem "newrelic_rpm"
 end
 
