@@ -1,0 +1,6 @@
+# development
+server: rails server -p $PORT -e development
+
+# production
+unicorn: /usr/local/share/rbenv/shims/bundle exec unicorn -c config/unicorn/production.rb
+worker: /usr/local/share/rbenv/shims/bundle exec rake jobs:work RAILS_ENV=production
