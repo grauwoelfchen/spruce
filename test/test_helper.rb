@@ -4,11 +4,15 @@ helper = lambda {
   require "rails/test_help"
   require "mocha/mini_test"
   require "minitest/mock"
-  require "minitest/pride" if ENV["TEST_PRIDE"]
+  require "minitest/rails/capybara"
+  require "minitest/pride" if ENV["TEST_PRIDE"].present?
   require "database_cleaner"
 
-  # additional directories
-  Dir[Rails.root.join("test/services/**/*.rb")].each { |f| require f }
+  # additional directories as NOTE, (run test:all for these tests)
+  #Dir[
+  #  Rails.root.join("test/services/**/*.rb"),
+  #  Rails.root.join("test/features/**/*.rb")
+  #].each { |f| require f }
 
   class ActiveSupport::TestCase
     include Sorcery::TestHelpers::Rails

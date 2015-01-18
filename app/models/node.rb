@@ -39,8 +39,22 @@ class Node < ActiveRecord::Base
     :if => ->(n) { n.name.present? }
   validates :user_id, :parent_id, :presence => true
 
+  after_commit :flush_cache
+
   def paths
     self_and_ancestors
       .reorder("node_hierarchies.generations DESC")
+  end
+
+  def self.cached_find(user, id)
+    Rails.cache.fetch([name, user.id, id], expires_in: 10.minutes) do
+      n = Node.visible_to(user).where(:id => id).first
+      raise ActiveRecord::RecordNotFound unless n
+      n
+    end
+  end
+
+  def flush_cache
+    Rails.cache.delete([self.class.name, user_id, id])
   end
 end

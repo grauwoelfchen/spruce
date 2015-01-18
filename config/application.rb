@@ -26,8 +26,8 @@ module Spruce
     # config.i18n.default_locale = :de
     config.i18n.enforce_available_locales = true
 
-    # exceptions
-    config.exceptions_app = self.routes
+    # disable exception handler in app (just render static html files)
+    #config.exceptions_app = self.routes
 
     config.notification = {
       to: ENV["NOTIFICATION_TO"],

@@ -39,8 +39,5 @@ Spruce::Application.routes.draw do
 
   get :sitemap, to: "sitemap#index", constraints: {format: "xml"}
 
-  # errors
-  match ":code", to: "errors#show", via: :all, constraints: {code: /\d{3}/ }
-
   root "pages#index"
 end
