@@ -57,6 +57,7 @@ class NodesController < ApplicationController
 
   def load_node
     @node = Node.visible_to(current_user).where(:id => params[:id]).first
+    #@node = Node.cached_find(current_user, params[:id])
     redirect_to root_url unless @node
   end
 

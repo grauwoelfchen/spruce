@@ -7,15 +7,19 @@ require File.expand_path("../config/application", __FILE__)
 Spruce::Application.load_tasks
 
 namespace :test do
-  desc "Run tests for services"
-  Rake::TestTask.new(:services => "environment") do |t|
+  desc "Run service tests"
+  Rake::TestTask.new(:services => "test:prepare") do |t|
     t.libs << "test"
     t.pattern = "test/services/**/*_test.rb"
   end
 
-  desc "Run test for routes"
-  Rake::TestTask.new(:routes => "environment") do |t|
+  desc "Run feature tests"
+  Rake::TestTask.new(:features => "test:prepare") do |t|
     t.libs << "test"
-    t.pattern = "test/integration/routes_test.rb"
+    t.pattern = "test/features/**/*_test.rb"
   end
 end
+
+# Just run test:all
+#Rake::Task["test:run"].enhance ["test:features"]
+#Rake::Task["test:run"].enhance ["test:services"]

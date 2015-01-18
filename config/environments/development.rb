@@ -10,7 +10,7 @@ Spruce::Application.configure do
   config.eager_load = false
 
   # Show full error reports and disable caching.
-  config.consider_all_requests_local = true
+  config.consider_all_requests_local = !ENV["CUSTOM_ERROR_DEVELOPMENT"].present?
   config.action_controller.perform_caching = false
 
   # Mailer
