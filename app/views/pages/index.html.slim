@@ -1,26 +1,22 @@
-#pages
-  p Let's spruce up messy thoughts.
+#pages.index
+  h2.text Let's spruce up messy thoughts.
   ul.links
     li
-      | *&nbsp;
       - if current_user && @root
         = link_to "Outlines", nodes_path
       - else
         | Outlines
       ul
-        li * Create issues, chapters or just items.
+        li Create issues, chapters or just items.
     li
-      | *&nbsp;
       = link_to "Introduction", introduction_path
       ul
-        li * What's this?
+        li What's this?
     li
-      | *&nbsp;
       = link_to "Changelog", changelog_path
       ul
-        li * History of Spruce
+        li History of Spruce
     li
-      | *&nbsp;
       span.strike Plans
       ul
-        li * Free, for now :)
+        li Free, for now :)
