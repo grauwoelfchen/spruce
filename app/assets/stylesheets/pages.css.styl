@@ -1,39 +1,39 @@
-// top
-ul.links
-  margin  0
+ul-style()
+  margin 0 0 3px 18px
   padding 0
-  li
-    list-style none
-    ul
-      margin  3px 0 3px 12px
-      padding 0
+
+list-style()
+  list-style none outside none
+  list-style-image url(bullet.png)
+  margin 0 0 3px 0
+
+ul
+  ul-style()
+li
+  list-style()
+li ul
+  margin-top 3px
+li ul li
+  margin-left -2px
+
+// top
+#pages.index
+  h2.text
+    font-size 13px
+    font-weight normal
+    margin 17px 0
 
 // introduction
-#pages
-  ul
-    li
-      list-style none
-  ul.descriptions,
-  ul.features
-    margin  3px 0px 3px 20px
-
-  ul.descriptions,
-  ul.features,
-  ul.screenshots
-    padding 0
-    li
-      ul
-        margin  3px 0px 3px 18px
-        padding 0
-
+#pages.introduction
   ul.screenshots
     li
       display inline
-      margin 0px 9px 0px 0px
+      margin 0 9px 0 0
       img
-        border 1px solid lightgray
+        border 1px dashed lightgray
         &:hover
-          border 1px dashed lightgray
+          border 1px dotted lightgray
+
   p.syntax,
   p.screenshots,
   p.author,
@@ -42,26 +42,18 @@ ul.links
     margin-left 20px
 
 // changelog
-#pages
+#pages.changelog
   ul.changelog
-    margin  0
-    padding 0
     li
-      list-style none
       span.released
-        padding   0 3px
+        padding 0 3px
         font-size 85%
-        color     silver
-      ul
-        margin  0 0 0 18px
-        padding 0
-    li.entry
-      margin 3px 0 3px 0
+        color silver
 
 // syntax
-#pages
+#pages.syntax
   pre.example
     width 700px
-    margin 5px 0px 10px 15px
+    margin 5px 0 10px 15px
     padding 9px
     border 1px solid #D8D8D8

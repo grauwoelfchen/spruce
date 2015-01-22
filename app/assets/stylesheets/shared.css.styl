@@ -2,8 +2,8 @@
 .flash-messages,
 .error-messages
   ul
-    margin  9px 0px
-    padding 0px
+    margin 9px 0
+    padding 0
     li
       list-style none
     li.alert
@@ -21,18 +21,19 @@ fs-style(type)
       text-decoration underline
     if type == 'file'
       font-weight normal
-      color       #696969
+      color #696969
     else
       font-weight bold
-      color       #008080
+      color #008080
+
 active-style()
   font-weight bold
-  color       #484848
+  color #484848
 
 p.navigation
-  margin 13px 0px
+  margin 13px 0
   span.title
-    margin      0px
+    margin 0
     active-style()
   span.parenthesis-highlight
     background-color lightgray
@@ -47,23 +48,23 @@ p.path
 .user
   form.button_to
     display inline
-    margin  0
+    margin 0
     padding 0
     div
       display inline
     input[type=submit]
-      margin             0
-      padding            0
+      margin 0
+      padding 0
       -webkit-appearance caret
-      background         none
-      border             none
-      font-size          inherit
-      font-family        inherit
-      cursor             pointer
-      text-decoration    underline
-      color              #0000FF
+      background none
+      border none
+      font-size inherit
+      font-family inherit
+      cursor pointer
+      text-decoration underline
+      color #0000FF
 
-// filesystem
+// filesystem style navigation
 ul.nodes
   li
     span.name
@@ -76,21 +77,21 @@ ul.nodes, ul.notes
   li
     list-style none
     span.updated
-      padding   0 3px
+      padding 0 3px
       font-size 85%
-      color     silver
+      color silver
 
 button-style()
-  text-decoration  none
-  color            black
+  text-decoration none
+  color black
   background-color #FCFCFC
-  border           1px solid #EBEBEB
-  padding          4px 8px
-  display          inline-block
-  outline          none
-  font-size        90%
-  letter-spacing   0.02em
-  line-height      1.44
+  border 1px solid #EBEBEB
+  padding 4px 8px
+  display inline-block
+  outline none
+  font-size 90%
+  letter-spacing 0.02em
+  line-height 1.44
   &:hover
     background-color #EDEDED
 
@@ -99,22 +100,22 @@ button-style()
 
 .actions
   display block
-  height  48px
-  margin  18px 0px 0px 1px
+  height 48px
+  margin 18px 0 0 1px
   .reset,.cancel
     float left
     a
       button-style()
-      margin 9px 0px 0px 3px
-      color  dimgray
+      margin 9px 0 0 3px
+      color dimgray
       &:hover
         color black
   .destroy
     float left
     a
       button-style()
-      margin 9px 0px 0px 3px
-      color  dimgray
+      margin 9px 0 0 3px
+      color dimgray
 
 // form
 section
@@ -126,31 +127,31 @@ section
     .field
       label
         display block
-        margin  3px 0px 0px 1px
+        margin 3px 0 0 1px
       input
         outline none
-        border  1px solid silver
-        margin  2px 0px 4px 0px
+        border 1px solid silver
+        margin 2px 0 4px 0
         padding 3px 5px
         &:focus
           background-color #EDEDED
       input[type='checkbox']
         margin 5px 1px
       textarea
-        margin 0px
+        margin 0
     .actions
       input[type='submit']
         button-style()
         margin 9px 10px 9px -1px
-        float  left
-        left   5px
+        float left
+        left 5px
 
 // placeholders
 placeholder-text = #4682B4
 placeholder-style()
-  color      placeholder-text
+  color placeholder-text
   font-style italic
-  opacity    0.3
+  opacity 0.3
 
 *::-webkit-input-placeholder
   placeholder-style()
