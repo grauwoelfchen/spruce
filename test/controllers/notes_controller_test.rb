@@ -3,7 +3,7 @@ require "test_helper"
 class NotesControllerTest < ActionController::TestCase
   fixtures :notes, :users, :nodes
 
-  setup    :login, :initialize_node, :initialize_note
+  setup :login, :initialize_node, :initialize_note
   teardown :logout
 
   # actions
@@ -16,8 +16,8 @@ class NotesControllerTest < ActionController::TestCase
 
   def test_get_index_with_others_node
     assert_raise ActionController::UrlGenerationError do
-      node = nodes(:bob_s_home)
-      get :index, :node_id => node.id
+      bob_s_node = nodes(:bob_s_home)
+      get :index, :node_id => bob_s_node.id
     end
   end
 
@@ -29,9 +29,9 @@ class NotesControllerTest < ActionController::TestCase
 
   def test_get_show_with_others_note
     bob_s_note = notes(:idea_note)
-    get :show, :id => bob_s_note.id
-    assert_response :redirect
-    assert_redirected_to root_url
+    assert_raise ActiveRecord::RecordNotFound do
+      get :show, :id => bob_s_note.id
+    end
   end
 
   def test_get_show
@@ -48,10 +48,10 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_get_new_with_others_node
-    node = nodes(:bob_s_home)
-    get :new, :node_id => node.id
-    assert_response :redirect
-    assert_redirected_to root_url
+    bob_s_node = nodes(:bob_s_home)
+    assert_raise ActiveRecord::RecordNotFound do
+      get :new, :node_id => bob_s_node.id
+    end
   end
 
   def test_get_new
@@ -64,23 +64,24 @@ class NotesControllerTest < ActionController::TestCase
 
   def test_post_create_without_nest
     assert_raise ActionController::UrlGenerationError do
-      post :create, :note => {:content => "* Unknown Note\r\n* Unexpected"}
+      post :create,
+        :note => {:content => "* Unknown Note\r\n* Unexpected"}
     end
   end
 
   def test_post_create_with_others_node
-    node = nodes(:bob_s_home)
+    bob_s_node = nodes(:bob_s_home)
     params = {
-      :node_id => node.id,
+      :node_id => bob_s_node.id,
       :note    => {
         :content => "Not allowed, right?\r\n"
       }
     }
     assert_no_difference "Node.count", 1 do
-      post :create, params
+      assert_raise ActiveRecord::RecordNotFound do
+        post :create, params
+      end
     end
-    assert_response :redirect
-    assert_redirected_to root_url
   end
 
   def test_post_create_with_validation_errors
@@ -119,9 +120,9 @@ class NotesControllerTest < ActionController::TestCase
 
   def test_get_edit_with_others_note
     bob_s_note = notes(:idea_note)
-    get :edit, :id => bob_s_note.id
-    assert_response :redirect
-    assert_redirected_to root_url
+    assert_raise ActiveRecord::RecordNotFound do
+      get :edit, :id => bob_s_note.id
+    end
   end
 
   def test_get_edit
@@ -140,9 +141,9 @@ class NotesControllerTest < ActionController::TestCase
         :content => "Not allowed, right?"
       }
     }
-    put :update, params
-    assert_response :redirect
-    assert_redirected_to root_url
+    assert_raise ActiveRecord::RecordNotFound do
+      put :update, params
+    end
   end
 
   def test_put_update_with_validation_errors
@@ -158,7 +159,8 @@ class NotesControllerTest < ActionController::TestCase
     params = {
       :id   => @note.id,
       :note => {
-        :content => "* Little Hard Linux user's Book\r\n* Getting Started"
+        :content =>
+          "* Little Hard Linux user's Book\r\n* Getting Started"
       }
     }
     put :update, params
@@ -171,8 +173,9 @@ class NotesControllerTest < ActionController::TestCase
 
   def test_get_delete_with_others_note
     bob_s_note = notes(:idea_note)
-    get :delete, :id => bob_s_note.id
-    assert_response :redirect
+    assert_raise ActiveRecord::RecordNotFound do
+      get :delete, :id => bob_s_note.id
+    end
   end
 
   def test_get_delete
@@ -185,10 +188,10 @@ class NotesControllerTest < ActionController::TestCase
   def test_delete_destroy_with_others_note
     bob_s_note = notes(:idea_note)
     assert_no_difference "Note.count", -1 do
-      delete :destroy, :id => bob_s_note.id
+      assert_raise ActiveRecord::RecordNotFound do
+        delete :destroy, :id => bob_s_note.id
+      end
     end
-    assert_response :redirect
-    assert_redirected_to root_url
   end
 
   def test_delete_destroy
@@ -216,20 +219,20 @@ class NotesControllerTest < ActionController::TestCase
 
   private
 
-  def login
-    user = users(:tim)
-    login_user(user)
-  end
+    def login
+      user = users(:tim)
+      login_user(user)
+    end
 
-  def initialize_node
-    Node.rebuild!
-  end
+    def initialize_node
+      Node.rebuild!
+    end
 
-  def initialize_note
-    @note = notes(:linux_book)
-  end
+    def initialize_note
+      @note = notes(:linux_book)
+    end
 
-  def logout
-    logout_user
-  end
+    def logout
+      logout_user
+    end
 end

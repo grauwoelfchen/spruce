@@ -16,12 +16,13 @@ class SessionsController < ApplicationController
 
   def destroy
     logout
-    redirect_to root_url, :notice => "Logged out :p"
+    redirect_to root_url,
+      :notice => "Logged out :p"
   end
 
   private
 
-  def admit_only_new_user
-    redirect_to root_url if current_user
-  end
+    def admit_only_new_user
+      redirect_to root_url if current_user
+    end
 end

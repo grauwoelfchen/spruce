@@ -11,7 +11,8 @@ class PasswordResetsController < ApplicationController
     if @user.valid_attribute?(:email, [:blank, :invalid])
       @user = User.find_by_email(user_params[:email])
       @user.deliver_reset_password_instructions! if @user
-      redirect_to root_url, :notice => "Instructions have been sent to your email :)"
+      redirect_to root_url,
+        :notice => "Instructions have been sent to your email :)"
     else
       render :new
     end
@@ -23,7 +24,8 @@ class PasswordResetsController < ApplicationController
   def update
     @user.password_confirmation = user_params[:password_confirmation]
     if @user.change_password!(user_params[:password])
-      redirect_to root_url, :notice => "Password was successfully updated !"
+      redirect_to root_url,
+        :notice => "Password was successfully updated !"
     else
       render :edit
     end
@@ -31,14 +33,14 @@ class PasswordResetsController < ApplicationController
 
   private
 
-  def load_user_from_token
-    logout
-    @user  = User.load_from_reset_password_token(params[:token])
-    @token = params[:token]
-    return not_authenticated unless @user
-  end
+    def load_user_from_token
+      logout
+      @user  = User.load_from_reset_password_token(params[:token])
+      @token = params[:token]
+      return not_authenticated unless @user
+    end
 
-  def user_params
-    params.require(:user).permit(:email, :password, :password_confirmation)
-  end
+    def user_params
+      params.require(:user).permit(:email, :password, :password_confirmation)
+    end
 end

@@ -4,10 +4,10 @@ class NodesController < ApplicationController
   before_filter :require_login
   before_filter :load_node, :except => [:index, :new, :create]
   before_filter :load_parent, :only => [:new, :create]
-  before_filter :block_root,  :only => [:edit, :update, :delete, :destroy]
+  before_filter :block_root, :only => [:edit, :update, :delete, :destroy]
 
   def index
-    @node = Node.visible_to(current_user).includes(:notes).root
+    @node = Node.visible_to(current_user).cached_root
     redirect_to root_url unless @node
   end
 
@@ -26,7 +26,8 @@ class NodesController < ApplicationController
     @node = Node.new(node_params).assign_to(current_user)
     @node.parent = @parent
     if @node.save
-      redirect_to node_url(@node.parent), :notice => "Successfully created branch. #{undo_link}"
+      redirect_to node_url(@node.parent),
+        :notice => "Successfully created branch. #{undo_link}"
     else
       render :new
     end
@@ -38,7 +39,8 @@ class NodesController < ApplicationController
   def update
     recorder = ChangeRecorder.new(@node)
     if recorder.update_attributes(node_params)
-      redirect_to @node, :notice => "Successfully updated branch. #{undo_link}"
+      redirect_to @node,
+        :notice => "Successfully updated branch. #{undo_link}"
     else
       render :edit
     end
@@ -50,31 +52,30 @@ class NodesController < ApplicationController
 
   def destroy
     @node.destroy
-    redirect_to nodes_url, :notice => "Successfully destroyed branch. #{undo_link}"
+    redirect_to nodes_url,
+      :notice => "Successfully destroyed branch. #{undo_link}"
   end
 
   private
 
-  def load_node
-    @node = Node.visible_to(current_user).where(:id => params[:id]).first
-    #@node = Node.cached_find(current_user, params[:id])
-    redirect_to root_url unless @node
-  end
+    def load_node
+      @node = Node.visible_to(current_user).cached_find(params[:id])
+    end
 
-  def load_parent
-    @parent = load_parent_node(params[:node_id])
-    redirect_to root_url unless @parent
-  end
+    def load_parent
+      @parent = load_parent_node(params[:node_id])
+    end
 
-  def block_root
-    redirect_to nodes_url if @node.root?
-  end
+    def block_root
+      redirect_to nodes_url if @node.root?
+    end
 
-  def node_params
-    params.require(:node).permit(:name)
-  end
+    def node_params
+      params.require(:node).permit(:name)
+    end
 
-  def undo_link
-    view_context.link_to("undo", revert_version_path(@node.versions.last, "b"), :method => :post)
-  end
+    def undo_link
+      view_context.link_to "undo", revert_version_path(@node.versions.last, "b"),
+        :method => :post
+    end
 end

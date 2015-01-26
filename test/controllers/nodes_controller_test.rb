@@ -3,7 +3,7 @@ require "test_helper"
 class NodesControllerTest < ActionController::TestCase
   fixtures :nodes, :users
 
-  setup    :login, :initialize_node
+  setup :login, :initialize_node
   teardown :logout
 
   # actions
@@ -16,10 +16,10 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_get_show_with_others_node
-    node = nodes(:tim_s_home)
-    get :show, :id => node.id
-    assert_response :redirect
-    assert_redirected_to root_url
+    tim_s_node = nodes(:tim_s_home)
+    assert_raise ActiveRecord::RecordNotFound do
+      get :show, :id => tim_s_node.id
+    end
   end
 
   def test_get_show
@@ -37,10 +37,10 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_get_new_with_others_node
-    node = nodes(:tim_s_home)
-    get :new, :node_id => node.id
-    assert_response :redirect
-    assert_redirected_to root_url
+    tim_s_node = nodes(:tim_s_home)
+    assert_raise ActiveRecord::RecordNotFound do
+      get :new, :node_id => tim_s_node.id
+    end
   end
 
   def test_get_new
@@ -53,18 +53,18 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_post_create_with_others_node
-    node = nodes(:tim_s_home).children.first
+    tim_s_node = nodes(:tim_s_home).children.first
     params = {
-      :node_id => node.id,
+      :node_id => tim_s_node.id,
       :node    => {
         :name => "Not allowed, right?"
       }
     }
     assert_no_difference "Node.count", 1 do
-      post :create, params
+      assert_raise ActiveRecord::RecordNotFound do
+        post :create, params
+      end
     end
-    assert_response :redirect
-    assert_redirected_to root_url
   end
 
   def test_post_create_with_validation_errors
@@ -108,10 +108,10 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_get_edit_with_others_node
-    node = nodes(:tim_s_home)
-    get :edit, :id => node.id
-    assert_response :redirect
-    assert_redirected_to root_url
+    tim_s_node = nodes(:tim_s_home)
+    assert_raise ActiveRecord::RecordNotFound do
+      get :edit, :id => tim_s_node.id
+    end
   end
 
   def test_get_edit
@@ -136,16 +136,16 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_put_update_with_others_node
-    node = nodes(:tim_s_home).children.first
+    tim_s_node = nodes(:tim_s_home).children.first
     params = {
-      :id   => node.id,
+      :id   => tim_s_node.id,
       :node => {
         :name => "Not allowed, right?"
       }
     }
-    put :update, params
-    assert_response :redirect
-    assert_redirected_to root_url
+    assert_raise ActiveRecord::RecordNotFound do
+      put :update, params
+    end
   end
 
   def test_put_update_with_validation_errors
@@ -187,10 +187,10 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_get_delete_with_others_node
-    node = nodes(:tim_s_home)
-    get :delete, :id => node.id
-    assert_response :redirect
-    assert_redirected_to root_url
+    tim_s_node = nodes(:tim_s_home)
+    assert_raise ActiveRecord::RecordNotFound do
+      get :delete, :id => tim_s_node.id
+    end
   end
 
   def test_get_delete
@@ -210,12 +210,12 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_delete_destroy_with_others_node
-    node = nodes(:tim_s_home).children.first
+    tim_s_node = nodes(:tim_s_home).children.first
     assert_no_difference "Node.count", -1 do
-      delete :destroy, :id => node.id
+      assert_raise ActiveRecord::RecordNotFound do
+        delete :destroy, :id => tim_s_node.id
+      end
     end
-    assert_response :redirect
-    assert_redirected_to root_url
   end
 
   def test_delete_destroy
@@ -244,17 +244,17 @@ class NodesControllerTest < ActionController::TestCase
 
   private
 
-  def login
-    user = users(:bob)
-    login_user(user)
-  end
+    def login
+      user = users(:bob)
+      login_user(user)
+    end
 
-  def initialize_node
-    Node.rebuild!
-    @node = nodes(:bob_s_home)
-  end
+    def initialize_node
+      Node.rebuild!
+      @node = nodes(:bob_s_home)
+    end
 
-  def logout
-    logout_user
-  end
+    def logout
+      logout_user
+    end
 end

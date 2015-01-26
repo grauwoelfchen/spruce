@@ -42,6 +42,12 @@ class Note < ActiveRecord::Base
     :content_must_be_valid_indent,
     :if => ->(n) { n.content.present? && n.content != n.name }
 
+  def self.cached_find(id)
+    Rails.cache.fetch([name, id], expires_in: 10.minutes) do
+      where(:id => id).take!
+    end
+  end
+
   def name
     content.to_s.split(/\r?\n/).first.to_s.gsub(/^\*?\s*/, '')
   end

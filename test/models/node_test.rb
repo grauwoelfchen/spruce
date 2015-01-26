@@ -221,7 +221,7 @@ class NodeTest < ActiveSupport::TestCase
 
   private
 
-  def build_tree
-    Node.rebuild!
-  end
+    def build_tree
+      Node.rebuild!
+    end
 end
