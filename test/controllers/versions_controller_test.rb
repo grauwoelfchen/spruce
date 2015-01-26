@@ -3,7 +3,7 @@ require 'test_helper'
 class VersionsControllerTest < ActionController::TestCase
   fixtures :nodes, :notes, :users
 
-  setup    :login, :initialize_node
+  setup :login, :initialize_node
   teardown :logout
 
   # actions
@@ -79,11 +79,11 @@ class VersionsControllerTest < ActionController::TestCase
   end
 
   def test_post_restore_node_with_others_version
-    node = nodes(:work)
-    node.update_attributes(:name => "Bob's Home v2")
+    bob_s_node = nodes(:work)
+    bob_s_node.update_attributes(:name => "Bob's Home v2")
     request.env["HTTP_REFERER"] = nodes_url
     params = {
-      :id   => node.versions.last.id,
+      :id   => bob_s_node.versions.last.id,
       :type => "b"
     }
     post :restore, params
@@ -92,11 +92,11 @@ class VersionsControllerTest < ActionController::TestCase
   end
 
   def test_post_restore_note_with_others_version
-    note = notes(:shopping_list)
-    note.update_attributes(:content => "* Shopping list v2\r\n")
-    request.env["HTTP_REFERER"] = note_url(note)
+    bob_s_note = notes(:shopping_list)
+    bob_s_note.update_attributes(:content => "* Shopping list v2\r\n")
+    request.env["HTTP_REFERER"] = note_url(bob_s_note)
     params = {
-      :id   => note.versions.last.id,
+      :id   => bob_s_note.versions.last.id,
       :type => "l"
     }
     post :restore, params
@@ -316,16 +316,16 @@ class VersionsControllerTest < ActionController::TestCase
 
   private
 
-  def login
-    user = users(:tim)
-    login_user(user)
-  end
+    def login
+      user = users(:tim)
+      login_user(user)
+    end
 
-  def initialize_node
-    Node.rebuild!
-  end
+    def initialize_node
+      Node.rebuild!
+    end
 
-  def logout
-    logout_user
-  end
+    def logout
+      logout_user
+    end
 end

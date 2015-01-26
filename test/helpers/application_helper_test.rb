@@ -2,7 +2,7 @@ require "test_helper"
 
 class ApplicationHelperTest < ActionView::TestCase
   include ApplicationHelper
-  
+
   fixtures :nodes, :notes
 
   def test_include_action_view_url_helper
@@ -84,7 +84,8 @@ class ApplicationHelperTest < ActionView::TestCase
     self.stubs(:current_page?).returns(true)
     self.stubs(:params).returns(:id => node.id.to_s)
     expected = <<-HTML.gsub(/^\s{6}|\n/, "")
-      / <a href="/b">root</a> / <span class="wd">#{node.name}</span>
+      / <a href="/b">root</a> /
+       <span class="pwd">#{node.name}</span>
     HTML
     assert_equal expected, render_paths(node.paths)
   end
@@ -95,7 +96,9 @@ class ApplicationHelperTest < ActionView::TestCase
     self.stubs(:current_page?).returns(true)
     self.stubs(:params).returns(:id => node.id.to_s)
     expected = <<-HTML.gsub(/^\s{6}|\n/, "")
-      / <a href="/b">root</a> / <a href="/b/#{node.parent.id}">#{node.parent.name}</a> / <span class="wd">#{node.name}</span>
+      / <a href="/b">root</a> /
+       <a href="/b/#{node.parent.id}">#{node.parent.name}</a> /
+       <span class="pwd">#{node.name}</span>
     HTML
     assert_equal expected, render_paths(node.paths)
   end

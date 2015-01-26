@@ -3,7 +3,7 @@ require "test_helper"
 class SessionsControllerTest < ActionController::TestCase
   fixtures :users
 
-  setup    :initialize_user
+  setup :initialize_user
   teardown :logout
 
   def test_new_session_for_logged_in_user
@@ -54,12 +54,12 @@ class SessionsControllerTest < ActionController::TestCase
 
   private
 
-  def initialize_user
-    @user = users(:tim)
-    @user.activate!
-  end
+    def initialize_user
+      @user = users(:tim)
+      @user.activate!
+    end
 
-  def logout
-    logout_user
-  end
+    def logout
+      logout_user
+    end
 end

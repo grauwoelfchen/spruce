@@ -118,15 +118,15 @@ class UsersControllerTest < ActionController::TestCase
 
   private
 
-  def signed_up_user
-    attributes = {
-      :username              => "johnsmith",
-      :email                 => "john@example.org",
-      :password              => "test",
-      :password_confirmation => "test",
-      :activation_token      => "token",
-      :activation_state      => "pending"
-    }
-    User.create(attributes)
-  end
+    def signed_up_user
+      attributes = {
+        :username              => "johnsmith",
+        :email                 => "john@example.org",
+        :password              => "test",
+        :password_confirmation => "test",
+        :activation_token      => "token",
+        :activation_state      => "pending"
+      }
+      User.create(attributes)
+    end
 end

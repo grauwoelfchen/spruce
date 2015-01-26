@@ -25,20 +25,20 @@ class NoteTest < ActiveSupport::TestCase
   def test_operation_application_with_unindent_sign
     attributes = {
       :node    => nodes(:var),
-      :content => <<-CONTENT
-* test
-* foo
-  -* bar
+      :content => <<-CONTENT.gsub(/^\s{8}/, "")
+        * test
+        * foo
+          -* bar
       CONTENT
     }
     user = users(:tim)
     note = Note.new(attributes).assign_to(user)
     note.save
     assert_empty note.errors
-    expected = <<-EXPECTED
-* test
-* foo
-* bar
+    expected = <<-EXPECTED.gsub(/^\s{6}/, "")
+      * test
+      * foo
+      * bar
     EXPECTED
     assert_equal expected, note.content
   end
@@ -46,20 +46,20 @@ class NoteTest < ActiveSupport::TestCase
   def test_operation_application_with_indent_sign
     attributes = {
       :node    => nodes(:var),
-      :content => <<-CONTENT
-* test
-  * foo
-  +* bar
+      :content => <<-CONTENT.gsub(/^\s{8}/, "")
+        * test
+          * foo
+          +* bar
       CONTENT
     }
     user = users(:tim)
     note = Note.new(attributes).assign_to(user)
     note.save
     assert_empty note.errors
-    expected = <<-EXPECTED
-* test
-  * foo
-    * bar
+    expected = <<-EXPECTED.gsub(/^\s{6}/, "")
+      * test
+        * foo
+          * bar
     EXPECTED
     assert_equal expected, note.content
   end
@@ -195,13 +195,13 @@ class NoteTest < ActiveSupport::TestCase
   def test_save_without_errors_at_line_after_deep_indent
     attributes = {
       :node    => nodes(:var),
-      :content => <<-NOTE
-* foo
-  * bar
-    * baz
-      * qux
-* quux
-      NOTE
+      :content => <<-CONTENT.gsub(/^\s{8}/, "")
+        * foo
+          * bar
+            * baz
+              * qux
+        * quux
+      CONTENT
     }
     user = users(:tim)
     note = Note.new(attributes).assign_to(user)
@@ -231,10 +231,10 @@ class NoteTest < ActiveSupport::TestCase
 
   def test_update_without_errors
     attributes = {
-      :content => <<-NOTE
-* New Little hard Linux beginner's Book
-  * Getting Started
-      NOTE
+      :content => <<-CONTENT.gsub(/^\s{8}/, "")
+        * New Little hard Linux beginner's Book
+          * Getting Started
+      CONTENT
     }
     note = notes(:linux_book)
     assert_difference "Version::Cycle.count", 1 do

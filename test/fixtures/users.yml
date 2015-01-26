@@ -6,6 +6,7 @@ tim:
   crypted_password: <%= Sorcery::CryptoProviders::BCrypt.encrypt("secret", salt) %>
   remember_me_token:
   reset_password_token:
+  activation_state: "active"
 bob:
   username: bob
   email: bob@example.org
@@ -13,3 +14,4 @@ bob:
   crypted_password: <%= Sorcery::CryptoProviders::BCrypt.encrypt("secret", salt) %>
   remember_me_token:
   reset_password_token:
+  activation_state: "active"

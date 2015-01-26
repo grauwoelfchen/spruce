@@ -41,20 +41,30 @@ class Node < ActiveRecord::Base
 
   after_commit :flush_cache
 
+  def self.cached_root
+    Rails.cache.fetch([name, "root"], expires_in: 10.minutes) do
+      root_node = includes(:notes).root
+      unless root_node
+        raise ActiveRecord::RecordNotFound
+      end
+      root_node
+    end
+  end
+
+  def self.cached_find(id)
+    Rails.cache.fetch([name, id], expires_in: 10.minutes) do
+      where(:id => id).take!
+    end
+  end
+
   def paths
     self_and_ancestors
       .reorder("node_hierarchies.generations DESC")
   end
 
-  def self.cached_find(user, id)
-    Rails.cache.fetch([name, user.id, id], expires_in: 10.minutes) do
-      n = Node.visible_to(user).where(:id => id).first
-      raise ActiveRecord::RecordNotFound unless n
-      n
-    end
-  end
+  private
 
-  def flush_cache
-    Rails.cache.delete([self.class.name, user_id, id])
-  end
+    def flush_cache
+      Rails.cache.delete([self.class.name, id])
+    end
 end
