@@ -42,6 +42,8 @@ class Note < ActiveRecord::Base
     :content_must_be_valid_indent,
     :if => ->(n) { n.content.present? && n.content != n.name }
 
+  after_commit :flush_cache
+
   def self.cached_find(id)
     Rails.cache.fetch([name, id], expires_in: 10.minutes) do
       where(:id => id).take!
@@ -118,5 +120,9 @@ class Note < ActiveRecord::Base
         }
         errors.add(:content, feedback)
       end
+    end
+
+    def flush_cache
+      Rails.cache.delete([self.class.name, id])
     end
 end
