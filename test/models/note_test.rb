@@ -1,6 +1,8 @@
 require "test_helper"
 
 class NoteTest < ActiveSupport::TestCase
+  include CachingHelper
+
   fixtures :notes, :users, :nodes
 
   # properties
@@ -322,6 +324,52 @@ class NoteTest < ActiveSupport::TestCase
   end
 
   # methods
+
+  def test_cached_find_raises_exception_if_missing_id_is_given
+    assert_raise ActiveRecord::RecordNotFound do
+      Note.cached_find(0)
+    end
+  end
+
+  def test_cached_find_returns_cache_after_cache_was_created
+    with_caching do
+      note = notes(:linux_book)
+      assert_equal note, Note.cached_find(note.id)
+
+      Note.expects(:where).with(:id => note.id).times(0)
+
+      mock = Minitest::Mock.new
+      mock.expect(:take!, :not_called)
+      Note.stub(:where, mock) do
+        assert_equal note, Note.cached_find(note.id)
+        assert_raise MockExpectationError do
+          mock.verify
+        end
+      end
+    end
+  end
+
+  def test_cached_find_loads_exact_record_after_cache_was_destroyed
+    with_caching do
+      note = notes(:wish_list)
+      assert_equal note, Note.cached_find(note.id)
+
+      assert note.update_attribute(:name, "My New Wishlist")
+      note.reload
+
+      Note::ActiveRecord_Relation.any_instance
+        .expects(:take!).returns(note).times(1)
+      Note.cached_find(note.id)
+      Rails.cache.clear
+
+      mock = Minitest::Mock.new
+      mock.expect(:take!, note)
+      Note.stub(:where, mock) do
+        assert_equal note, Note.cached_find(note.id)
+        mock.verify
+      end
+    end
+  end
 
   def test_name_with_blank_content
     note = notes(:linux_book)

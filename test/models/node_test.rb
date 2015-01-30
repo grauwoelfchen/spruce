@@ -1,6 +1,8 @@
 require "test_helper"
 
 class NodeTest < ActiveSupport::TestCase
+  include CachingHelper
+
   fixtures :nodes, :users, :notes
 
   setup :build_tree
@@ -207,6 +209,45 @@ class NodeTest < ActiveSupport::TestCase
   end
 
   # methods
+
+  def test_cached_find_raises_exception_if_missing_id_is_given
+    assert_raise ActiveRecord::RecordNotFound do
+      Node.cached_find(0)
+    end
+  end
+
+  def test_cached_find_returns_cache_after_cache_was_created
+    with_caching do
+      node = nodes(:var)
+      assert_equal node, Node.cached_find(node.id)
+
+      mock = Minitest::Mock.new
+      mock.expect(:take!, :not_called)
+      Node.stub(:where, mock) do
+        assert_equal node, Node.cached_find(node.id)
+        assert_raise MockExpectationError do
+          mock.verify
+        end
+      end
+    end
+  end
+
+  def test_cached_find_loads_exact_record_after_cache_was_destroyed
+    with_caching do
+      node = nodes(:var)
+      assert_equal node, Node.cached_find(node.id)
+
+      assert node.update_attribute(:name, "usr")
+      node.reload
+
+      mock = Minitest::Mock.new
+      mock.expect(:take!, node)
+      Node.stub(:where, mock) do
+        assert_equal node, Node.cached_find(node.id)
+        mock.verify
+      end
+    end
+  end
 
   def test_roots
     roots = Node.roots
