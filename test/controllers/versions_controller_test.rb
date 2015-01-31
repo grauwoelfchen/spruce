@@ -1,9 +1,11 @@
 require 'test_helper'
 
 class VersionsControllerTest < ActionController::TestCase
+  include RequestHelper
+
   fixtures :nodes, :notes, :users
 
-  setup :login, :initialize_node
+  setup :login, :build_node_tree
   teardown :logout
 
   # actions
@@ -64,6 +66,7 @@ class VersionsControllerTest < ActionController::TestCase
       :type => "b"
     }
     post :restore, params
+
     assert_response :redirect
     assert_redirected_to root_url
   end
@@ -105,6 +108,8 @@ class VersionsControllerTest < ActionController::TestCase
   end
 
   # restore create
+
+  # FIXME
 
   # restore update
 
@@ -180,45 +185,47 @@ class VersionsControllerTest < ActionController::TestCase
 
   # restore destroy
 
+  # FIXME
 
   # methods
 
   def test_redo_link_for_node_on_undo
-    controller = VersionsController.new
-    controller.stubs(:revert_version_path)
-      .returns("/versions/2/b/revert?redo=true")
-    controller.stubs(:params).returns(:type => "b", :redo => "false")
     node = nodes(:var)
     node.update_attributes(:name => "var v2")
     version = node.versions.last
     version.restore!
+
+    controller = VersionsController.new
     controller.instance_variable_set(:@version, version)
-    expected = <<-LINK.gsub(/^\s{6}|\n/, "")
-      <a data-method="post" href="/versions/2/b/revert?redo=true"
-       rel="nofollow">redo</a>
-    LINK
-    assert_equal expected, controller.send(:redo_link)
+
+    with_params(controller, :type => "b", :redo => "false") do
+      expected = <<-LINK.gsub(/^\s{8}|\n/, "")
+        <a data-method="post" href="/v/#{version.next.id}/b/revert?redo=true"
+         rel="nofollow">redo</a>
+      LINK
+      assert_equal expected, controller.send(:redo_link)
+    end
   end
 
   def test_redo_link_for_node_on_redo
-    controller = VersionsController.new
-    controller.stubs(:revert_version_path)
-      .returns("/versions/2/b/revert?redo=false")
-    controller.stubs(:params).returns(:type => "b", :redo => "true")
     node = nodes(:var)
     node.update_attributes(:name => "var v2")
     version = node.versions.last
     version.restore!
+
+    controller = VersionsController.new
     controller.instance_variable_set(:@version, version)
-    expected = <<-LINK.gsub(/^\s{6}|\n/, "")
-      <a data-method="post" href="/versions/2/b/revert?redo=false"
-       rel="nofollow">undo</a>
-    LINK
-    assert_equal expected, controller.send(:redo_link)
+
+    with_params(controller, :type => "b", :redo => "true") do
+      expected = <<-LINK.gsub(/^\s{8}|\n/, "")
+        <a data-method="post" href="/v/#{version.next.id}/b/revert?redo=false"
+         rel="nofollow">undo</a>
+      LINK
+      assert_equal expected, controller.send(:redo_link)
+    end
   end
 
   def test_back_url_for_new_node_with_referer
-    controller = VersionsController.new
     attributes = {
       :name => "New node",
       :user => users(:tim)
@@ -228,14 +235,16 @@ class VersionsControllerTest < ActionController::TestCase
     node.save
     version = node.versions.last
     version.restore!
+
+    controller = VersionsController.new
     controller.instance_variable_set(:@version, version)
-    request.stubs(:referer).returns(node_url(node))
-    controller.stubs(:request).returns(request)
-    assert_equal :back, controller.send(:back_url)
+
+    with_referer(controller, node_url(node)) do
+      assert_equal :back, controller.send(:back_url)
+    end
   end
 
   def test_back_url_for_new_node_without_referer
-    controller = VersionsController.new
     attributes = {
       :name => "New node",
       :user => users(:tim)
@@ -245,14 +254,16 @@ class VersionsControllerTest < ActionController::TestCase
     node.save
     version = node.versions.last
     version.restore!
+
+    controller = VersionsController.new
     controller.instance_variable_set(:@version, version)
-    request.stubs(:referer).returns(nil)
-    controller.stubs(:request).returns(request)
-    assert_equal nodes_url, controller.send(:back_url)
+
+    with_referer(controller, nil) do
+      assert_equal nodes_url, controller.send(:back_url)
+    end
   end
 
   def test_back_url_for_new_note
-    controller = VersionsController.new
     attributes = {
       :content => "* New note\r\n",
       :user    => users(:tim),
@@ -261,57 +272,69 @@ class VersionsControllerTest < ActionController::TestCase
     note.save
     version = note.versions.last
     version.restore!
+
+    controller = VersionsController.new
     controller.instance_variable_set(:@version, version)
-    controller.stubs(:request).returns(request)
-    assert_equal node_url(version.item.node), controller.send(:back_url)
+
+    with_request(controller) do
+      assert_equal node_url(version.item.node), controller.send(:back_url)
+    end
   end
 
   def test_back_url_for_node_with_referer
-    controller = VersionsController.new
     node = nodes(:var)
     node.update_attributes(:name => "var v2")
     version = node.versions.last
     version.restore!
+
+    controller = VersionsController.new
     controller.instance_variable_set(:@version, version)
-    request.stubs(:referer).returns(node_url(node))
-    controller.stubs(:request).returns(request)
-    assert_equal :back, controller.send(:back_url)
+
+    with_referer(controller, node_url(node)) do
+      assert_equal :back, controller.send(:back_url)
+    end
   end
 
   def test_back_url_for_note_with_referer
-    controller = VersionsController.new
     note = notes(:linux_book)
     note.update_attributes(:content => "* More hard Linux beginner's Book\r\n")
     version = note.versions.last
     version.restore!
+
+    controller = VersionsController.new
     controller.instance_variable_set(:@version, version)
-    request.stubs(:referer).returns(note_url(note))
-    controller.stubs(:request).returns(request)
-    assert_equal :back, controller.send(:back_url)
+
+    with_referer(controller, note_url(note)) do
+      assert_equal :back, controller.send(:back_url)
+    end
   end
 
   def test_back_url_for_node_without_referer
-    controller = VersionsController.new
     node = nodes(:var)
     node.update_attributes(:name => "var v2")
     version = node.versions.last
     version.restore!
+
+    controller = VersionsController.new
     controller.instance_variable_set(:@version, version)
-    request.stubs(:referer).returns(nil)
-    controller.stubs(:request).returns(request)
-    assert_equal nodes_url, controller.send(:back_url)
+
+    with_referer(controller, nil) do
+      assert_equal nodes_url, controller.send(:back_url)
+    end
   end
 
   def test_back_url_for_note_without_referer
-    controller = VersionsController.new
     note = notes(:linux_book)
     note.update_attributes(:content => "* More hard Linux beginner's Book\r\n")
     version = note.versions.last
     version.restore!
+
+    controller = VersionsController.new
     controller.instance_variable_set(:@version, version)
-    request.stubs(:referer).returns(nil)
-    controller.stubs(:request).returns(request)
-    assert_equal nodes_url, controller.send(:back_url)
+
+    with_referer(controller, nil) do
+      assert_equal nodes_url, controller.send(:back_url)
+    end
   end
 
   private
@@ -321,7 +344,7 @@ class VersionsControllerTest < ActionController::TestCase
       login_user(user)
     end
 
-    def initialize_node
+    def build_node_tree
       Node.rebuild!
     end
 

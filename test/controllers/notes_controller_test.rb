@@ -1,9 +1,11 @@
 require "test_helper"
 
 class NotesControllerTest < ActionController::TestCase
+  include RequestHelper
+
   fixtures :notes, :users, :nodes
 
-  setup :login, :initialize_node, :initialize_note
+  setup :login, :build_node_tree, :initialize_note
   teardown :logout
 
   # actions
@@ -208,13 +210,18 @@ class NotesControllerTest < ActionController::TestCase
   # methods
 
   def test_undo_link
+    @note.update_attribute(:name, "Updated hard Linux Book")
+    prev_version = @note.versions.last
     controller = NotesController.new
-    controller.stubs(:revert_version_path).returns("/versions/1/l/revert")
     controller.instance_variable_set(:@note, @note)
-    expected = <<-LINK.gsub(/^\s{6}|\n/, "")
-      <a data-method="post" href="/versions/1/l/revert" rel="nofollow">undo</a>
-    LINK
-    assert_equal expected, controller.send(:undo_link)
+
+    with_request(controller) do
+      expected = <<-LINK.gsub(/^\s{8}|\n/, "")
+        <a data-method="post"
+         href="/v/#{prev_version.id}/l/revert" rel="nofollow">undo</a>
+      LINK
+      assert_equal expected, controller.send(:undo_link)
+    end
   end
 
   private
@@ -224,7 +231,7 @@ class NotesControllerTest < ActionController::TestCase
       login_user(user)
     end
 
-    def initialize_node
+    def build_node_tree
       Node.rebuild!
     end
 

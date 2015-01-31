@@ -5,6 +5,8 @@ class PasswordResetsControllerTest < ActionController::TestCase
 
   setup :initialize_user
 
+  # actions
+
   def test_get_edit_with_invalid_token
     get :edit, :token => "invalid"
     assert_response :redirect
@@ -64,6 +66,10 @@ class PasswordResetsControllerTest < ActionController::TestCase
     assert_response :redirect
     assert_redirected_to root_url
   end
+
+  # methods
+
+  # FIXME
 
   private
 

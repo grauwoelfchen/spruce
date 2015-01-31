@@ -1,9 +1,11 @@
 require "test_helper"
 
 class NodesControllerTest < ActionController::TestCase
+  include RequestHelper
+
   fixtures :nodes, :users
 
-  setup :login, :initialize_node
+  setup :login, :build_node_tree, :initialize_node
   teardown :logout
 
   # actions
@@ -233,13 +235,18 @@ class NodesControllerTest < ActionController::TestCase
   # methods
 
   def test_undo_link
+    @node.update_attribute(:name, "Public")
+    prev_version = @node.versions.last
     controller = NodesController.new
-    controller.stubs(:revert_version_path).returns("/versions/1/b/revert")
     controller.instance_variable_set(:@node, @node)
-    expected = <<-LINK.gsub(/^\s{6}|\n/, "")
-      <a data-method="post" href="/versions/1/b/revert" rel="nofollow">undo</a>
-    LINK
-    assert_equal expected, controller.send(:undo_link)
+
+    with_request(controller) do
+      expected = <<-LINK.gsub(/^\s{8}|\n/, "")
+        <a data-method="post"
+         href="/v/#{prev_version.id}/b/revert" rel="nofollow">undo</a>
+      LINK
+      assert_equal expected, controller.send(:undo_link)
+    end
   end
 
   private
@@ -249,8 +256,11 @@ class NodesControllerTest < ActionController::TestCase
       login_user(user)
     end
 
-    def initialize_node
+    def build_node_tree
       Node.rebuild!
+    end
+
+    def initialize_node
       @node = nodes(:bob_s_home)
     end
 

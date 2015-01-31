@@ -67,7 +67,7 @@ class NotesController < ApplicationController
     end
 
     def undo_link
-      view_context.link_to "undo", revert_version_path(@note.versions.last, "l"),
-        :method => :post
+      view_context.link_to "undo",
+        revert_version_path(@note.versions.last, "l"), :method => :post
     end
 end
