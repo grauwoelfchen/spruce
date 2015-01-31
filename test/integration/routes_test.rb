@@ -102,4 +102,23 @@ class RoutesTest < ActionDispatch::IntegrationTest
       {method: "delete", path: "/l/1/delete"},
       {controller: "notes", action: "destroy", id: "1"})
   end
+
+  def test_route_to_versions
+    assert_routing(
+      {method: "get", path: "/v/1/l/revert"},
+      {controller: "versions", action: "revert", id: "1", type: "l"}
+    )
+    assert_routing(
+      {method: "get", path: "/v/1/b/revert"},
+      {controller: "versions", action: "revert", id: "1", type: "b"}
+    )
+    assert_routing(
+      {method: "post", path: "/v/1/l/revert"},
+      {controller: "versions", action: "restore", id: "1", type: "l"}
+    )
+    assert_routing(
+      {method: "post", path: "/v/1/b/revert"},
+      {controller: "versions", action: "restore", id: "1", type: "b"}
+    )
+  end
 end

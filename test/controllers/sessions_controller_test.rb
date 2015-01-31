@@ -6,6 +6,8 @@ class SessionsControllerTest < ActionController::TestCase
   setup :initialize_user
   teardown :logout
 
+  # actions
+
   def test_new_session_for_logged_in_user
     login_user(@user)
     get :new
@@ -51,6 +53,10 @@ class SessionsControllerTest < ActionController::TestCase
     assert_response :redirect
     assert_redirected_to root_url
   end
+
+  # methods
+
+  # FIXME
 
   private
 

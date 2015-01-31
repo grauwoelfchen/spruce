@@ -3,6 +3,8 @@ require "test_helper"
 class UsersControllerTest < ActionController::TestCase
   fixtures :users
 
+  # actions
+
   def test_get_new_for_logged_in_user
     user = signed_up_user
     user.activate!
@@ -115,6 +117,10 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :redirect
     assert_redirected_to login_url
   end
+
+  # methods
+
+  # FIXME
 
   private
 
