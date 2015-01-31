@@ -14,7 +14,10 @@ class NodesController < ApplicationController
   def show
     respond_to do |format|
       format.html
-      format.js { render :layout => false }
+      format.text { render :layout => false }
+      if request.xhr?
+        format.js { render :layout => false }
+      end
     end
   end
 

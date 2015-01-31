@@ -1,0 +1,4 @@
+- if @node.children.empty? && @node.notes.empty?
+  | none
+- else
+  = render "list", node: @node

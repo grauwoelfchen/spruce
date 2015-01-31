@@ -10,40 +10,52 @@ class CanAccessToNodeTest < Capybara::Rails::TestCase
 
   # showing
 
-  def test_successfully_showing_with_valid_id
+  def test_successfully_showing_html_with_valid_id
     visit "/b/#{@node.id}"
-    assert page.status_code, 200
-    assert_content page, "SHOW"
-    assert_content page, @node.name
+    assert_equal 200, page.status_code
+    assert_equal "text/html; charset=utf-8",
+      page.response_headers["Content-Type"]
+    assert_match /html/, page.body
+    assert_content "SHOW"
+    assert_content @node.name
+  end
+
+  def test_successfully_showing_text_with_valid_id
+    visit "/b/#{@node.id}.txt"
+    assert_equal 200, page.status_code
+    assert_equal "text/plain; charset=utf-8",
+      page.response_headers["Content-Type"]
+    refute_match /html/, page.body
+    assert_content @node.children.first.name
   end
 
   # creation
 
   def test_successfully_creation_with_valid_id
     visit "/b/#{@node.id}/b/new"
-    assert page.status_code, 200
-    assert_content page, "NEW 'BRANCH"
+    assert_equal 200, page.status_code
+    assert_content "NEW 'BRANCH"
 
     within("//form[@id=new_node]") do
       fill_in "node_name", :with => "log"
       click_button "Save"
     end
-    assert page.status_code, 200
-    assert_content page, "Successfully created branch"
+    assert_equal 200, page.status_code
+    assert_content "Successfully created branch"
   end
 
   # updating
 
   def test_successfully_updating_with_valid_id
     visit "/b/#{@node.id}/edit"
-    assert page.status_code, 200
+    assert_equal 200, page.status_code
 
     within("//form[@id=edit_node_#{@node.id}]") do
       fill_in "node_name", :with => "www"
       click_button "Save"
     end
-    assert page.status_code, 200
-    assert_content page, "Successfully updated branch"
+    assert_equal 200, page.status_code
+    assert_content "Successfully updated branch"
   end
 
   private

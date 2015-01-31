@@ -21,6 +21,10 @@ class NotesController < ApplicationController
   end
 
   def show
+    respond_to do |format|
+      format.html
+      format.text { render :layout => false }
+    end
   end
 
   def edit
