@@ -46,6 +46,24 @@ class RoutesTest < ActionDispatch::IntegrationTest
       {controller: "users", action: "activate", token: "token"})
   end
 
+  def test_route_to_password_resets
+    assert_routing(
+      {method: "get", path: "/password_resets/new"},
+      {controller: "password_resets", action: "new"})
+    assert_routing(
+      {method: "post", path: "/password_resets"},
+      {controller: "password_resets", action: "create"})
+    assert_routing(
+      {method: "get", path: "/password_resets/token/edit"},
+      {controller: "password_resets", action: "edit", token: "token"})
+    assert_routing(
+      {method: "put", path: "/password_resets/token"},
+      {controller: "password_resets", action: "update", token: "token"})
+    assert_routing(
+      {method: "patch", path: "/password_resets/token"},
+      {controller: "password_resets", action: "update", token: "token"})
+  end
+
   def test_route_to_nodes
     assert_routing(
       {method: "get", path: "/b/1/b/new"},
@@ -67,6 +85,9 @@ class RoutesTest < ActionDispatch::IntegrationTest
       {controller: "nodes", action: "edit", id: "1"})
     assert_routing(
       {method: "put", path: "/b/1"},
+      {controller: "nodes", action: "update",  id: "1"})
+    assert_routing(
+      {method: "patch", path: "/b/1"},
       {controller: "nodes", action: "update",  id: "1"})
     assert_routing(
       {method: "get", path: "/b/1/delete"},
@@ -94,6 +115,9 @@ class RoutesTest < ActionDispatch::IntegrationTest
       {controller: "notes", action: "edit", id: "1"})
     assert_routing(
       {method: "put", path: "/l/1"},
+      {controller: "notes", action: "update", id: "1"})
+    assert_routing(
+      {method: "patch", path: "/l/1"},
       {controller: "notes", action: "update", id: "1"})
     assert_routing(
       {method: "get", path: "/l/1/delete"},
