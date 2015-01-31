@@ -10,7 +10,7 @@ class CanAccessToNoteTest < Capybara::Rails::TestCase
 
   # showing
 
-  def test_successfully_showing_html_with_valid_id
+  def test_successfully_showing_html_with
     visit "/l/#{@note.id}"
     assert_equal 200, page.status_code
     assert_equal "text/html; charset=utf-8",
@@ -20,7 +20,7 @@ class CanAccessToNoteTest < Capybara::Rails::TestCase
     assert_content @note.name
   end
 
-  def test_successfully_showing_text_with_valid_id
+  def test_successfully_showing_text_with
     visit "/l/#{@note.id}.txt"
     assert_equal 200, page.status_code
     assert_equal "text/plain; charset=utf-8",
@@ -31,7 +31,7 @@ class CanAccessToNoteTest < Capybara::Rails::TestCase
 
   # creation
 
-  def test_successfully_creation_with_valid_id
+  def test_successfully_creation_with
     visit "/b/#{@note.node_id}/l/new"
     assert_equal 200, page.status_code
     assert_content "NEW 'LEAF"
@@ -50,7 +50,7 @@ class CanAccessToNoteTest < Capybara::Rails::TestCase
 
   # updating
 
-  def test_successfully_updating_with_valid_id
+  def test_successfully_updating_with
     visit "/l/#{@note.id}/edit"
     assert_equal 200, page.status_code
 
@@ -64,6 +64,42 @@ class CanAccessToNoteTest < Capybara::Rails::TestCase
     end
     assert_equal 200, page.status_code
     assert_content "Successfully updated leaf"
+  end
+
+  # destroying
+
+  def test_successfully_destroying_with_with_js
+    node = @note.node
+
+    visit "/l/#{@note.id}/edit"
+    assert_equal 200, page.status_code
+
+    within("//div[@class=destroy]") do
+      click_link "Delete"
+    end
+    assert_equal 200, page.status_code
+    assert_equal "http://example.org/b/#{node.id}", page.current_url
+    assert_content "Successfully destroyed leaf"
+
+    visit "/l/#{@note.id}"
+    assert_equal 404, page.status_code
+  end
+
+  def test_successfully_destroying_with_without_js
+    node = @note.node
+
+    visit "/l/#{@note.id}/delete"
+    assert_equal 200, page.status_code
+
+    within("//form") do
+      click_button "Destroy"
+    end
+    assert_equal 200, page.status_code
+    assert_equal "http://example.org/b/#{node.id}", page.current_url
+    assert_content "Successfully destroyed leaf"
+
+    visit "/l/#{@note.id}"
+    assert_equal 404, page.status_code
   end
 
   private

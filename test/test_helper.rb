@@ -10,6 +10,8 @@ helper = lambda {
 
   Dir[Rails.root.join("test/support/**/*.rb")].each { |f| require f }
 
+  Capybara.app_host = "http://example.org"
+
   class ActiveSupport::TestCase
     include Sorcery::TestHelpers::Rails
 
