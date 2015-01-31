@@ -10,7 +10,7 @@ class CanAccessToNodeTest < Capybara::Rails::TestCase
 
   # showing
 
-  def test_successfully_showing_html_with_valid_id
+  def test_successfully_showing_html_with
     visit "/b/#{@node.id}"
     assert_equal 200, page.status_code
     assert_equal "text/html; charset=utf-8",
@@ -20,18 +20,19 @@ class CanAccessToNodeTest < Capybara::Rails::TestCase
     assert_content @node.name
   end
 
-  def test_successfully_showing_text_with_valid_id
-    visit "/b/#{@node.id}.txt"
+  def test_successfully_showing_text_with
+    node = nodes(:var)
+    visit "/b/#{node.id}.txt"
     assert_equal 200, page.status_code
     assert_equal "text/plain; charset=utf-8",
       page.response_headers["Content-Type"]
     refute_match /html/, page.body
-    assert_content @node.children.first.name
+    assert_content node.children.first.name
   end
 
   # creation
 
-  def test_successfully_creation_with_valid_id
+  def test_successfully_creation_with
     visit "/b/#{@node.id}/b/new"
     assert_equal 200, page.status_code
     assert_content "NEW 'BRANCH"
@@ -46,7 +47,7 @@ class CanAccessToNodeTest < Capybara::Rails::TestCase
 
   # updating
 
-  def test_successfully_updating_with_valid_id
+  def test_successfully_updating_with
     visit "/b/#{@node.id}/edit"
     assert_equal 200, page.status_code
 
@@ -58,6 +59,50 @@ class CanAccessToNodeTest < Capybara::Rails::TestCase
     assert_content "Successfully updated branch"
   end
 
+  # destroying
+
+  def test_successfully_destroying_with_with_js
+    visit "/b/#{@node.id}/edit"
+    assert_equal 200, page.status_code
+
+    within("//div[@class=destroy]") do
+      click_link "Delete"
+    end
+    assert_equal 200, page.status_code
+    assert_equal "http://example.org/b", page.current_url
+    assert_content "Successfully destroyed branch"
+
+    visit "/b/#{@node.id}"
+    assert_equal 404, page.status_code
+  end
+
+  def test_does_not_show_destroy_button_in_edit_if_node_has_child_node
+    node = nodes(:var)
+    visit "/b/#{node.id}/edit"
+    assert_equal "http://example.org/b/#{node.id}/edit", page.current_url
+    assert_equal 200, page.status_code
+    refute_match /Destroy/, page.body
+  end
+
+  def test_does_not_rendr_destroy_form_if_node_has_child_node
+    # FIXME
+  end
+
+  def test_successfully_destroying_with_without_js
+    visit "/b/#{@node.id}/delete"
+    assert_equal 200, page.status_code
+
+    within("//form") do
+      click_button "Destroy"
+    end
+    assert_equal 200, page.status_code
+    assert_equal "http://example.org/b", page.current_url
+    assert_content "Successfully destroyed branch"
+
+    visit "/b/#{@node.id}"
+    assert_equal 404, page.status_code
+  end
+
   private
 
     def login
@@ -66,7 +111,7 @@ class CanAccessToNodeTest < Capybara::Rails::TestCase
 
     def initialize_node
       Node.rebuild!
-      @node = nodes(:var)
+      @node = nodes(:lib)
     end
 
     def logout
