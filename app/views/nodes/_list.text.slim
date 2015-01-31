@@ -1,0 +1,14 @@
+- if node.children
+  - node.children.includes(:children, :notes).each do |n|
+    = "d "
+    = n.name
+    = " "
+    = n.updated_at.strftime("%Y-%m-%dT%H:%M:%S")
+    = "\n"
+- if node.notes
+  - node.notes.order(name: :asc).each do |n|
+    = "- "
+    = truncate(n.name, length: 36)
+    = " "
+    = n.updated_at.strftime("%Y-%m-%dT%H:%M:%S")
+    = "\n"

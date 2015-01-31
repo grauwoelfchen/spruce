@@ -75,11 +75,14 @@ class RoutesTest < ActionDispatch::IntegrationTest
       {method: "get", path: "/b"},
       {controller: "nodes", action: "index"})
     assert_routing(
+      {method: "get", path: "/b.txt"},
+      {controller: "nodes", action: "index", format: "txt"})
+    assert_routing(
       {method: "get", path: "/b/1"},
       {controller: "nodes", action: "show", id: "1"})
     assert_routing(
-      {method: "get", path: "/b/1.js"},
-      {controller: "nodes", action: "show", id: "1", format: "js"})
+      {method: "get", path: "/b/1.txt"},
+      {controller: "nodes", action: "show", id: "1", format: "txt"})
     assert_routing(
       {method: "get", path: "/b/1/edit"},
       {controller: "nodes", action: "edit", id: "1"})

@@ -14,7 +14,7 @@ class VersionsControllerTest < ActionController::TestCase
 
   def test_get_revert_node_with_invalid_version
     params = {
-      :id   => "invalid",
+      :id   => "0",
       :type => "b"
     }
     get :revert, params
@@ -24,7 +24,7 @@ class VersionsControllerTest < ActionController::TestCase
 
   def test_get_revert_note_with_invalid_version
     params = {
-      :id   => "invalid",
+      :id   => "0",
       :type => "l"
     }
     get :revert, params
@@ -62,7 +62,7 @@ class VersionsControllerTest < ActionController::TestCase
 
   def test_post_restore_node_with_invalid_version
     params = {
-      :id   => "invalid",
+      :id   => "0",
       :type => "b"
     }
     post :restore, params
@@ -73,7 +73,7 @@ class VersionsControllerTest < ActionController::TestCase
 
   def test_post_restore_note_with_invalid_version
     params = {
-      :id   => "invalid",
+      :id   => "0",
       :type => "l"
     }
     post :restore, params
