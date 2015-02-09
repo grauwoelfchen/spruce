@@ -16,6 +16,7 @@ class NotesControllerTest < ActionController::TestCase
 
   def test_get_index_with_others_node
     bob_s_node = nodes(:bob_s_home)
+
     assert_raise(ActionController::UrlGenerationError) do
       get(:index, :node_id => bob_s_node.id)
     end
@@ -29,15 +30,18 @@ class NotesControllerTest < ActionController::TestCase
 
   def test_get_show_with_others_note
     bob_s_note = notes(:idea_note)
+
     assert_raise(ActiveRecord::RecordNotFound) do
       get(:show, :id => bob_s_note.id)
     end
+
     refute(assigns(:note))
     refute(assigns(:node))
   end
 
   def test_get_show
     get(:show, :id => @note.id)
+
     assert_equal(@note, assigns(:note))
     assert_equal(@note.node, assigns(:node))
     assert_template(:show)
@@ -52,14 +56,17 @@ class NotesControllerTest < ActionController::TestCase
 
   def test_get_new_with_others_node
     bob_s_node = nodes(:bob_s_home)
+
     assert_raise ActiveRecord::RecordNotFound do
       get :new, :node_id => bob_s_node.id
     end
+
     refute(assigns(:node))
   end
 
   def test_get_new
     get(:new, :node_id => @note.node.id)
+
     assert_instance_of(Note, assigns(:note))
     assert_equal(@note.node, assigns(:node))
     assert_template(:new)
@@ -81,11 +88,13 @@ class NotesControllerTest < ActionController::TestCase
         :content => "Not allowed, right?\r\n"
       }
     }
+
     assert_no_difference("Node.count", 1) do
       assert_raise(ActiveRecord::RecordNotFound) do
         post(:create, params)
       end
     end
+
     refute(assigns(:node))
     refute(assigns(:note))
   end
@@ -97,9 +106,11 @@ class NotesControllerTest < ActionController::TestCase
         :content => ""
       }
     }
+
     assert_no_difference("Note.count", 1) do
       post(:create, params)
     end
+
     assert_instance_of(Note, assigns(:note))
     refute(assigns(:note).persisted?)
     assert_equal(@note.node, assigns(:node))
@@ -117,9 +128,11 @@ class NotesControllerTest < ActionController::TestCase
         :content => "* More Hard Linux beginner's Book\r\n"
       }
     }
+
     assert_difference("Note.count", 1) do
       post(:create, params)
     end
+
     assert_instance_of(Note, assigns(:note))
     assert(assigns(:note).persisted?)
     assert_equal(@note.node, assigns(:node))
@@ -133,15 +146,18 @@ class NotesControllerTest < ActionController::TestCase
 
   def test_get_edit_with_others_note
     bob_s_note = notes(:idea_note)
+
     assert_raise(ActiveRecord::RecordNotFound) do
       get(:edit, :id => bob_s_note.id)
     end
+
     refute(assigns(:note))
     refute(assigns(:node))
   end
 
   def test_get_edit
     get(:edit, :id => @note.id)
+
     assert_equal(@note, assigns(:note))
     assert_equal(@note.node, assigns(:node))
     assert_template(:edit)
@@ -157,9 +173,11 @@ class NotesControllerTest < ActionController::TestCase
         :content => "Not allowed, right?"
       }
     }
+
     assert_raise(ActiveRecord::RecordNotFound) do
       put(:update, params)
     end
+
     refute(flash[:notice])
     refute(assigns(:note))
     refute(assigns(:node))
@@ -167,6 +185,7 @@ class NotesControllerTest < ActionController::TestCase
 
   def test_put_update_with_validation_errors
     put(:update, :id => @note.id, :note => {:content => ""})
+
     assert_response(:success)
     assert_equal(@note, assigns(:note))
     assert_equal(@note.node, assigns(:node))
@@ -185,6 +204,7 @@ class NotesControllerTest < ActionController::TestCase
       }
     }
     put(:update, params)
+
     assert_equal(params[:note][:content], assigns(:note).content)
     assert_equal(@note.node, assigns(:node))
     assert_equal(
@@ -197,15 +217,18 @@ class NotesControllerTest < ActionController::TestCase
 
   def test_get_delete_with_others_note
     bob_s_note = notes(:idea_note)
+
     assert_raise(ActiveRecord::RecordNotFound) do
       get(:delete, :id => bob_s_note.id)
     end
+
     refute(assigns(:note))
     refute(assigns(:node))
   end
 
   def test_get_delete
     get(:delete, :id => @note.id)
+
     assert_equal(@note, assigns(:note))
     assert_equal(@note.node, assigns(:node))
     assert_template(:delete)
@@ -214,11 +237,13 @@ class NotesControllerTest < ActionController::TestCase
 
   def test_delete_destroy_with_others_note
     bob_s_note = notes(:idea_note)
+
     assert_no_difference("Note.count", -1) do
       assert_raise (ActiveRecord::RecordNotFound) do
         delete(:destroy, :id => bob_s_note.id)
       end
     end
+
     refute(assigns(:note))
     refute(assigns(:node))
   end
@@ -227,6 +252,7 @@ class NotesControllerTest < ActionController::TestCase
     assert_difference("Note.count", -1) do
       delete(:destroy, :id => @note.id)
     end
+
     assert_equal(@note, assigns(:note))
     refute(assigns(:note).persisted?)
     assert_equal(
@@ -243,8 +269,8 @@ class NotesControllerTest < ActionController::TestCase
     controller = NotesController.new
     controller.request = request
     controller.params[:id] = @note.id
-
     controller.send(:load_note)
+
     assert_equal(@note, controller.instance_variable_get(:@note))
   end
 

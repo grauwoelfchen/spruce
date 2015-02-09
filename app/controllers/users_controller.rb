@@ -1,9 +1,9 @@
 class UsersController < ApplicationController
   skip_before_filter :require_login, :only => [:new, :create, :activate]
-  before_filter :force_logout, :only => [:create, :activate]
+  before_filter :require_logout, :only => [:create, :activate]
 
   def new
-    redirect_to root_url if current_user
+    return redirect_to(root_url) if current_user
     @user = User.new
   end
 
@@ -24,12 +24,13 @@ class UsersController < ApplicationController
         :notice => "Your were successfully activated, Please login :-D"
     else
       not_authenticated
+      flash.now.alert = "Invalid token :-p"
     end
   end
 
   private
 
-    def force_logout
+    def require_logout
       if current_user
         logout
         redirect_to root_url

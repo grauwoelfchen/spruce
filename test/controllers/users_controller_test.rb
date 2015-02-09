@@ -1,29 +1,31 @@
 require "test_helper"
 
 class UsersControllerTest < ActionController::TestCase
-  fixtures :users
+  fixtures(:users)
 
   # actions
 
-  def test_get_new_for_logged_in_user
+  def test_get_new_with_logged_in_user
     user = signed_up_user
     user.activate!
     login_user(user)
-    get :new
-    assert_response :redirect
-    assert_redirected_to root_url
+    get(:new)
+    refute(assigns(:user))
+    assert_response(:redirect)
+    assert_redirected_to(root_url)
     logout_user
   end
 
   def test_get_new
-    get :new
-    assert_response :success
-    assert_instance_of User, assigns(:user)
-    assert_template :new
-    assert_template :partial => "_form"
+    get(:new)
+    assert_instance_of(User, assigns(:user))
+    refute(assigns(:user).persisted?)
+    assert_template(:new)
+    assert_template(:partial => "_form")
+    assert_response(:success)
   end
 
-  def test_post_create_for_logged_in_user
+  def test_post_create_with_logged_in_user
     user = signed_up_user
     user.activate!
     login_user(user)
@@ -35,11 +37,13 @@ class UsersControllerTest < ActionController::TestCase
         :password_confirmation => "secret"
       }
     }
-    assert_no_difference "User.count", 1 do
-      post :create, params
+    assert_no_difference("User.count", 1) do
+      post(:create, params)
     end
-    assert_response :redirect
-    assert_redirected_to root_url
+    assert_nil(assigns(:current_user))
+    refute(assigns(:user))
+    assert_response(:redirect)
+    assert_redirected_to(root_url)
   end
 
   def test_post_create_with_validation_errors
@@ -51,13 +55,16 @@ class UsersControllerTest < ActionController::TestCase
         :password_confirmation => ""
       }
     }
-    assert_no_difference "User.count" do
-      post :create, params
+    assert_no_difference("User.count") do
+      post(:create, params)
     end
-    assert_response :success
-    assert_template :new
-    assert_template :partial => "shared/_errors"
-    assert_template :partial => "_form"
+    assert_instance_of(User, assigns(:user))
+    refute(assigns(:user).persisted?)
+    assert_nil(flash[:notice])
+    assert_template(:new)
+    assert_template(:partial => "shared/_errors")
+    assert_template(:partial => "_form")
+    assert_response(:success)
   end
 
   def test_post_create
@@ -69,14 +76,20 @@ class UsersControllerTest < ActionController::TestCase
         :password_confirmation => "secret"
       }
     }
-    assert_difference "User.count", 1 do
-      post :create, params
+    assert_difference("User.count", 1) do
+      post(:create, params)
     end
-    assert_response :redirect
-    assert_redirected_to root_url
+    assert_instance_of(User, assigns(:user))
+    assert(assigns(:user).persisted?)
+    assert_equal(
+      "Signed up! Please check email :)",
+      flash[:notice]
+    )
+    assert_response(:redirect)
+    assert_redirected_to(root_url)
   end
 
-  def test_get_activate_for_logged_in_user
+  def test_get_activate_with_logged_in_user
     user = signed_up_user
     token = user.activation_token
     user.activate!
@@ -85,11 +98,13 @@ class UsersControllerTest < ActionController::TestCase
       "User.where(:activation_state => \"active\").count",
       "Node.where(:user_id => #{user.id}).count"
     ]
-    assert_no_difference expressions, 1 do
-      get :activate, :token => token
+    assert_no_difference(expressions, 1) do
+      get(:activate, :token => token)
     end
-    assert_response :redirect
-    assert_redirected_to root_url
+    assert_nil(assigns(:current_user))
+    refute(assigns(:user))
+    assert_response(:redirect)
+    assert_redirected_to(root_url)
   end
 
   def test_get_activate_with_invalid_token
@@ -98,11 +113,16 @@ class UsersControllerTest < ActionController::TestCase
       "User.where(:activation_state => \"active\").count",
       "Node.where(:user_id => #{user.id}).count"
     ]
-    assert_no_difference expressions, 1 do
-      get :activate, :token => "invalid"
+    assert_no_difference(expressions, 1) do
+      get(:activate, :token => "invalid")
     end
-    assert_response :redirect
-    assert_redirected_to login_url
+    refute(assigns(:user))
+    assert_equal(
+      "Invalid token :-p",
+      flash[:alert]
+    )
+    assert_response(:redirect)
+    assert_redirected_to(login_url)
   end
 
   def test_get_activate
@@ -111,16 +131,46 @@ class UsersControllerTest < ActionController::TestCase
       "User.where(:activation_state => \"active\").count",
       "Node.where(:user_id => #{user.id}).count"
     ]
-    assert_difference expressions, 1 do
-      get :activate, :token => user.activation_token
+    assert_difference(expressions, 1) do
+      get(:activate, :token => user.activation_token)
     end
-    assert_response :redirect
-    assert_redirected_to login_url
+    user.reload
+    assert(user.active?)
+    assert_equal(
+      "Your were successfully activated, Please login :-D",
+      flash[:notice]
+    )
+    assert_response(:redirect)
+    assert_redirected_to(login_url)
   end
 
   # methods
 
-  # FIXME
+  def test_require_logout_with_logged_in_user
+    user = users(:bob)
+    login_user(user)
+    controller = UsersController.new
+    controller.request = request
+    response = ActionDispatch::Response.new
+    controller.instance_variable_set(:@_response, response)
+    assert_equal(user, controller.current_user)
+    
+    controller.send(:require_logout)
+    assert_equal(false, controller.current_user)
+    assert_equal(root_url, response.redirect_url)
+  end
+
+  def test_require_logout_with_non_logged_in_user
+    controller = UsersController.new
+    controller.request = request
+    response = ActionDispatch::Response.new
+    controller.instance_variable_set(:@_response, response)
+    assert_equal(false, controller.current_user)
+    
+    controller.send(:require_logout)
+    assert_equal(false, controller.current_user)
+    assert_equal(nil, response.redirect_url)
+  end
 
   private
 

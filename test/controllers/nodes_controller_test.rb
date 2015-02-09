@@ -10,6 +10,7 @@ class NodesControllerTest < ActionController::TestCase
 
   def test_get_index_without_nest
     get(:index)
+
     assert_equal(@node, assigns(:node))
     assert_template(:index)
     assert_response(:success)
@@ -17,15 +18,18 @@ class NodesControllerTest < ActionController::TestCase
 
   def test_get_show_with_others_node
     tim_s_node = nodes(:tim_s_home)
+
     assert_raise(ActiveRecord::RecordNotFound) do
       get(:show, :id => tim_s_node.id)
     end
+
     refute(assigns(:node))
   end
 
   def test_get_show
     node = @node.children.first
     get(:show, :id => node.id)
+
     assert_equal(node, assigns(:node))
     assert_template(:show)
     assert_response(:success)
@@ -34,6 +38,7 @@ class NodesControllerTest < ActionController::TestCase
   def test_get_show_js_via_xhr
     node = @node.children.first
     xhr(:get, :show, :id => node.id, :format => :js)
+
     assert_equal(node, assigns(:node))
     assert_template(:show)
     assert_response(:success)
@@ -42,6 +47,7 @@ class NodesControllerTest < ActionController::TestCase
   def test_get_show_text
     node = @node.children.first
     xhr(:get, :show, :id => node.id, :format => :text)
+
     assert_equal(node, assigns(:node))
     assert_template(:show)
     assert_response(:success)
@@ -49,15 +55,18 @@ class NodesControllerTest < ActionController::TestCase
 
   def test_get_new_with_others_parent_node
     tim_s_node = nodes(:tim_s_home)
+
     assert_raise(ActiveRecord::RecordNotFound) do
       get(:new, :node_id => tim_s_node.id)
     end
+
     refute(assigns(:parent))
     refute(assigns(:node))
   end
 
   def test_get_new
     get(:new, :node_id => @node.id)
+
     assert_kind_of(Node, assigns(:node))
     assert_equal(@node, assigns(:parent))
     assert_template(:new)
@@ -73,11 +82,13 @@ class NodesControllerTest < ActionController::TestCase
         :name => "Not allowed, right?"
       }
     }
+
     assert_no_difference("Node.count", 1) do
       assert_raise(ActiveRecord::RecordNotFound) do
         post(:create, params)
       end
     end
+
     refute(assigns(:parent))
     refute(assigns(:node))
   end
@@ -89,9 +100,11 @@ class NodesControllerTest < ActionController::TestCase
         :name => ""
       }
     }
+
     assert_no_difference("Node.count", 1) do
       post(:create, params)
     end
+
     assert_instance_of(Node, assigns(:node))
     refute(assigns(:node).persisted?)
     assert_equal(@node, assigns(:parent))
@@ -109,9 +122,11 @@ class NodesControllerTest < ActionController::TestCase
         :name => "New child node"
       }
     }
+
     assert_difference("Node.count", 1) do
       post(:create, params)
     end
+
     assert_instance_of(Node, assigns(:node))
     assert(assigns(:node).persisted?)
     assert_equal(@node, assigns(:parent))
@@ -125,6 +140,7 @@ class NodesControllerTest < ActionController::TestCase
 
   def test_get_edit_with_root_node
     get(:edit, :id => @node.id)
+
     assert_equal(@node, assigns(:node))
     assert_response(:redirect)
     assert_redirected_to(nodes_url)
@@ -132,15 +148,18 @@ class NodesControllerTest < ActionController::TestCase
 
   def test_get_edit_with_others_node
     tim_s_node = nodes(:tim_s_home)
+
     assert_raise(ActiveRecord::RecordNotFound) do
       get(:edit, :id => tim_s_node.id)
     end
+
     refute(assigns(:node))
   end
 
   def test_get_edit
     node = @node.children.first
     get(:edit, :id => node.id)
+
     assert_equal(node, assigns(:node))
     assert_template(:edit)
     assert_template(:partial => "_form")
@@ -155,6 +174,7 @@ class NodesControllerTest < ActionController::TestCase
       }
     }
     put(:update, params)
+
     assert_equal(@node, assigns(:node))
     assert_nil(flash[:notice])
     assert_response(:redirect)
@@ -169,9 +189,11 @@ class NodesControllerTest < ActionController::TestCase
         :name => "Not allowed, right?"
       }
     }
+
     assert_raise(ActiveRecord::RecordNotFound) do
       put(:update, params)
     end
+
     assert_nil(flash[:notice])
     refute(assigns(:node))
   end
@@ -185,6 +207,7 @@ class NodesControllerTest < ActionController::TestCase
       }
     }
     put(:update, params)
+
     assert_equal(node, assigns(:node))
     assert_nil(flash[:notice])
     assert_template(:edit)
@@ -202,6 +225,7 @@ class NodesControllerTest < ActionController::TestCase
       }
     }
     put(:update, params)
+
     assert_equal(params[:node][:name], assigns(:node).name)
     assert_equal(
       "Successfully updated branch. undo",
@@ -213,6 +237,7 @@ class NodesControllerTest < ActionController::TestCase
 
   def test_get_delete_with_root_node
     get(:delete, :id => @node.id)
+
     assert_equal(@node, assigns(:node))
     assert_response(:redirect)
     assert_redirected_to(nodes_url)
@@ -220,15 +245,18 @@ class NodesControllerTest < ActionController::TestCase
 
   def test_get_delete_with_others_node
     tim_s_node = nodes(:tim_s_home)
+
     assert_raise(ActiveRecord::RecordNotFound) do
       get(:delete, :id => tim_s_node.id)
     end
+
     refute(assigns(:node))
   end
 
   def test_get_delete
     node = @node.children.first
     get(:delete, :id => node.id)
+
     assert_equal(node, assigns(:node))
     assert_template(:delete)
     assert_response(:success)
@@ -238,6 +266,7 @@ class NodesControllerTest < ActionController::TestCase
     assert_no_difference("Node.count", -1) do
       delete(:destroy, :id => @node.id)
     end
+
     assert_equal(@node, assigns(:node))
     assert_nil(flash[:notice])
     assert_response(:redirect)
@@ -246,20 +275,24 @@ class NodesControllerTest < ActionController::TestCase
 
   def test_delete_destroy_with_others_node
     tim_s_node = nodes(:tim_s_home).children.first
+
     assert_no_difference("Node.count", -1) do
       assert_raise(ActiveRecord::RecordNotFound) do
         delete(:destroy, :id => tim_s_node.id)
       end
     end
+
     assert_nil(flash[:notice])
     refute(assigns(:node))
   end
 
   def test_delete_destroy
     node = @node.children.first
+
     assert_difference("Node.count", -1) do
       delete(:destroy, :id => node.id)
     end
+
     assert_equal(node, assigns(:node))
     refute(assigns(:node).persisted?)
     assert_equal(
@@ -278,6 +311,7 @@ class NodesControllerTest < ActionController::TestCase
     node = @node.children.first
     controller.params[:id] = node.id
     controller.send(:load_node)
+
     assert_equal(node, controller.instance_variable_get(:@node))
   end
 
@@ -286,6 +320,7 @@ class NodesControllerTest < ActionController::TestCase
     controller.request = request
     controller.params[:node_id] = @node.id
     controller.send(:load_parent)
+
     assert_equal(@node, controller.instance_variable_get(:@parent))
   end
 
@@ -296,6 +331,7 @@ class NodesControllerTest < ActionController::TestCase
     response = ActionDispatch::Response.new
     controller.instance_variable_set(:@_response, response)
     controller.send(:block_root)
+
     assert_equal(302, controller.status)
     assert_equal(nodes_url, response.redirect_url)
   end
@@ -310,6 +346,7 @@ class NodesControllerTest < ActionController::TestCase
       <a data-method="post"
        href="/v/#{prev_version.id}/b/revert" rel="nofollow">undo</a>
     LINK
+
     assert_equal(expected, controller.send(:undo_link))
   end
 
