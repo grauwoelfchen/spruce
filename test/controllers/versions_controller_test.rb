@@ -85,7 +85,7 @@ class VersionsControllerTest < ActionController::TestCase
   end
 
   def test_post_restore_node_with_others_version
-    bob_s_node = nodes(:work)
+    bob_s_node = nodes(:works)
     bob_s_node.update_attributes(:name => "Bob's Home v2")
     params = {
       :id   => bob_s_node.versions.last.id,

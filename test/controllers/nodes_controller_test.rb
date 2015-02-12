@@ -1,17 +1,18 @@
 require "test_helper"
 
 class NodesControllerTest < ActionController::TestCase
-  fixtures(:nodes, :users)
+  fixtures(:nodes, :notes, :users)
 
-  setup(:login, :build_node_tree, :initialize_node)
+  setup(:login, :build_node_tree)
   teardown(:logout)
 
   # actions
 
   def test_get_index_without_nest
+    node = nodes(:bob_s_home)
     get(:index)
 
-    assert_equal(@node, assigns(:node))
+    assert_equal(node, assigns(:node))
     assert_template(:index)
     assert_response(:success)
   end
@@ -27,7 +28,7 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_get_show
-    node = @node.children.first
+    node = nodes(:works)
     get(:show, :id => node.id)
 
     assert_equal(node, assigns(:node))
@@ -36,7 +37,7 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_get_show_js_via_xhr
-    node = @node.children.first
+    node = nodes(:works)
     xhr(:get, :show, :id => node.id, :format => :js)
 
     assert_equal(node, assigns(:node))
@@ -45,7 +46,7 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_get_show_text
-    node = @node.children.first
+    node = nodes(:works)
     xhr(:get, :show, :id => node.id, :format => :text)
 
     assert_equal(node, assigns(:node))
@@ -65,10 +66,11 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_get_new
-    get(:new, :node_id => @node.id)
+    node = nodes(:bob_s_home)
+    get(:new, :node_id => node.id)
 
     assert_kind_of(Node, assigns(:node))
-    assert_equal(@node, assigns(:parent))
+    assert_equal(node, assigns(:parent))
     assert_template(:new)
     assert_template(:partial => "_form")
     assert_response(:success)
@@ -94,8 +96,9 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_post_create_with_validation_errors
+    node = nodes(:bob_s_home)
     params = {
-      :node_id => @node.id,
+      :node_id => node.id,
       :node    => {
         :name => ""
       }
@@ -107,7 +110,7 @@ class NodesControllerTest < ActionController::TestCase
 
     assert_instance_of(Node, assigns(:node))
     refute(assigns(:node).persisted?)
-    assert_equal(@node, assigns(:parent))
+    assert_equal(node, assigns(:parent))
     assert_nil(flash[:notice])
     assert_template(:new)
     assert_template(:partial => "shared/_errors")
@@ -116,8 +119,9 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_post_create
+    node = nodes(:bob_s_home)
     params = {
-      :node_id => @node.id,
+      :node_id => node.id,
       :node    => {
         :name => "New child node"
       }
@@ -129,19 +133,20 @@ class NodesControllerTest < ActionController::TestCase
 
     assert_instance_of(Node, assigns(:node))
     assert(assigns(:node).persisted?)
-    assert_equal(@node, assigns(:parent))
+    assert_equal(node, assigns(:parent))
     assert_equal(
       "Successfully created branch. undo",
       ActionController::Base.helpers.strip_tags(flash[:notice])
     )
     assert_response(:redirect)
-    assert_redirected_to(node_url(@node))
+    assert_redirected_to(node_url(node))
   end
 
   def test_get_edit_with_root_node
-    get(:edit, :id => @node.id)
+    node = nodes(:bob_s_home)
+    get(:edit, :id => node.id)
 
-    assert_equal(@node, assigns(:node))
+    assert_equal(node, assigns(:node))
     assert_response(:redirect)
     assert_redirected_to(nodes_url)
   end
@@ -157,7 +162,7 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_get_edit
-    node = @node.children.first
+    node = nodes(:works)
     get(:edit, :id => node.id)
 
     assert_equal(node, assigns(:node))
@@ -167,15 +172,16 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_put_update_with_root_node
+    node = nodes(:bob_s_home)
     params = {
-      :id   => @node.id,
+      :id   => node.id,
       :node => {
         :name => "Not allwoed, right?"
       }
     }
     put(:update, params)
 
-    assert_equal(@node, assigns(:node))
+    assert_equal(node, assigns(:node))
     assert_nil(flash[:notice])
     assert_response(:redirect)
     assert_redirected_to(nodes_url)
@@ -199,7 +205,7 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_put_update_with_validation_errors
-    node = @node.children.first
+    node = nodes(:works)
     params = {
       :id   => node.id,
       :node => {
@@ -217,7 +223,7 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_put_update
-    node = @node.children.first
+    node = nodes(:works)
     params = {
       :id   => node.id,
       :node => {
@@ -236,9 +242,10 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_get_delete_with_root_node
-    get(:delete, :id => @node.id)
+    node = nodes(:bob_s_home)
+    get(:delete, :id => node.id)
 
-    assert_equal(@node, assigns(:node))
+    assert_equal(node, assigns(:node))
     assert_response(:redirect)
     assert_redirected_to(nodes_url)
   end
@@ -254,7 +261,7 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_get_delete
-    node = @node.children.first
+    node = nodes(:works)
     get(:delete, :id => node.id)
 
     assert_equal(node, assigns(:node))
@@ -263,14 +270,28 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_delete_destroy_with_root_node
+    node = nodes(:bob_s_home)
     assert_no_difference("Node.count", -1) do
-      delete(:destroy, :id => @node.id)
+      delete(:destroy, :id => node.id)
     end
 
-    assert_equal(@node, assigns(:node))
+    assert_equal(node, assigns(:node))
     assert_nil(flash[:notice])
     assert_response(:redirect)
     assert_redirected_to(nodes_url)
+  end
+
+  def test_delete_destroy_with_non_blank_node
+    node = nodes(:issues)
+
+    assert_no_difference("Node.count", -1) do
+      delete(:destroy, :id => node.id)
+    end
+
+    assert_equal(node, assigns(:node))
+    assert_nil(flash[:notice])
+    assert_response(:redirect)
+    assert_redirected_to(edit_node_url(node))
   end
 
   def test_delete_destroy_with_others_node
@@ -287,7 +308,7 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_delete_destroy
-    node = @node.children.first
+    node = nodes(:works)
 
     assert_difference("Node.count", -1) do
       delete(:destroy, :id => node.id)
@@ -308,7 +329,7 @@ class NodesControllerTest < ActionController::TestCase
   def test_load_node
     controller = NodesController.new
     controller.request = request
-    node = @node.children.first
+    node = nodes(:bob_s_home)
     controller.params[:id] = node.id
     controller.send(:load_node)
 
@@ -318,16 +339,18 @@ class NodesControllerTest < ActionController::TestCase
   def test_load_parent
     controller = NodesController.new
     controller.request = request
-    controller.params[:node_id] = @node.id
+    node = nodes(:bob_s_home)
+    controller.params[:node_id] = node.id
     controller.send(:load_parent)
 
-    assert_equal(@node, controller.instance_variable_get(:@parent))
+    assert_equal(node, controller.instance_variable_get(:@parent))
   end
 
   def test_block_root_with_root_node
     controller = NodesController.new
     controller.request = request
-    controller.instance_variable_set(:@node, @node)
+    node = nodes(:bob_s_home)
+    controller.instance_variable_set(:@node, node)
     response = ActionDispatch::Response.new
     controller.instance_variable_set(:@_response, response)
     controller.send(:block_root)
@@ -336,12 +359,40 @@ class NodesControllerTest < ActionController::TestCase
     assert_equal(nodes_url, response.redirect_url)
   end
 
+
+  def test_block_non_blank_node_with_non_blank_node
+    controller = NodesController.new
+    controller.request = request
+    node = nodes(:issues)
+    controller.instance_variable_set(:@node, node)
+    response = ActionDispatch::Response.new
+    controller.instance_variable_set(:@_response, response)
+    controller.send(:block_non_blank_node)
+
+    assert_equal(302, controller.status)
+    assert_equal(edit_node_url(node), response.redirect_url)
+  end
+
+  def test_block_non_blank_node_with_blank_node
+    controller = NodesController.new
+    controller.request = request
+    node = nodes(:works)
+    controller.instance_variable_set(:@node, node)
+    response = ActionDispatch::Response.new
+    controller.instance_variable_set(:@_response, response)
+    controller.send(:block_non_blank_node)
+
+    assert_equal(200, controller.status)
+    assert_nil(response.redirect_url)
+  end
+
   def test_undo_link
     controller = NodesController.new
     controller.request = request
-    @node.update_attribute(:name, "Public")
-    prev_version = @node.versions.last
-    controller.instance_variable_set(:@node, @node)
+    node = nodes(:works)
+    node.update_attribute(:name, "Public")
+    prev_version = node.versions.last
+    controller.instance_variable_set(:@node, node)
     expected = <<-LINK.gsub(/^\s{6}|\n/, "")
       <a data-method="post"
        href="/v/#{prev_version.id}/b/revert" rel="nofollow">undo</a>
@@ -359,10 +410,6 @@ class NodesControllerTest < ActionController::TestCase
 
     def build_node_tree
       Node.rebuild!
-    end
-
-    def initialize_node
-      @node = nodes(:bob_s_home)
     end
 
     def logout

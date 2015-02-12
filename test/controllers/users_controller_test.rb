@@ -154,7 +154,7 @@ class UsersControllerTest < ActionController::TestCase
     response = ActionDispatch::Response.new
     controller.instance_variable_set(:@_response, response)
     assert_equal(user, controller.current_user)
-    
+
     controller.send(:require_logout)
     assert_equal(false, controller.current_user)
     assert_equal(root_url, response.redirect_url)
@@ -166,7 +166,7 @@ class UsersControllerTest < ActionController::TestCase
     response = ActionDispatch::Response.new
     controller.instance_variable_set(:@_response, response)
     assert_equal(false, controller.current_user)
-    
+
     controller.send(:require_logout)
     assert_equal(false, controller.current_user)
     assert_equal(nil, response.redirect_url)

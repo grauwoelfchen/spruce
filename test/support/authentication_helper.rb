@@ -4,7 +4,7 @@ module AuthenticationHelper
   include Capybara::DSL
 
   def self.included(klass)
-    klass.fixtures :users
+    klass.fixtures(:users)
   end
 
   def login_as_tim
@@ -18,17 +18,17 @@ module AuthenticationHelper
   end
 
   def logout!
-    visit "/logout"
+    visit("/logout")
   end
 
   private
 
     def login_as(user)
-      visit "/login"
-      within "//form" do
-        fill_in "username", :with => user.email
-        fill_in "password", :with => "secret"
+      visit("/login")
+      within("//form") do
+        fill_in("username", :with => user.email)
+        fill_in("password", :with => "secret")
       end
-      click_button "Log in"
+      click_button("Log in")
     end
 end

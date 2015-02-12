@@ -3,103 +3,121 @@ require "test_helper"
 class CanAccessToNoteTest < Capybara::Rails::TestCase
   include AuthenticationHelper
 
-  fixtures :nodes, :notes
+  fixtures(:nodes, :notes)
 
-  setup :login, :initialize_node, :initialize_note
-  teardown :logout
+  setup(:login, :build_node_tree)
+  teardown(:logout)
 
   # showing
 
   def test_successfully_showing_html_with
-    visit "/l/#{@note.id}"
-    assert_equal 200, page.status_code
-    assert_equal "text/html; charset=utf-8",
-      page.response_headers["Content-Type"]
-    assert_match /html/, page.body
-    assert_content "SHOW"
-    assert_content @note.name
+    note = notes(:linux_book)
+    visit("/l/#{note.id}")
+
+    assert_equal(200, page.status_code)
+    assert_equal("text/html; charset=utf-8",
+      page.response_headers["Content-Type"])
+    assert_match(/html/, page.body)
+    assert_content("SHOW")
+    assert_content(note.name)
   end
 
   def test_successfully_showing_text_with
-    visit "/l/#{@note.id}.txt"
-    assert_equal 200, page.status_code
-    assert_equal "text/plain; charset=utf-8",
-      page.response_headers["Content-Type"]
-    refute_match /html/, page.body
-    assert_content @note.name
+    note = notes(:linux_book)
+    visit("/l/#{note.id}.txt")
+
+    assert_equal(200, page.status_code)
+    assert_equal("text/plain; charset=utf-8",
+      page.response_headers["Content-Type"])
+    refute_match(/html/, page.body)
+    assert_content(note.name)
   end
 
   # creation
 
   def test_successfully_creation_with
-    visit "/b/#{@note.node_id}/l/new"
-    assert_equal 200, page.status_code
-    assert_content "NEW 'LEAF"
+    note = notes(:linux_book)
+    visit("/b/#{note.node_id}/l/new")
+
+    assert_equal(200, page.status_code)
+    assert_content("NEW 'LEAF")
 
     within("//form[@id=new_note]") do
-      fill_in "canvas", :with => <<-CONTENT.gsub(/^\s{8}/, "")
+      content = <<-CONTENT.gsub(/^\s{8}/, "")
         * foo
           * bar
           * baz
       CONTENT
-      click_button "Save"
+      fill_in("canvas", :with => content)
+      click_button("Save")
     end
-    assert_equal 200, page.status_code
-    assert_content "Successfully created leaf"
+
+    assert_equal(200, page.status_code)
+    assert_content("Successfully created leaf")
   end
 
   # updating
 
   def test_successfully_updating_with
-    visit "/l/#{@note.id}/edit"
-    assert_equal 200, page.status_code
+    note = notes(:linux_book)
+    visit("/l/#{note.id}/edit")
 
-    within("//form[@id=edit_note_#{@note.id}]") do
-      fill_in "canvas", :with => <<-CONTENT.gsub(/^\s{8}/, "")
+    assert_equal(200, page.status_code)
+
+    within("//form[@id=edit_note_#{note.id}]") do
+      content = <<-CONTENT.gsub(/^\s{8}/, "")
         * qux
           * quux
           * boom
       CONTENT
-      click_button "Save"
+      fill_in("canvas", :with => content)
+      click_button("Save")
     end
-    assert_equal 200, page.status_code
-    assert_content "Successfully updated leaf"
+
+    assert_equal(200, page.status_code)
+    assert_content("Successfully updated leaf")
   end
 
   # destroying
 
   def test_successfully_destroying_with_with_js
-    node = @note.node
+    note = notes(:linux_book)
+    node = note.node
+    visit("/l/#{note.id}/edit")
 
-    visit "/l/#{@note.id}/edit"
-    assert_equal 200, page.status_code
+    assert_equal(200, page.status_code)
 
     within("//div[@class=destroy]") do
-      click_link "Delete"
+      click_link("Delete")
     end
-    assert_equal 200, page.status_code
-    assert_equal "http://example.org/b/#{node.id}", page.current_url
-    assert_content "Successfully destroyed leaf"
 
-    visit "/l/#{@note.id}"
-    assert_equal 404, page.status_code
+    assert_equal(200, page.status_code)
+    assert_equal("http://example.org/b/#{node.id}", page.current_url)
+    assert_content("Successfully destroyed leaf")
+
+    visit("/l/#{note.id}")
+
+    assert_equal(404, page.status_code)
   end
 
   def test_successfully_destroying_with_without_js
-    node = @note.node
+    note = notes(:linux_book)
+    node = note.node
+    visit("/l/#{note.id}/delete")
 
-    visit "/l/#{@note.id}/delete"
-    assert_equal 200, page.status_code
+    assert_equal(200, page.status_code)
 
     within("//form") do
-      click_button "Destroy"
+      click_button("Destroy")
     end
-    assert_equal 200, page.status_code
-    assert_equal "http://example.org/b/#{node.id}", page.current_url
-    assert_content "Successfully destroyed leaf"
 
-    visit "/l/#{@note.id}"
-    assert_equal 404, page.status_code
+    assert_equal(200, page.status_code)
+    assert_equal("http://example.org/b/#{node.id}", page.current_url)
+    assert_content("Successfully destroyed leaf")
+
+    visit("/l/#{note.id}")
+
+    assert_equal(404, page.status_code)
   end
 
   private
@@ -108,12 +126,8 @@ class CanAccessToNoteTest < Capybara::Rails::TestCase
       login_as_tim
     end
 
-    def initialize_node
+    def build_node_tree
       Node.rebuild!
-    end
-
-    def initialize_note
-      @note = notes(:linux_book)
     end
 
     def logout

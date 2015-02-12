@@ -22,6 +22,15 @@ wish_list:
       * Comfortable Sofa
       * Cool Percolator
       * Awesome Coffee Table
+working_log:
+  user: tim
+  node: log
+  name: Working log
+  content: |
+    * Working log
+      * Setup CI
+      * Create user authentication
+      * Enter css framework
 ## bob's
 idea_note:
   user: bob
@@ -30,6 +39,13 @@ idea_note:
   content: |
     * Tiny RSS agregator
     * Scheme Markdown Parser
+diy_issues:
+  user: bob
+  node: issues
+  name: DIY Issues
+  content: |
+    * Repair block of north garden
+    * Fix roof hole
 shopping_list:
   user: bob
   node: bob_s_home
