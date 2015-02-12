@@ -8,7 +8,6 @@ class NodesController < ApplicationController
 
   def index
     @node = Node.visible_to(current_user).cached_root
-    redirect_to root_url unless @node
   end
 
   def show
