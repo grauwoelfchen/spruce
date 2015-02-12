@@ -336,8 +336,6 @@ class NoteTest < ActiveSupport::TestCase
       note = notes(:linux_book)
       assert_equal note, Note.cached_find(note.id)
 
-      Note.expects(:where).with(:id => note.id).times(0)
-
       mock = Minitest::Mock.new
       mock.expect(:take!, :not_called)
       Note.stub(:where, mock) do
@@ -357,8 +355,6 @@ class NoteTest < ActiveSupport::TestCase
       assert note.update_attribute(:name, "My New Wishlist")
       note.reload
 
-      Note::ActiveRecord_Relation.any_instance
-        .expects(:take!).returns(note).times(1)
       Note.cached_find(note.id)
       Rails.cache.clear
 

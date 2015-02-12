@@ -26,7 +26,6 @@ end
 group :test do
   gem "minitest", "~> 5.4"
   gem "minitest-rails-capybara"
-  gem "mocha"
   gem "database_cleaner"
   gem "test_after_commit"
 end
