@@ -5,6 +5,7 @@ class NodesController < ApplicationController
   before_filter :load_node, :except => [:index, :new, :create]
   before_filter :load_parent, :only => [:new, :create]
   before_filter :block_root, :only => [:edit, :update, :delete, :destroy]
+  before_filter :block_non_blank_node, :only => [:delete, :destroy]
 
   def index
     @node = Node.visible_to(current_user).cached_root
@@ -69,7 +70,12 @@ class NodesController < ApplicationController
     end
 
     def block_root
-      redirect_to nodes_url if @node.root?
+      redirect_to(nodes_url) if @node.root?
+    end
+
+    def block_non_blank_node
+      redirect_to(edit_node_url(@node)) \
+        if @node.children.any? || @node.notes.any?
     end
 
     def node_params

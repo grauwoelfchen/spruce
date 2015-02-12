@@ -13,10 +13,10 @@ class PagesControllerTest < ActionController::TestCase
   def test_get_index_with_logged_in_user
     login
     build_node_tree
-    initialize_node
+    node = nodes(:bob_s_home)
     get(:index)
 
-    assert_equal(@node, assigns(:root))
+    assert_equal(node, assigns(:root))
     assert_template(:index)
     assert_response(:success)
 
@@ -46,10 +46,6 @@ class PagesControllerTest < ActionController::TestCase
 
     def build_node_tree
       Node.rebuild!
-    end
-
-    def initialize_node
-      @node = nodes(:bob_s_home)
     end
 
     def logout

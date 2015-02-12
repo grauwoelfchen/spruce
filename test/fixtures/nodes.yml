@@ -8,7 +8,11 @@ var:
   user: tim
   parent: tim_s_home
   name: var
-lib:
+log: 
+  user: tim
+  parent: var
+  name: log
+lib: # empty node
   user: tim
   parent: var
   name: lib
@@ -17,7 +21,11 @@ bob_s_home:
   user: bob
   parent:
   name:
-work:
+issues:
   user: bob
   parent: bob_s_home
-  name: Work
+  name: Issues
+works: # empty node
+  user: bob
+  parent: bob_s_home
+  name: Works

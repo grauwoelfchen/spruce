@@ -3,7 +3,7 @@ require "test_helper"
 class NotesControllerTest < ActionController::TestCase
   fixtures(:notes, :users, :nodes)
 
-  setup(:login, :build_node_tree, :initialize_note)
+  setup(:login, :build_node_tree)
   teardown(:logout)
 
   # actions
@@ -23,8 +23,10 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_get_index
+    note = notes(:linux_book)
+
     assert_raise(ActionController::UrlGenerationError) do
-      get(:index, :node_id => @note.node.id)
+      get(:index, :node_id => note.node.id)
     end
   end
 
@@ -40,10 +42,11 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_get_show
-    get(:show, :id => @note.id)
+    note = notes(:linux_book)
+    get(:show, :id => note.id)
 
-    assert_equal(@note, assigns(:note))
-    assert_equal(@note.node, assigns(:node))
+    assert_equal(note, assigns(:note))
+    assert_equal(note.node, assigns(:node))
     assert_template(:show)
     assert_response(:success)
   end
@@ -65,10 +68,11 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_get_new
-    get(:new, :node_id => @note.node.id)
+    note = notes(:linux_book)
+    get(:new, :node_id => note.node.id)
 
     assert_instance_of(Note, assigns(:note))
-    assert_equal(@note.node, assigns(:node))
+    assert_equal(note.node, assigns(:node))
     assert_template(:new)
     assert_template(:partial => "_form")
     assert_response(:success)
@@ -100,8 +104,9 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_post_create_with_validation_errors
+    note = notes(:linux_book)
     params = {
-      :node_id => @note.node.id,
+      :node_id => note.node.id,
       :note    => {
         :content => ""
       }
@@ -113,7 +118,7 @@ class NotesControllerTest < ActionController::TestCase
 
     assert_instance_of(Note, assigns(:note))
     refute(assigns(:note).persisted?)
-    assert_equal(@note.node, assigns(:node))
+    assert_equal(note.node, assigns(:node))
     assert_nil(flash[:notice])
     assert_template(:new)
     assert_template(:partial => "shared/_errors")
@@ -122,8 +127,9 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_post_create
+    note = notes(:linux_book)
     params = {
-      :node_id => @note.node.id,
+      :node_id => note.node.id,
       :note    => {
         :content => "* More Hard Linux beginner's Book\r\n"
       }
@@ -135,7 +141,7 @@ class NotesControllerTest < ActionController::TestCase
 
     assert_instance_of(Note, assigns(:note))
     assert(assigns(:note).persisted?)
-    assert_equal(@note.node, assigns(:node))
+    assert_equal(note.node, assigns(:node))
     assert_equal(
       "Successfully created leaf. undo",
       ActionController::Base.helpers.strip_tags(flash[:notice])
@@ -156,10 +162,11 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_get_edit
-    get(:edit, :id => @note.id)
+    note = notes(:linux_book)
+    get(:edit, :id => note.id)
 
-    assert_equal(@note, assigns(:note))
-    assert_equal(@note.node, assigns(:node))
+    assert_equal(note, assigns(:note))
+    assert_equal(note.node, assigns(:node))
     assert_template(:edit)
     assert_template(:partial => "_form")
     assert_response(:success)
@@ -184,11 +191,12 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_put_update_with_validation_errors
-    put(:update, :id => @note.id, :note => {:content => ""})
+    note = notes(:linux_book)
+    put(:update, :id => note.id, :note => {:content => ""})
 
     assert_response(:success)
-    assert_equal(@note, assigns(:note))
-    assert_equal(@note.node, assigns(:node))
+    assert_equal(note, assigns(:note))
+    assert_equal(note.node, assigns(:node))
     refute(flash[:notice])
     assert_template(:edit)
     assert_template(:partial => "shared/_errors")
@@ -196,8 +204,9 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_put_update
+    note = notes(:linux_book)
     params = {
-      :id   => @note.id,
+      :id   => note.id,
       :note => {
         :content =>
           "* Little Hard Linux user's Book\r\n* Getting Started"
@@ -206,7 +215,7 @@ class NotesControllerTest < ActionController::TestCase
     put(:update, params)
 
     assert_equal(params[:note][:content], assigns(:note).content)
-    assert_equal(@note.node, assigns(:node))
+    assert_equal(note.node, assigns(:node))
     assert_equal(
       "Successfully updated leaf. undo",
       ActionController::Base.helpers.strip_tags(flash[:notice])
@@ -227,10 +236,11 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_get_delete
-    get(:delete, :id => @note.id)
+    note = notes(:linux_book)
+    get(:delete, :id => note.id)
 
-    assert_equal(@note, assigns(:note))
-    assert_equal(@note.node, assigns(:node))
+    assert_equal(note, assigns(:note))
+    assert_equal(note.node, assigns(:node))
     assert_template(:delete)
     assert_response(:success)
   end
@@ -249,37 +259,41 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_delete_destroy
+    note = notes(:linux_book)
+
     assert_difference("Note.count", -1) do
-      delete(:destroy, :id => @note.id)
+      delete(:destroy, :id => note.id)
     end
 
-    assert_equal(@note, assigns(:note))
+    assert_equal(note, assigns(:note))
     refute(assigns(:note).persisted?)
     assert_equal(
       "Successfully destroyed leaf. undo",
       ActionController::Base.helpers.strip_tags(flash[:notice])
     )
     assert_response(:redirect)
-    assert_redirected_to(node_url(@note.node))
+    assert_redirected_to(node_url(note.node))
   end
 
   # methods
 
   def test_load_note
+    note = notes(:linux_book)
     controller = NotesController.new
     controller.request = request
-    controller.params[:id] = @note.id
+    controller.params[:id] = note.id
     controller.send(:load_note)
 
-    assert_equal(@note, controller.instance_variable_get(:@note))
+    assert_equal(note, controller.instance_variable_get(:@note))
   end
 
   def test_undo_link
     controller = NotesController.new
     controller.request = request
-    @note.update_attribute(:name, "Updated hard Linux Book")
-    prev_version = @note.versions.last
-    controller.instance_variable_set(:@note, @note)
+    note = notes(:linux_book)
+    note.update_attribute(:name, "Updated hard Linux Book")
+    prev_version = note.versions.last
+    controller.instance_variable_set(:@note, note)
 
     expected = <<-LINK.gsub(/^\s{6}|\n/, "")
       <a data-method="post"
@@ -297,10 +311,6 @@ class NotesControllerTest < ActionController::TestCase
 
     def build_node_tree
       Node.rebuild!
-    end
-
-    def initialize_note
-      @note = notes(:linux_book)
     end
 
     def logout
