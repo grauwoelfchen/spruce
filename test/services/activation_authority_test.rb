@@ -1,32 +1,35 @@
 require "test_helper"
 
 class ActivationAuthorityTest < ActiveSupport::TestCase
-  fixtures :users, :nodes
+  fixtures(:users, :nodes)
 
   def test_activate_with_invalid_token
     user = signed_up_user
-    assert_no_difference "Node.count", 1 do
+
+    assert_no_difference("Node.count", 1) do
       authority = ActivationAuthority.new("invalid")
-      assert_not authority.activate!
+      refute(authority.activate!)
     end
   end
 
   def test_activate_with_existing_user
     user = users(:bob)
-    assert_no_difference "Node.count", 1 do
+
+    assert_no_difference("Node.count", 1) do
       authority = ActivationAuthority.new
-      assert_not authority.activate!
+      refute(authority.activate!)
     end
   end
 
   def test_activate
     user = signed_up_user
     mail = Minitest::Mock.new
-    mail.expect :deliver, :return_value
-    NotificationMailer.stub :new_user_email, mail do
-      assert_difference "Node.count", 1 do
+    mail.expect(:deliver, true)
+
+    NotificationMailer.stub(:new_user_email, mail) do
+      assert_difference("Node.count", 1) do
         authority = ActivationAuthority.new(user.activation_token)
-        assert authority.activate!
+        assert(authority.activate!)
         mail.verify
       end
     end
@@ -34,25 +37,28 @@ class ActivationAuthorityTest < ActiveSupport::TestCase
 
   def test_create_home_with_existing_user
     user = users(:bob)
-    assert_no_difference "Node.count", 1 do
+
+    assert_no_difference("Node.count", 1) do
       authority = ActivationAuthority.new
-      refute_nil authority.send(:create_home, user)
+      refute_nil(authority.send(:create_home, user))
     end
   end
 
   def test_create_home_signed_up_user
     user = signed_up_user
-    assert_difference "Node.count", 1 do
+
+    assert_difference("Node.count", 1) do
       authority = ActivationAuthority.new(user.activation_token)
-      refute_nil authority.send(:create_home, user)
+      refute_nil(authority.send(:create_home, user))
     end
   end
 
   def test_notify_about_new_user
     user = signed_up_user
     mail = Minitest::Mock.new
-    mail.expect :deliver, :return_value
-    NotificationMailer.stub :new_user_email, mail do
+    mail.expect(:deliver, true)
+
+    NotificationMailer.stub(:new_user_email, mail) do
       authority = ActivationAuthority.new(user.activation_token)
       authority.send(:notify_about_new_user, user)
       mail.verify
