@@ -1,8 +1,7 @@
-helper = lambda {
+helper = Proc.new do
   ENV["RAILS_ENV"] ||= "test"
   require File.expand_path("../../config/environment", __FILE__)
   require "rails/test_help"
-  require "mocha/mini_test"
   require "minitest/mock"
   require "minitest/rails/capybara"
   require "minitest/pride" if ENV["TEST_PRIDE"].present?
@@ -28,7 +27,7 @@ helper = lambda {
       DatabaseCleaner.clean
     end
   end
-}
+end
 
 unless defined?(Spork) && Spork.using_spork?
   helper.call
