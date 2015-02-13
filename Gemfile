@@ -36,5 +36,5 @@ group :production do
   gem "newrelic_rpm"
 end
 
-personal = File.expand_path("../Gemfile.personal", __FILE__)
-eval File.read(personal) if File.exists?(personal)
+rock = File.expand_path("../Gemfile.rock", __FILE__)
+eval File.read(rock) if File.exists?(rock)

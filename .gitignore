@@ -24,8 +24,8 @@
 # service
 /config/newrelic.yml
 
-# personal
-/Gemfile.personal
+# rock
+/Gemfile.rock
 
 /Guardfile
 
