@@ -15,10 +15,11 @@ class VersionsControllerTest < ActionController::TestCase
       :id   => "0",
       :type => "b"
     }
-    get(:revert, params)
+
+    assert_raise(ActiveRecord::RecordNotFound) do
+      get(:revert, params)
+    end
     refute(assigns(:version))
-    assert_response(:redirect)
-    assert_redirected_to(root_url)
   end
 
   def test_get_revert_note_with_invalid_version
@@ -26,10 +27,11 @@ class VersionsControllerTest < ActionController::TestCase
       :id   => "0",
       :type => "l"
     }
-    get(:revert, params)
+
+    assert_raise(ActiveRecord::RecordNotFound) do
+      get(:revert, params)
+    end
     refute(assigns(:version))
-    assert_response(:redirect)
-    assert_redirected_to(root_url)
   end
 
   def test_get_revert_node_with_valid_version
@@ -40,6 +42,7 @@ class VersionsControllerTest < ActionController::TestCase
       :type => "b"
     }
     get(:revert, params)
+
     assert_equal(node.versions.last, assigns(:version))
     assert_template(:revert)
     assert_response(:success)
@@ -53,6 +56,7 @@ class VersionsControllerTest < ActionController::TestCase
       :type => "l"
     }
     get(:revert, params)
+
     assert_equal(note.versions.last, assigns(:version))
     assert_response(:success)
     assert_template(:revert)
@@ -65,11 +69,12 @@ class VersionsControllerTest < ActionController::TestCase
       :id   => "0",
       :type => "b"
     }
-    post :restore, params
+
+    assert_raise(ActiveRecord::RecordNotFound) do
+      post :restore, params
+    end
     refute(assigns(:version))
     refute(flash[:notice])
-    assert_response(:redirect)
-    assert_redirected_to(root_url)
   end
 
   def test_post_restore_note_with_invalid_version
@@ -77,11 +82,12 @@ class VersionsControllerTest < ActionController::TestCase
       :id   => "0",
       :type => "l"
     }
-    post(:restore, params)
+
+    assert_raise(ActiveRecord::RecordNotFound) do
+      post(:restore, params)
+    end
     refute(assigns(:version))
     refute(flash[:notice])
-    assert_response(:redirect)
-    assert_redirected_to(root_url)
   end
 
   def test_post_restore_node_with_others_version
@@ -91,11 +97,12 @@ class VersionsControllerTest < ActionController::TestCase
       :id   => bob_s_node.versions.last.id,
       :type => "b"
     }
-    post(:restore, params)
+
+    assert_raise(ActiveRecord::RecordNotFound) do
+      post(:restore, params)
+    end
     refute(assigns(:version))
     refute(flash[:notice])
-    assert_response(:redirect)
-    assert_redirected_to(root_url)
   end
 
   def test_post_restore_note_with_others_version
@@ -105,11 +112,12 @@ class VersionsControllerTest < ActionController::TestCase
       :id   => bob_s_note.versions.last.id,
       :type => "l"
     }
-    post(:restore, params)
+
+    assert_raise(ActiveRecord::RecordNotFound) do
+      post(:restore, params)
+    end
     refute(assigns(:version))
     refute(flash[:notice])
-    assert_response(:redirect)
-    assert_redirected_to(root_url)
   end
 
   # restore create
