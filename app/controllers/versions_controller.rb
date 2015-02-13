@@ -14,9 +14,7 @@ class VersionsController < ApplicationController
   private
 
     def load_version
-      @version = Version::Cycle
-        .where(:id => params[:id], :user_id => current_user.id).first
-      redirect_to root_url unless @version
+      @version = Version::Cycle.visible_to(current_user).find(params[:id])
     end
 
     def redo_link
