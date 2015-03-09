@@ -9,7 +9,7 @@ class NodesControllerTest < ActionController::TestCase
   # actions
 
   def test_get_index_without_nest
-    node = nodes(:bob_s_home)
+    node = nodes(:weenie_s_home)
     get(:index)
 
     assert_equal(node, assigns(:node))
@@ -18,10 +18,10 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_get_show_with_others_node
-    tim_s_node = nodes(:tim_s_home)
+    oswald_s_node = nodes(:oswald_s_home)
 
     assert_raise(ActiveRecord::RecordNotFound) do
-      get(:show, :id => tim_s_node.id)
+      get(:show, :id => oswald_s_node.id)
     end
 
     refute(assigns(:node))
@@ -55,10 +55,10 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_get_new_with_others_parent_node
-    tim_s_node = nodes(:tim_s_home)
+    oswald_s_node = nodes(:oswald_s_home)
 
     assert_raise(ActiveRecord::RecordNotFound) do
-      get(:new, :node_id => tim_s_node.id)
+      get(:new, :node_id => oswald_s_node.id)
     end
 
     refute(assigns(:parent))
@@ -66,7 +66,7 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_get_new
-    node = nodes(:bob_s_home)
+    node = nodes(:weenie_s_home)
     get(:new, :node_id => node.id)
 
     assert_kind_of(Node, assigns(:node))
@@ -77,9 +77,9 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_post_create_with_others_parent_node
-    tim_s_node = nodes(:tim_s_home).children.first
+    oswald_s_node = nodes(:oswald_s_home).children.first
     params = {
-      :node_id => tim_s_node.id,
+      :node_id => oswald_s_node.id,
       :node    => {
         :name => "Not allowed, right?"
       }
@@ -96,7 +96,7 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_post_create_with_validation_errors
-    node = nodes(:bob_s_home)
+    node = nodes(:weenie_s_home)
     params = {
       :node_id => node.id,
       :node    => {
@@ -119,7 +119,7 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_post_create
-    node = nodes(:bob_s_home)
+    node = nodes(:weenie_s_home)
     params = {
       :node_id => node.id,
       :node    => {
@@ -143,7 +143,7 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_get_edit_with_root_node
-    node = nodes(:bob_s_home)
+    node = nodes(:weenie_s_home)
     get(:edit, :id => node.id)
 
     assert_equal(node, assigns(:node))
@@ -152,10 +152,10 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_get_edit_with_others_node
-    tim_s_node = nodes(:tim_s_home)
+    oswald_s_node = nodes(:oswald_s_home)
 
     assert_raise(ActiveRecord::RecordNotFound) do
-      get(:edit, :id => tim_s_node.id)
+      get(:edit, :id => oswald_s_node.id)
     end
 
     refute(assigns(:node))
@@ -172,7 +172,7 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_put_update_with_root_node
-    node = nodes(:bob_s_home)
+    node = nodes(:weenie_s_home)
     params = {
       :id   => node.id,
       :node => {
@@ -188,9 +188,9 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_put_update_with_others_parent_node
-    tim_s_node = nodes(:tim_s_home).children.first
+    oswald_s_node = nodes(:oswald_s_home).children.first
     params = {
-      :id   => tim_s_node.id,
+      :id   => oswald_s_node.id,
       :node => {
         :name => "Not allowed, right?"
       }
@@ -242,7 +242,7 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_get_delete_with_root_node
-    node = nodes(:bob_s_home)
+    node = nodes(:weenie_s_home)
     get(:delete, :id => node.id)
 
     assert_equal(node, assigns(:node))
@@ -251,10 +251,10 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_get_delete_with_others_node
-    tim_s_node = nodes(:tim_s_home)
+    oswald_s_node = nodes(:oswald_s_home)
 
     assert_raise(ActiveRecord::RecordNotFound) do
-      get(:delete, :id => tim_s_node.id)
+      get(:delete, :id => oswald_s_node.id)
     end
 
     refute(assigns(:node))
@@ -270,7 +270,7 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_delete_destroy_with_root_node
-    node = nodes(:bob_s_home)
+    node = nodes(:weenie_s_home)
     assert_no_difference("Node.count", -1) do
       delete(:destroy, :id => node.id)
     end
@@ -295,11 +295,11 @@ class NodesControllerTest < ActionController::TestCase
   end
 
   def test_delete_destroy_with_others_node
-    tim_s_node = nodes(:tim_s_home).children.first
+    oswald_s_node = nodes(:oswald_s_home).children.first
 
     assert_no_difference("Node.count", -1) do
       assert_raise(ActiveRecord::RecordNotFound) do
-        delete(:destroy, :id => tim_s_node.id)
+        delete(:destroy, :id => oswald_s_node.id)
       end
     end
 
@@ -329,7 +329,7 @@ class NodesControllerTest < ActionController::TestCase
   def test_load_node
     controller = NodesController.new
     controller.request = request
-    node = nodes(:bob_s_home)
+    node = nodes(:weenie_s_home)
     controller.params[:id] = node.id
     controller.send(:load_node)
 
@@ -339,7 +339,7 @@ class NodesControllerTest < ActionController::TestCase
   def test_load_parent
     controller = NodesController.new
     controller.request = request
-    node = nodes(:bob_s_home)
+    node = nodes(:weenie_s_home)
     controller.params[:node_id] = node.id
     controller.send(:load_parent)
 
@@ -349,7 +349,7 @@ class NodesControllerTest < ActionController::TestCase
   def test_block_root_with_root_node
     controller = NodesController.new
     controller.request = request
-    node = nodes(:bob_s_home)
+    node = nodes(:weenie_s_home)
     controller.instance_variable_set(:@node, node)
     response = ActionDispatch::Response.new
     controller.instance_variable_set(:@_response, response)
@@ -404,7 +404,7 @@ class NodesControllerTest < ActionController::TestCase
   private
 
     def login
-      user = users(:bob)
+      user = users(:weenie)
       login_user(user)
     end
 

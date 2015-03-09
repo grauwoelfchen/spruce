@@ -15,10 +15,10 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_get_index_with_others_node
-    bob_s_node = nodes(:bob_s_home)
+    weenie_s_node = nodes(:weenie_s_home)
 
     assert_raise(ActionController::UrlGenerationError) do
-      get(:index, :node_id => bob_s_node.id)
+      get(:index, :node_id => weenie_s_node.id)
     end
   end
 
@@ -31,10 +31,10 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_get_show_with_others_note
-    bob_s_note = notes(:idea_note)
+    weenie_s_note = notes(:idea_note)
 
     assert_raise(ActiveRecord::RecordNotFound) do
-      get(:show, :id => bob_s_note.id)
+      get(:show, :id => weenie_s_note.id)
     end
 
     refute(assigns(:note))
@@ -58,10 +58,10 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_get_new_with_others_node
-    bob_s_node = nodes(:bob_s_home)
+    weenie_s_node = nodes(:weenie_s_home)
 
     assert_raise ActiveRecord::RecordNotFound do
-      get :new, :node_id => bob_s_node.id
+      get :new, :node_id => weenie_s_node.id
     end
 
     refute(assigns(:node))
@@ -85,9 +85,9 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_post_create_with_others_node
-    bob_s_node = nodes(:bob_s_home)
+    weenie_s_node = nodes(:weenie_s_home)
     params = {
-      :node_id => bob_s_node.id,
+      :node_id => weenie_s_node.id,
       :note    => {
         :content => "Not allowed, right?\r\n"
       }
@@ -151,10 +151,10 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_get_edit_with_others_note
-    bob_s_note = notes(:idea_note)
+    weenie_s_note = notes(:idea_note)
 
     assert_raise(ActiveRecord::RecordNotFound) do
-      get(:edit, :id => bob_s_note.id)
+      get(:edit, :id => weenie_s_note.id)
     end
 
     refute(assigns(:note))
@@ -173,9 +173,9 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_put_update_with_others_note
-    bob_s_note = notes(:idea_note)
+    weenie_s_note = notes(:idea_note)
     params = {
-      :id   => bob_s_note.id,
+      :id   => weenie_s_note.id,
       :note => {
         :content => "Not allowed, right?"
       }
@@ -225,10 +225,10 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_get_delete_with_others_note
-    bob_s_note = notes(:idea_note)
+    weenie_s_note = notes(:idea_note)
 
     assert_raise(ActiveRecord::RecordNotFound) do
-      get(:delete, :id => bob_s_note.id)
+      get(:delete, :id => weenie_s_note.id)
     end
 
     refute(assigns(:note))
@@ -246,11 +246,11 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   def test_delete_destroy_with_others_note
-    bob_s_note = notes(:idea_note)
+    weenie_s_note = notes(:idea_note)
 
     assert_no_difference("Note.count", -1) do
       assert_raise (ActiveRecord::RecordNotFound) do
-        delete(:destroy, :id => bob_s_note.id)
+        delete(:destroy, :id => weenie_s_note.id)
       end
     end
 
@@ -305,7 +305,7 @@ class NotesControllerTest < ActionController::TestCase
   private
 
     def login
-      user = users(:tim)
+      user = users(:oswald)
       login_user(user)
     end
 

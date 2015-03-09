@@ -18,8 +18,8 @@ class CanNotAccessToNoteWithInvalidParametersTest < Capybara::Rails::TestCase
   end
 
   def test_404_not_found_error_at_showing_with_others_note_id
-    tim_s_note = notes(:wish_list)
-    visit("/l/#{tim_s_note.id}")
+    oswald_s_note = notes(:wish_list)
+    visit("/l/#{oswald_s_note.id}")
 
     assert_equal(404, page.status_code)
     assert_content("Not Found :-p")
@@ -35,8 +35,8 @@ class CanNotAccessToNoteWithInvalidParametersTest < Capybara::Rails::TestCase
   end
 
   def test_404_not_found_error_at_creation_with_others_parent_id
-    tim_s_node = nodes(:lib)
-    visit("/b/#{tim_s_node.id}/l/new")
+    oswald_s_node = nodes(:lib)
+    visit("/b/#{oswald_s_node.id}/l/new")
 
     assert_equal(404, page.status_code)
     assert_content("Not Found :-p")
@@ -52,8 +52,8 @@ class CanNotAccessToNoteWithInvalidParametersTest < Capybara::Rails::TestCase
   end
 
   def test_404_not_found_error_at_editing_with_others_note_id
-    tim_s_note = notes(:wish_list)
-    visit("/l/#{tim_s_note.id}/edit")
+    oswald_s_note = notes(:wish_list)
+    visit("/l/#{oswald_s_note.id}/edit")
 
     assert_equal(404, page.status_code)
     assert_content("Not Found :-p")
@@ -69,8 +69,8 @@ class CanNotAccessToNoteWithInvalidParametersTest < Capybara::Rails::TestCase
   end
 
   def test_404_not_found_error_at_deleting_with_others_note_id
-    tim_s_note = notes(:wish_list)
-    visit("/l/#{tim_s_note.id}/delete")
+    oswald_s_note = notes(:wish_list)
+    visit("/l/#{oswald_s_note.id}/delete")
 
     assert_equal(404, page.status_code)
     assert_content("Not Found :-p")
@@ -79,7 +79,7 @@ class CanNotAccessToNoteWithInvalidParametersTest < Capybara::Rails::TestCase
   private
 
     def login
-      login_as_bob
+      login_as_weenie
     end
 
     def initialize_node

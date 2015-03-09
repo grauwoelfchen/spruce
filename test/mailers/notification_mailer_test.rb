@@ -17,6 +17,6 @@ class NotificationMailerTest < ActionMailer::TestCase
   private
 
   def initialize_user
-    @user = users(:tim)
+    @user = users(:oswald)
   end
 end

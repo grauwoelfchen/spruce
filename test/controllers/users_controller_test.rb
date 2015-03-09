@@ -147,7 +147,7 @@ class UsersControllerTest < ActionController::TestCase
   # methods
 
   def test_require_logout_with_logged_in_user
-    user = users(:bob)
+    user = users(:weenie)
     login_user(user)
     controller = UsersController.new
     controller.request = request

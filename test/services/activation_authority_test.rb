@@ -13,7 +13,7 @@ class ActivationAuthorityTest < ActiveSupport::TestCase
   end
 
   def test_activate_with_existing_user
-    user = users(:bob)
+    user = users(:weenie)
 
     assert_no_difference("Node.count", 1) do
       authority = ActivationAuthority.new
@@ -36,7 +36,7 @@ class ActivationAuthorityTest < ActiveSupport::TestCase
   end
 
   def test_create_home_with_existing_user
-    user = users(:bob)
+    user = users(:weenie)
 
     assert_no_difference("Node.count", 1) do
       authority = ActivationAuthority.new

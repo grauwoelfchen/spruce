@@ -1,31 +1,31 @@
 # nodes
-## tim's
-tim_s_home:
-  user: tim
+## oswald's
+oswald_s_home:
+  user: oswald
   parent:
   name:
 var:
-  user: tim
-  parent: tim_s_home
+  user: oswald
+  parent: oswald_s_home
   name: var
-log: 
-  user: tim
+log:
+  user: oswald
   parent: var
   name: log
 lib: # empty node
-  user: tim
+  user: oswald
   parent: var
   name: lib
-## bob's
-bob_s_home:
-  user: bob
+## weenie's
+weenie_s_home:
+  user: weenie
   parent:
   name:
 issues:
-  user: bob
-  parent: bob_s_home
+  user: weenie
+  parent: weenie_s_home
   name: Issues
 works: # empty node
-  user: bob
-  parent: bob_s_home
+  user: weenie
+  parent: weenie_s_home
   name: Works

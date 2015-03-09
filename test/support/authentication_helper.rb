@@ -7,13 +7,13 @@ module AuthenticationHelper
     klass.fixtures(:users)
   end
 
-  def login_as_tim
-    user = users(:tim)
+  def login_as_oswald
+    user = users(:oswald)
     login_as(user)
   end
 
-  def login_as_bob
-    user = users(:bob)
+  def login_as_weenie
+    user = users(:weenie)
     login_as(user)
   end
 

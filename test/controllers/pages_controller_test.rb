@@ -13,7 +13,7 @@ class PagesControllerTest < ActionController::TestCase
   def test_get_index_with_logged_in_user
     login
     build_node_tree
-    node = nodes(:bob_s_home)
+    node = nodes(:weenie_s_home)
     get(:index)
 
     assert_equal(node, assigns(:root))
@@ -40,7 +40,7 @@ class PagesControllerTest < ActionController::TestCase
   private
 
     def login
-      user = users(:bob)
+      user = users(:weenie)
       login_user(user)
     end
 

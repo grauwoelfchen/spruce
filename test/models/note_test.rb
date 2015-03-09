@@ -38,7 +38,7 @@ class NoteTest < ActiveSupport::TestCase
           -* bar
       CONTENT
     }
-    user = users(:tim)
+    user = users(:oswald)
     note = Note.new(attributes).assign_to(user)
     note.save
     expected = <<-EXPECTED.gsub(/^\s{6}/, "")
@@ -60,7 +60,7 @@ class NoteTest < ActiveSupport::TestCase
           +* bar
       CONTENT
     }
-    user = users(:tim)
+    user = users(:oswald)
     note = Note.new(attributes).assign_to(user)
     note.save
     expected = <<-EXPECTED.gsub(/^\s{6}/, "")
@@ -233,7 +233,7 @@ class NoteTest < ActiveSupport::TestCase
         * quux
       CONTENT
     }
-    user = users(:tim)
+    user = users(:oswald)
     note = Note.new(attributes).assign_to(user)
 
     assert_difference("Version::Cycle.count", 1) do
@@ -249,7 +249,7 @@ class NoteTest < ActiveSupport::TestCase
       :content => "* Test\r\n* This is test",
       :node    => nodes(:var)
     }
-    user = users(:tim)
+    user = users(:oswald)
     note = Note.new(attributes).assign_to(user)
 
     assert_difference("Version::Cycle.count", 1) do
@@ -316,7 +316,7 @@ class NoteTest < ActiveSupport::TestCase
   end
 
   def test_relation_by_visible_to
-    user = users(:bob)
+    user = users(:weenie)
     relation = Note.visible_to(user)
 
     assert_kind_of(ActiveRecord::Relation, relation)
@@ -325,7 +325,7 @@ class NoteTest < ActiveSupport::TestCase
   end
 
   def test_assignment_by_assign_to
-    user = users(:bob)
+    user = users(:weenie)
     note = Note.new.assign_to(user)
 
     assert_kind_of(Note, note)
@@ -333,7 +333,7 @@ class NoteTest < ActiveSupport::TestCase
   end
 
   def test_owner_consistency_after_init
-    user = users(:bob)
+    user = users(:weenie)
     note = Note.new.assign_to(user)
 
     assert_equal(user.id, note.user_id)
@@ -341,7 +341,7 @@ class NoteTest < ActiveSupport::TestCase
   end
 
   def test_owner_consistency_after_transfer
-    new_user = users(:bob)
+    new_user = users(:weenie)
     original_note = notes(:wish_list)
     note = original_note.assign_to(new_user)
 

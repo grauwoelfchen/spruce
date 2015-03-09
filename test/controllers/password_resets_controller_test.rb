@@ -195,7 +195,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
   private
 
     def initialize_user
-      @user = users(:tim)
+      @user = users(:oswald)
       @user.update_attribute(:reset_password_token, "token")
     end
 end

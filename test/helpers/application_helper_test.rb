@@ -34,13 +34,15 @@ class ApplicationHelperTest < ActionView::TestCase
   end
 
   def test_current_page_in_other_pages
-    stub_method(:controller_name, "others")
-    stub_method(:action_name, "somthing")
+    stub_method(:controller, PagesController.new)
+    stub_method(:controller_name, "pages")
+    stub_method(:action_name, "index")
 
     assert_equal(false, current_page_in?(["sessions#new"]))
   end
 
   def test_current_page_in_at_exact_pages
+    stub_method(:controller, SessionsController.new)
     stub_method(:controller_name, "sessions")
     stub_method(:action_name, "new")
 

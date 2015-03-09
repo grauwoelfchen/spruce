@@ -64,7 +64,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def test_validation_with_existing_username
-    existing_user = users(:tim)
+    existing_user = users(:oswald)
     user = User.new(:username => existing_user.username)
 
     refute(user.valid?)
@@ -94,7 +94,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def test_validation_with_existing_email
-    existing_user = users(:tim)
+    existing_user = users(:oswald)
     user = User.new(:email => existing_user.email)
 
     refute(user.valid?)
@@ -152,24 +152,24 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def test_update_with_errors
-    user = users(:tim)
+    user = users(:oswald)
 
     assert_not(user.update_attributes(:username => ""))
   end
 
   def test_update_without_errors
     attributes = {
-      :email                 => "tim-s-new-email@example.org",
+      :email                 => "oswald-s-new-email@example.org",
       :password              => "secret",
       :password_confirmation => "secret"
     }
-    user = users(:tim)
+    user = users(:oswald)
 
     assert(user.update_attributes(attributes))
   end
 
   def test_delete
-    user = users(:bob)
+    user = users(:weenie)
 
     assert_difference("User.count", -1) do
       assert(user.delete)
@@ -180,7 +180,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def test_destroy
-    user = users(:bob)
+    user = users(:weenie)
 
     assert_difference("User.count", -1) do
       assert(user.destroy)
@@ -198,7 +198,7 @@ class UserTest < ActiveSupport::TestCase
       :password              => "secret",
       :password_confirmation => "secret"
     }
-    user = users(:bob)
+    user = users(:weenie)
 
     assert(user.update_attributes(attributes))
     refute(user.active?)
@@ -210,7 +210,7 @@ class UserTest < ActiveSupport::TestCase
       :password              => "secret",
       :password_confirmation => "secret"
     }
-    user = users(:bob)
+    user = users(:weenie)
 
     assert(user.update_attributes(attributes))
     assert(user.active?)

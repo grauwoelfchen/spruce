@@ -89,7 +89,7 @@ class SessionsControllerTest < ActionController::TestCase
   private
 
     def initialize_user
-      @user = users(:tim)
+      @user = users(:oswald)
       @user.activate!
     end
 

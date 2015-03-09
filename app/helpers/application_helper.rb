@@ -2,15 +2,27 @@ module ApplicationHelper
   include ActionView::Helpers::UrlHelper
 
   alias_method :orig_current_page?, :current_page?
-  def current_page?(options)
-    if options.is_a?(String) && options =~ /^([a-z]+)#([a-z]+)$/
-      options = {controller: $1, action: $2}
-    end
+  def current_page?(args)
+    options = if args.is_a?(String) && args =~ /^([A-z:]+)#([a-z]+)$/
+                controller_class, method_name = $1, $2
+                {
+                  controller: '/' + controller_class.downcase.gsub(/::/, "/"),
+                  action:     method_name
+                }
+              else
+                args
+              end
     orig_current_page?(url_for(options))
   end
 
   def current_page_in?(options)
-    "#{controller_name}##{action_name}".in?(options)
+    names = controller.class.name.downcase.split("::")
+    here = if names.length > 1
+             "#{names[0..-2].join("::")}::#{controller_name}##{action_name}"
+           else
+             "#{controller_name}##{action_name}"
+           end
+    here.in?(options.map(&:downcase))
   end
 
   def display_favicon_link(env)

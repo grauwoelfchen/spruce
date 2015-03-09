@@ -91,10 +91,10 @@ class VersionsControllerTest < ActionController::TestCase
   end
 
   def test_post_restore_node_with_others_version
-    bob_s_node = nodes(:works)
-    bob_s_node.update_attributes(:name => "Bob's Home v2")
+    weenie_s_node = nodes(:works)
+    weenie_s_node.update_attributes(:name => "weenie's Home v2")
     params = {
-      :id   => bob_s_node.versions.last.id,
+      :id   => weenie_s_node.versions.last.id,
       :type => "b"
     }
 
@@ -106,10 +106,10 @@ class VersionsControllerTest < ActionController::TestCase
   end
 
   def test_post_restore_note_with_others_version
-    bob_s_note = notes(:shopping_list)
-    bob_s_note.update_attributes(:content => "* Shopping list v2\r\n")
+    weenie_s_note = notes(:shopping_list)
+    weenie_s_note.update_attributes(:content => "* Shopping list v2\r\n")
     params = {
-      :id   => bob_s_note.versions.last.id,
+      :id   => weenie_s_note.versions.last.id,
       :type => "l"
     }
 
@@ -263,10 +263,10 @@ class VersionsControllerTest < ActionController::TestCase
   def test_back_url_for_new_node_with_referer
     attributes = {
       :name => "New node",
-      :user => users(:tim)
+      :user => users(:oswald)
     }
-    user = users(:tim)
-    node = nodes(:tim_s_home).children.new(attributes)
+    user = users(:oswald)
+    node = nodes(:oswald_s_home).children.new(attributes)
     node.save
     version = node.versions.last
     version.restore!
@@ -283,10 +283,10 @@ class VersionsControllerTest < ActionController::TestCase
   def test_back_url_for_new_node_without_referer
     attributes = {
       :name => "New node",
-      :user => users(:tim)
+      :user => users(:oswald)
     }
-    user = users(:tim)
-    node = nodes(:tim_s_home).children.new(attributes)
+    user = users(:oswald)
+    node = nodes(:oswald_s_home).children.new(attributes)
     node.save
     version = node.versions.last
     version.restore!
@@ -303,9 +303,9 @@ class VersionsControllerTest < ActionController::TestCase
   def test_back_url_for_new_note_with_referer
     attributes = {
       :content => "* New note\r\n",
-      :user    => users(:tim),
+      :user    => users(:oswald),
     }
-    node = nodes(:tim_s_home)
+    node = nodes(:oswald_s_home)
     note = node.notes.new(attributes)
     note.save
     version = note.versions.last
@@ -323,9 +323,9 @@ class VersionsControllerTest < ActionController::TestCase
   def test_back_url_for_new_note_without_referer
     attributes = {
       :content => "* New note\r\n",
-      :user    => users(:tim),
+      :user    => users(:oswald),
     }
-    note = nodes(:tim_s_home).notes.new(attributes)
+    note = nodes(:oswald_s_home).notes.new(attributes)
     note.save
     version = note.versions.last
     version.restore!
@@ -402,7 +402,7 @@ class VersionsControllerTest < ActionController::TestCase
   private
 
     def login
-      user = users(:tim)
+      user = users(:oswald)
       login_user(user)
     end
 

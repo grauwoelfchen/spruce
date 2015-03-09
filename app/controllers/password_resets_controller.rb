@@ -8,7 +8,7 @@ class PasswordResetsController < ApplicationController
 
   def create
     @user = User.new(:email => user_params[:email])
-    if @user.valid_attribute?(:email, [:blank, :invalid])
+    if @user.valid_attribute?(:email, %w[taken])
       @user = User.find_by_email(user_params[:email])
       @user.deliver_reset_password_instructions! if @user
       redirect_to root_url,
@@ -22,8 +22,8 @@ class PasswordResetsController < ApplicationController
   end
 
   def update
-    @user.password_confirmation = user_params[:password_confirmation]
-    if @user.change_password!(user_params[:password])
+    @user.assign_attributes(user_params)
+    if @user.valid? && @user.change_password!(user_params[:password])
       redirect_to root_url,
         :notice => "Password was successfully updated !"
     else

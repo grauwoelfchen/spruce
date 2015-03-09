@@ -1,8 +1,8 @@
 # notes
-## tim's
+## oswald's
 linux_book:
-  user: tim
-  node: tim_s_home
+  user: oswald
+  node: oswald_s_home
   name: Little hard Linux beginner's Book
   content: |
     * Little hard Linux beginner's Book
@@ -14,7 +14,7 @@ linux_book:
         * Xterm
         * Tiling Window Managers
 wish_list:
-  user: tim
+  user: oswald
   node: var
   name: My Wishlist
   content: |
@@ -23,7 +23,7 @@ wish_list:
       * Cool Percolator
       * Awesome Coffee Table
 working_log:
-  user: tim
+  user: oswald
   node: log
   name: Working log
   content: |
@@ -31,24 +31,24 @@ working_log:
       * Setup CI
       * Create user authentication
       * Enter css framework
-## bob's
+## weenie's
 idea_note:
-  user: bob
-  node: bob_s_home
+  user: weenie
+  node: weenie_s_home
   name: My Ideas
   content: |
     * Tiny RSS agregator
     * Scheme Markdown Parser
 diy_issues:
-  user: bob
+  user: weenie
   node: issues
   name: DIY Issues
   content: |
     * Repair block of north garden
     * Fix roof hole
 shopping_list:
-  user: bob
-  node: bob_s_home
+  user: weenie
+  node: weenie_s_home
   name: Shopping list
   content: |
     * Shopping list

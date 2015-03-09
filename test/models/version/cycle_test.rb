@@ -36,9 +36,9 @@ class Version::CycleTest < ActiveSupport::TestCase
   # actions
 
   def test_save_with_create_node
-    user = users(:tim)
-    node = Node.new(:name => "Tim's node").assign_to(user)
-    node.parent = nodes(:tim_s_home)
+    user = users(:oswald)
+    node = Node.new(:name => "oswald's node").assign_to(user)
+    node.parent = nodes(:oswald_s_home)
 
     assert_difference("Version::Cycle.count", 1) do
       assert_difference("Node.count", 1) do
@@ -53,7 +53,7 @@ class Version::CycleTest < ActiveSupport::TestCase
       :content => "* Test\r\n* This is test",
       :node    => nodes(:var)
     }
-    user = users(:tim)
+    user = users(:oswald)
     note = Note.new(attributes).assign_to(user)
 
     assert_difference("Version::Cycle.count", 1) do
@@ -65,7 +65,7 @@ class Version::CycleTest < ActiveSupport::TestCase
   end
 
   def test_save_with_destroy_node
-    node = nodes(:bob_s_home)
+    node = nodes(:weenie_s_home)
     child = node.children.first
 
     assert_difference("Version::Cycle.count", 1) do

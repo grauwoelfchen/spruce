@@ -101,7 +101,7 @@ class NodeTest < ActiveSupport::TestCase
   end
 
   def test_validation_with_invalid_parent_id
-    node = nodes(:bob_s_home)
+    node = nodes(:weenie_s_home)
     node.parent = node
 
     refute(node.valid?)
@@ -122,9 +122,9 @@ class NodeTest < ActiveSupport::TestCase
   end
 
   def test_save_without_errors
-    user = users(:tim)
-    node = Node.new(:name => "Tim's node").assign_to(user)
-    node.parent = nodes(:tim_s_home)
+    user = users(:oswald)
+    node = Node.new(:name => "oswald's node").assign_to(user)
+    node.parent = nodes(:oswald_s_home)
 
     assert_difference("Version::Cycle.count", 1) do
       assert_difference("Node.count", 1) do
@@ -135,7 +135,7 @@ class NodeTest < ActiveSupport::TestCase
   end
 
   def test_update_with_errors
-    node = nodes(:tim_s_home)
+    node = nodes(:oswald_s_home)
 
     assert_no_difference("Version::Cycle.count", 1) do
       assert_not(node.update_attributes(:name => ""))
@@ -146,13 +146,13 @@ class NodeTest < ActiveSupport::TestCase
     node = nodes(:var)
 
     assert_difference("Version::Cycle.count", 1) do
-      assert(node.update_attributes(:name => "Tim's awesome home"))
+      assert(node.update_attributes(:name => "oswald's awesome home"))
     end
     assert_empty(node.errors)
   end
 
   def test_delete
-    node = nodes(:bob_s_home)
+    node = nodes(:weenie_s_home)
     child = node.children.first
 
     assert_no_difference("Version::Cycle.count", 1) do
@@ -168,7 +168,7 @@ class NodeTest < ActiveSupport::TestCase
   end
 
   def test_destroy
-    node = nodes(:bob_s_home)
+    node = nodes(:weenie_s_home)
     child = node.children.first
 
     assert_difference("Version::Cycle.count", 1) do
@@ -194,7 +194,7 @@ class NodeTest < ActiveSupport::TestCase
   end
 
   def test_relation_by_visible_to
-    user = users(:bob)
+    user = users(:weenie)
     relation = Node.visible_to(user)
 
     assert_kind_of(ActiveRecord::Relation, relation)
@@ -204,7 +204,7 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_assignment_by_assign_to
     node = Node.new
-    user = users(:bob)
+    user = users(:weenie)
     result = node.assign_to(user)
 
     assert_kind_of(Node, result)
@@ -212,7 +212,7 @@ class NodeTest < ActiveSupport::TestCase
   end
 
   def test_owner_consistency_after_init
-    user = users(:bob)
+    user = users(:weenie)
     node = Node.new.assign_to(user)
 
     assert_equal(user.id, node.user_id)
@@ -220,8 +220,8 @@ class NodeTest < ActiveSupport::TestCase
   end
 
   def test_owner_consistency_after_transfer
-    new_user = users(:bob)
-    original_node = nodes(:tim_s_home)
+    new_user = users(:weenie)
+    original_node = nodes(:oswald_s_home)
     node = original_node.assign_to(new_user)
 
     assert_equal(new_user.id, node.user_id)

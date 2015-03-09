@@ -36,11 +36,17 @@ class User < ActiveRecord::Base
     activation_state == "active"
   end
 
-  def valid_attribute?(attr, message_keys = [])
+  # see https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml
+  def valid_attribute?(attr, exclude_keys = [])
     self.valid?
-    messages = message_keys.map { |m| I18n.t("errors.messages.#{m}") }
-    self.errors.messages.delete_if { |key, values|
-      key != attr || values.reject { |v| v.in?(messages) }.present?
+    # TODO improve flexibility of args
+    # currently, ignores error message using equality(includeness) of string
+    exclude_messages = exclude_keys.map { |m| I18n.t("errors.messages.#{m}") }
+    # delete unuse errors for other attrs and unfocesd error messages
+    self.errors.messages.reject! { |key, _|
+      key != attr
+    }.map { |_, values|
+      values.reject! { |v| v.in?(exclude_messages) }
     }
     self.errors[attr].blank?
   end

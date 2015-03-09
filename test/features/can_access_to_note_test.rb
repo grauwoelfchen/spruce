@@ -123,7 +123,7 @@ class CanAccessToNoteTest < Capybara::Rails::TestCase
   private
 
     def login
-      login_as_tim
+      login_as_oswald
     end
 
     def build_node_tree
