@@ -16,29 +16,47 @@ html lang="en"
     = display_favicon_link Rails.env
   body.application
     header
-      h1
-        = link_to root_path do
-          = image_tag "spruce.png", size: "60x80"
-          | &nbsp;
-          span Spruce
-      .user
-        - if current_user
-          span= "Hi #{current_user.username}"
-          | &nbsp;
-          = button_to "Log out", logout_path, method: :delete
-        - else
-          - if current_page_in?(["sessions#new", "sessions#create"])
-            | Log in
-          - else
-            = link_to "Log in",  login_path
-          | &nbsp;or&nbsp;
-          - if current_page_in?(["users#new", "users#create"])
-            | Sign up
-          - else
-            = link_to "Sign up", signup_path
+      .logo
+        - logo = link_to root_path do
+          = image_tag "spruce.png", size: "47x63"
+        javascript:
+          (function() {
+            $("header > .logo").html($('<h2>#{logo}</h2>'));
+
+          })();
+      .container
+        .content
+          h1
+            = link_to root_path do
+              span Spruce
+          .user
+            - if current_user
+              span= "Hi #{current_user.username}"
+              | &nbsp;
+              = button_to "Log out", logout_path, method: :delete
+            - else
+              - if current_page_in?(["sessions#new", "sessions#create"])
+                | Log in
+              - else
+                = link_to "Log in",  login_path
+              | &nbsp;or&nbsp;
+              - if current_page_in?(["users#new", "users#create"])
+                | Sign up
+              - else
+                = link_to "Sign up", signup_path
     section
-      - if flash.any? && flash.notice
-        = render "shared/flash", flash: flash
-      .main
-        == yield
-    //footer
+      #nav.nav
+        .navs
+      javascript:
+        (function() {
+          $("#nav > .navs").html($('<ul>\
+            <li>#{current_user ? link_to("outlines", nodes_path) : link_to("top", root_path)}</li>\
+            <li>#{link_to("syntax", syntax_path)}</li>\
+          </ul>'));
+        })();
+      .container
+        .content 
+          - if flash.any? && flash.notice
+            = render "shared/flash", flash: flash
+          == yield
+    footer

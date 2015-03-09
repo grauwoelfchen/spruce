@@ -7,35 +7,54 @@ html, body
 // layout - application
 body.application
   header
-    position absolute
-    margin 0 0 9px 0
-    min-width 600px
+    height 81px
+    border-bottom 1px dashed gray
     h1
-      text-align left
-      float left
-      margin 0px
-      outline none
+      width 200px
+      margin 3px 0 12px 0
       a
         text-decoration none
         color #484848
         &:hover
           color black
+        span
+          font-size 27px
+    h2
+      text-align right
+      float right
+      margin 0
+      outline none
+      a
+        text-decoration none
         img
           float left
           margin 0
-        span
-          float left
-          display block
-          margin 13px 0 0 5px
-          font-size 27px
-    .user
-      position absolute
-      margin 63px 0 0 67px
-      width 500px
 
   section
-    display block
-    margin 85px 0 0 0
-    padding 4px 4px
-    .main
-      min-height 300px
+    margin-top 5px
+
+header,section
+  display block
+  margin-left auto
+  margin-right auto
+  position relative
+
+.logo, .nav
+  width 30%
+  min-width 250px
+  float left
+
+.container
+  width 70%
+  float left
+  .content
+    padding-left 20px
+
+.nav
+  .navs
+    margin-top: 13px
+    text-align right
+    ul
+      padding-right 3px
+      li
+        list-style none
