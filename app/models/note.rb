@@ -1,3 +1,5 @@
+require "lilac"
+
 class Note < ActiveRecord::Base
   include Assignable
   include Visible
@@ -13,8 +15,6 @@ class Note < ActiveRecord::Base
   has_paper_trail \
     :class_name => "Version::Cycle",
     :meta       => {:user_id => :user_id}
-
-  before_validation :apply_operations
 
   validates_presence_of :user_id, :node_id, :content
   validates :name, :presence => true, :if => ->(n) { n.content.present? }
@@ -42,6 +42,9 @@ class Note < ActiveRecord::Base
     :content_must_be_valid_indent,
     :if => ->(n) { n.content.present? && n.content != n.name }
 
+  before_validation :apply_operations
+
+  before_save :convert_content
   after_commit :flush_cache
 
   def self.cached_find(id)
@@ -55,20 +58,6 @@ class Note < ActiveRecord::Base
   end
 
   private
-
-    def apply_operations
-      # TODO improve operation
-      if content
-        # -
-        self.content = content
-          .gsub(/^(\s*)\s{2}\-\*/, '\1*')
-          .gsub(/\u0001/, "")
-        # +
-        self.content = content
-          .gsub(/^(\s*)\+\*/u, '\1  *')
-          .gsub(/\u0001/, "")
-      end
-    end
 
     def content_must_not_contain_blank_line
       lines =
@@ -119,6 +108,26 @@ class Note < ActiveRecord::Base
           :lines   => lines
         }
         errors.add(:content, feedback)
+      end
+    end
+
+    def apply_operations
+      # TODO improve operation
+      if content
+        # -
+        self.content = content
+          .gsub(/^(\s*)\s{2}\-\*/, '\1*')
+          .gsub(/\u0001/, "")
+        # +
+        self.content = content
+          .gsub(/^(\s*)\+\*/u, '\1  *')
+          .gsub(/\u0001/, "")
+      end
+    end
+
+    def convert_content
+      if "content".in?(changed)
+        self.content_html = Lilac::List.new(content).to_html
       end
     end
 

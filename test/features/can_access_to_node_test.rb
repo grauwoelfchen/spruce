@@ -10,7 +10,7 @@ class CanAccessToNodeTest < Capybara::Rails::TestCase
 
   # showing
 
-  def test_successfully_showing_html_with
+  def test_successfully_showing_html_with_valid_id
     node = nodes(:lib)
     visit("/b/#{node.id}")
 
@@ -22,7 +22,7 @@ class CanAccessToNodeTest < Capybara::Rails::TestCase
     assert_content(node.name)
   end
 
-  def test_successfully_showing_text_with
+  def test_successfully_showing_text_with_valid_id
     node = nodes(:var)
     visit("/b/#{node.id}.txt")
 
@@ -35,7 +35,7 @@ class CanAccessToNodeTest < Capybara::Rails::TestCase
 
   # creation
 
-  def test_successfully_creation_with
+  def test_successfully_creation_with_valid_id
     node = nodes(:lib)
     visit("/b/#{node.id}/b/new")
 
@@ -53,7 +53,7 @@ class CanAccessToNodeTest < Capybara::Rails::TestCase
 
   # updating
 
-  def test_successfully_updating_with
+  def test_successfully_updating_with_valid_id
     node = nodes(:lib)
     visit("/b/#{node.id}/edit")
 

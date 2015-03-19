@@ -83,6 +83,7 @@ GEM
     jwt (0.1.11)
       multi_json (>= 1.5)
     kgio (2.9.2)
+    lilac (0.0.3)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     mime-types (2.4.3)
@@ -210,6 +211,7 @@ DEPENDENCIES
   delayed_job_active_record
   dotenv-rails (~> 0.11.1)
   foreman
+  lilac
   minitest (~> 5.4)
   minitest-rails-capybara
   newrelic_rpm
