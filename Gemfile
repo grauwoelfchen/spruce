@@ -12,6 +12,8 @@ gem "closure_tree"
 gem "delayed_job_active_record"
 gem "paper_trail", "~> 3.0.1"
 
+gem "lilac"
+
 gem "turbolinks"
 gem "uglifier"
 gem "slim"

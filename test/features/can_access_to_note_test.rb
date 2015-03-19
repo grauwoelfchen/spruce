@@ -10,7 +10,7 @@ class CanAccessToNoteTest < Capybara::Rails::TestCase
 
   # showing
 
-  def test_successfully_showing_html_with
+  def test_successfully_showing_html_with_valid_note_id
     note = notes(:linux_book)
     visit("/l/#{note.id}")
 
@@ -22,7 +22,7 @@ class CanAccessToNoteTest < Capybara::Rails::TestCase
     assert_content(note.name)
   end
 
-  def test_successfully_showing_text_with
+  def test_successfully_showing_text_with_valid_note_id
     note = notes(:linux_book)
     visit("/l/#{note.id}.txt")
 
@@ -35,7 +35,7 @@ class CanAccessToNoteTest < Capybara::Rails::TestCase
 
   # creation
 
-  def test_successfully_creation_with
+  def test_successfully_creation_with_valid_node_id
     note = notes(:linux_book)
     visit("/b/#{note.node_id}/l/new")
 
@@ -53,12 +53,23 @@ class CanAccessToNoteTest < Capybara::Rails::TestCase
     end
 
     assert_equal(200, page.status_code)
+    list = <<-HTML.gsub(/^\s*|\n/, "")
+<ul>
+  <li>foo
+    <ul>
+      <li>bar</li>
+      <li>baz</li>
+    </ul>
+  </li>
+</ul>
+    HTML
+    assert(page.body.include?(list))
     assert_content("Successfully created leaf")
   end
 
   # updating
 
-  def test_successfully_updating_with
+  def test_successfully_updating_with_valid_note_id
     note = notes(:linux_book)
     visit("/l/#{note.id}/edit")
 
@@ -75,6 +86,17 @@ class CanAccessToNoteTest < Capybara::Rails::TestCase
     end
 
     assert_equal(200, page.status_code)
+    list = <<-HTML.gsub(/^\s*|\n/, "")
+<ul>
+  <li>qux
+    <ul>
+      <li>quux</li>
+      <li>boom</li>
+    </ul>
+  </li>
+</ul>
+    HTML
+    assert(page.body.include?(list))
     assert_content("Successfully updated leaf")
   end
 

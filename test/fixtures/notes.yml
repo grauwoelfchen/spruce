@@ -4,54 +4,90 @@ linux_book:
   user: oswald
   node: oswald_s_home
   name: Little hard Linux beginner's Book
+<% content =<<-CONTENT
+* Little hard Linux beginner's Book
+  * Preface
+    * Table of Contents
+    * Setup box
+      * Gentoo and Funtoo
+      * About X Window System
+      * Xterm
+      * Tiling Window Managers
+CONTENT
+%>
   content: |
-    * Little hard Linux beginner's Book
-      * Preface
-      * Table of Contents
-      * Setup box
-        * Gentoo and Funtoo
-        * About X Window System
-        * Xterm
-        * Tiling Window Managers
+    <% content.split("\n").map { |line| %><%= line %>
+    <% } %>
+  content_html: <%= Note.new(content: content).send(:convert_content) %>
 wish_list:
   user: oswald
   node: var
   name: My Wishlist
+<% content =<<-CONTENT
+* My Wishlist
+  * Comfortable Sofa
+  * Cool Percolator
+  * Awesome Coffee Table
+CONTENT
+%>
   content: |
-    * My Wishlist
-      * Comfortable Sofa
-      * Cool Percolator
-      * Awesome Coffee Table
+    <% content.split("\n").map { |line| %><%= line %>
+    <% } %>
+  content_html: <%= Note.new(content: content).send(:convert_content) %>
 working_log:
   user: oswald
   node: log
   name: Working log
+<% content =<<-CONTENT
+* Working log
+  * Setup CI
+  * Create user authentication
+  * Enter css framework
+CONTENT
+%>
   content: |
-    * Working log
-      * Setup CI
-      * Create user authentication
-      * Enter css framework
+    <% content.split("\n").map { |line| %><%= line %>
+    <% } %>
+  content_html: <%= Note.new(content: content).send(:convert_content) %>
 ## weenie's
 idea_note:
   user: weenie
   node: weenie_s_home
   name: My Ideas
+<% content =<<-CONTENT
+* Tiny RSS agregator
+* Scheme Markdown Parser
+CONTENT
+%>
   content: |
-    * Tiny RSS agregator
-    * Scheme Markdown Parser
+    <% content.split("\n").map { |line| %><%= line %>
+    <% } %>
+  content_html: <%= Note.new(content: content).send(:convert_content) %>
 diy_issues:
   user: weenie
   node: issues
   name: DIY Issues
+<% content =<<-CONTENT
+* Repair block of north garden
+* Fix roof hole
+CONTENT
+%>
   content: |
-    * Repair block of north garden
-    * Fix roof hole
+    <% content.split("\n").map { |line| %><%= line %>
+    <% } %>
+  content_html: <%= Note.new(content: content).send(:convert_content) %>
 shopping_list:
   user: weenie
   node: weenie_s_home
   name: Shopping list
+<% content =<<-CONTENT
+* Shopping list
+  * Tofu
+  * Salad
+  * Orange Juce
+CONTENT
+%>
   content: |
-    * Shopping list
-      * Tofu
-      * Salad
-      * Orange Juce
+    <% content.split("\n").map { |line| %><%= line %>
+    <% } %>
+  content_html: <%= Note.new(content: content).send(:convert_content) %>
