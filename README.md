@@ -22,14 +22,17 @@ Let's [spruce](https://spruce-tree.net/) up messy thoughts.
 ;; Install rubygems via bundler
 (spruce) % bundle install --path .bundle/gems
 
-;; Install bower
-(spruce) % npm install bower
+;; Install gulp
+(spruce) % npm install gulp -g
 
-;; Install asset packages via bower
-(spruce) % ./node_modules/.bin/bower install
+;; Install npm packages
+(spruce) % npm install
+
+;; Install asset packages via gulp
+(spruce) % gulp bower
 ```
 
-see `.bowerrc` and `bower.json`
+see also `.bowerrc` and `bower.json`
 
 
 ## Boot
@@ -50,11 +53,6 @@ see `Procfile`
 ;; Run test only for specified file
 (spruce) % bundle exec foreman run ruby -I.:test test/models/node_test.rb
 
-;; See minitest help
-(spruce) % bundle exec foreman run ruby -I.:test test/test_helper.rb --help
-minitest options:
-    -h, --help                       Display this help.
-    -s, --seed SEED                  Sets random seed
-    -v, --verbose                    Verbose. Show progress processing files.
-    -n, --name PATTERN               Filter test names on pattern (e.g. /foo/)
+;; Watch with gulp (see gulpfile.js)
+(spruce) % gulp watch
 ```
