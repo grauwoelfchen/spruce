@@ -269,13 +269,14 @@ class NodeTest < ActiveSupport::TestCase
   def test_cached_find_returns_cache_after_cache_was_created
     with_caching do
       node = nodes(:var)
+      scoped = Node.visible_to(node.user)
 
-      assert_equal(node, Node.cached_find(node.id))
+      assert_equal(node, scoped.cached_find(node.id))
 
       mock = Minitest::Mock.new
-      mock.expect(:take!, :not_called)
+      mock.expect(:take!, node) # not called
       Node.stub(:where, mock) do
-        assert_equal(node, Node.cached_find(node.id))
+        assert_equal(node, scoped.cached_find(node.id))
         assert_raise(MockExpectationError) do
           mock.verify
         end
@@ -286,8 +287,9 @@ class NodeTest < ActiveSupport::TestCase
   def test_cached_find_loads_exact_record_after_cache_was_destroyed
     with_caching do
       node = nodes(:var)
+      scoped = Node.visible_to(node.user)
 
-      assert_equal(node, Node.cached_find(node.id))
+      assert_equal(node, scoped.cached_find(node.id))
       assert(node.update_attribute(:name, "usr"))
 
       node.reload
@@ -295,7 +297,7 @@ class NodeTest < ActiveSupport::TestCase
       mock = Minitest::Mock.new
       mock.expect(:take!, node)
       Node.stub(:where, mock) do
-        assert_equal(node, Node.cached_find(node.id))
+        assert_equal(node, scoped.cached_find(node.id))
         mock.verify
       end
     end
