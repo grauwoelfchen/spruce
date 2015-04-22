@@ -48,8 +48,10 @@ class Note < ActiveRecord::Base
   after_commit :flush_cache
 
   def self.cached_find(id)
-    Rails.cache.fetch([name, id], expires_in: 10.minutes) do
-      where(:id => id).take!
+    with_scoped_to do |scoped_id|
+      Rails.cache.fetch([name, scoped_id, id], expires_in: 10.minutes) do
+        where(:id => id).take!
+      end
     end
   end
 
@@ -132,6 +134,6 @@ class Note < ActiveRecord::Base
     end
 
     def flush_cache
-      Rails.cache.delete([self.class.name, id])
+      Rails.cache.delete([self.class.name, user_id, id])
     end
 end

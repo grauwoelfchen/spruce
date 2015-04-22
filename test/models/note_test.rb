@@ -381,22 +381,31 @@ class NoteTest < ActiveSupport::TestCase
 
   # methods
 
+  def test_cached_find_raises_exception_without_visible_to_scope
+    assert_raise(ActiveRecord::RecordNotFound) do
+      note = notes(:linux_book)
+      Note.cached_find(note.id)
+    end
+  end
+
   def test_cached_find_raises_exception_if_missing_id_is_given
     assert_raise(ActiveRecord::RecordNotFound) do
-      Note.cached_find(0)
+      note = notes(:linux_book)
+      Note.visible_to(note.user).cached_find(0)
     end
   end
 
   def test_cached_find_returns_cache_after_cache_was_created
     with_caching do
       note = notes(:linux_book)
+      scoped = Note.visible_to(note.user)
 
-      assert_equal(note, Note.cached_find(note.id))
+      assert_equal(note, scoped.cached_find(note.id))
 
       mock = Minitest::Mock.new
-      mock.expect(:take!, :not_called)
+      mock.expect(:take!, note) # not called
       Note.stub(:where, mock) do
-        assert_equal(note, Note.cached_find(note.id))
+        assert_equal(note, scoped.cached_find(note.id))
         assert_raise(MockExpectationError) do
           mock.verify
         end
@@ -407,19 +416,20 @@ class NoteTest < ActiveSupport::TestCase
   def test_cached_find_loads_exact_record_after_cache_was_destroyed
     with_caching do
       note = notes(:wish_list)
+      scoped = Note.visible_to(note.user)
 
-      assert_equal(note, Note.cached_find(note.id))
+      assert_equal(note, scoped.cached_find(note.id))
       assert(note.update_attribute(:name, "My New Wishlist"))
 
       note.reload
 
-      Note.cached_find(note.id)
-      Rails.cache.clear
+      #scoped.cached_find(note.id)
+      #Rails.cache.clear
 
       mock = Minitest::Mock.new
       mock.expect(:take!, note)
       Note.stub(:where, mock) do
-        assert_equal(note, Note.cached_find(note.id))
+        assert_equal(note, scoped.cached_find(note.id))
         mock.verify
       end
     end

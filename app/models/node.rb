@@ -42,18 +42,22 @@ class Node < ActiveRecord::Base
   after_commit :flush_cache
 
   def self.cached_root
-    Rails.cache.fetch([name, "root"], expires_in: 10.minutes) do
-      root_node = includes(:notes).root
-      unless root_node
-        raise ActiveRecord::RecordNotFound
+    with_scoped_to do |scoped_id|
+      Rails.cache.fetch([name, scoped_id, "root"], expires_in: 10.minutes) do
+        root_node = includes(:notes).root
+        unless root_node
+          raise ActiveRecord::RecordNotFound
+        end
+        root_node
       end
-      root_node
     end
   end
 
   def self.cached_find(id)
-    Rails.cache.fetch([name, id], expires_in: 10.minutes) do
-      where(:id => id).take!
+    with_scoped_to do |scoped_id|
+      Rails.cache.fetch([name, scoped_id, id], expires_in: 10.minutes) do
+        where(:id => id).take!
+      end
     end
   end
 
@@ -65,6 +69,7 @@ class Node < ActiveRecord::Base
   private
 
     def flush_cache
-      Rails.cache.delete([self.class.name, id])
+      Rails.cache.delete([self.class.name, user_id, "root"])
+      Rails.cache.delete([self.class.name, user_id, id])
     end
 end
