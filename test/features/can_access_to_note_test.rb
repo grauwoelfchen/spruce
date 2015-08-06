@@ -122,7 +122,7 @@ class CanAccessToNoteTest < Capybara::Rails::TestCase
     assert_equal(404, page.status_code)
   end
 
-  def test_successfully_destroying_with_without_js
+  def test_successfully_destroying_without_js
     note = notes(:linux_book)
     node = note.node
     visit("/l/#{note.id}/delete")
