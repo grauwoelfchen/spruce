@@ -30,7 +30,7 @@ module Spruce
     #config.exceptions_app = self.routes
 
     config.notification = {
-      to: ENV["NOTIFICATION_TO"],
+      to:   ENV["NOTIFICATION_TO"],
       from: ENV["NOTIFICATION_FROM"]
     }
   end
