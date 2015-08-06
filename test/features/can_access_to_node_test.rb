@@ -116,7 +116,7 @@ class CanAccessToNodeTest < Capybara::Rails::TestCase
     refute_match(/Destroy/, page.body)
   end
 
-  def test_successfully_destroying_with_without_js
+  def test_successfully_destroying_without_js
     node = nodes(:lib)
     visit("/b/#{node.id}/delete")
 
