@@ -16,4 +16,3 @@ module ChangeRecordable
     result
   end
 end
-
