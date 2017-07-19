@@ -21,7 +21,7 @@ gem "stylus"
 
 group :development do
   gem "slim-rails"
-  gem "capistrano", "~> 3.2.0"
+  gem "capistrano", "3.8.2"
   gem "capistrano-rails"
 end
 

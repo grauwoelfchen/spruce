@@ -1,8 +1,8 @@
-# config valid only for Capistrano 3.1
-lock "3.2.1"
+# config valid only for Capistrano 3.8
+lock "3.8.2"
 
 set :application, "spruce"
-set :repo_url, "git@github.com:grauwoelfchen/spruce.git"
+set :repo_url, "git@grauwoelfchen.net:spruce.git"
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
